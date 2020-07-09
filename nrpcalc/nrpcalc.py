@@ -1,27 +1,67 @@
-import maker
-import finder
-import kmerSetDB
+from .base import maker
+from .base import finder
+from .base import kmerSetDB
 
-def nrp_background(
+
+__version__ = '1.0.0'
+__authors__ = '''Ayaan Hossain <auh57@psu.edu>
+\r\t  Howard Salis <salis@psu.edu>'''
+
+__doc__ = '''
+Non-Repetitive Parts Calculator
+
+Automated design and discovery of non-repetitive 
+genetic parts for engineering stable genetic systems
+
+Version = {}
+Authors = {}
+
+NRP Calculator offers two modes of operations
+- Finder Mode: Discover toolboxes of non-repetitive parts
+               from a list of candidate sequences
+-  Maker Mode: Automated design of non-repetitive parts
+               based on constraints
+
+Additionally, a 'background' object is present which can
+be used to store background sequences against which parts
+discovered to designed are ensured to be non-repetitive
+
+You can learn more about the modes and background via
+  print nrpcalc.background.__doc__
+  print nrpcalc.finder.__doc__
+  print nrpcalc.maker.__doc__
+'''.format(
+    __version__,
+    __authors__)
+
+
+def background(
     path,
     Lmax,
     verbose=True):
     '''
-    Holder function for Background object. Returns a kmerSetDB object for
-    on-disk storage of background sequences, as well as any sequences built
-    using Maker. Useful when chaining several Maker and Finder jobs as well
-    as retrieving background developed from previous runs.
+    NRP Calculator 'background' object for on-disk storage of background
+    sequences, as well as any sequences built using Maker. Useful when
+    chaining several Maker and Finder jobs as well as persisting background
+    developed from previous runs.
 
-    path    : a string that ./shows/a/path/to/store/background
-    Lmax    : an integer, see Finder and Maker argument details for context
-    verbose : optional boolean, enables/disables printing of progress
+    :: path
+       type - string
+       desc - ./a/path/to/store/background/object
+    :: Lmax
+       type - integer
+       desc - maximum allowed shared repeat length
+    :: verbose
+       type - boolean
+       desc - if True displays progress
+              (default=True)
     '''
     return kmerSetDB(
         path=path,
         homology=Lmax+1,
         verbose=verbose)
 
-def nrp_finder(
+def finder(
     seq_list,
     Lmax,
     internal_repeats=False,
@@ -48,7 +88,7 @@ def nrp_finder(
         vercov_func=vercov_func,
         verbose=verbose)
 
-def nrp_maker(
+def maker(
     seq_list,
     struct_list,
     target_list,
