@@ -1,2 +1,5 @@
-# Non-Repetitive Parts Calculator
-
+<h1 align="center">
+    <a href="https://github.com/ayaanhossain/nrpcalc/">
+        <img src="./logo/logo.png"  alt="Non-Repetitive Parts Calculator" width="250"/>
+    </a>
+</h1>
