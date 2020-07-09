@@ -1,4 +1,4 @@
-* Finalize logo
+* ~~Finalize logo~~
 * Add DNA/RNA type specification in Maker
 * Rewrite all public function docs
 * Write up README sketch
