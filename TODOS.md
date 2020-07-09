@@ -1,8 +1,8 @@
-* ~~Write unnitests and maximize codecov~~
-* ~~examples  directory with multiprocessing and benchmark programs~~
-* ~~Figure out custom Exceptions in style of `ShareDB.<Exceptiob>: message`~~
-* ~~Figure out manifest.json for versioning and other info~~
-* ~~How to publish to PyPI?~~
-* ~~Complete API.md~~
-* Fix all badges
-* Publish to PyPI
+* Finalize logo
+* Add DNA/RNA type specification in Maker
+* Rewrite all public function docs
+* Write up README sketch
+* Finish docs
+* Concurrently finish examples
+* Write up tests
+* Publish to pip
