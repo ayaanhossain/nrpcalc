@@ -22,8 +22,8 @@ To solve this “repeat challenge” in synthetic biology, we developed and expe
 
 Non-repetitiveness is a global property of the entire genetic part toolbox, and it is quantified by a repeat distribution (the number of repeats of length `L`) or more simply by the maximum shared repeat length, `Lmax`.  Both algorithms generate toolboxes according to a user-specified  `Lmax`  to control the desired level of non-repetitiveness. For example, when a toolbox of genetic parts is designed using an  `Lmax` of `10` base pairs, every genetic part in the toolbox can be simultaneously utilized in the same genetic system without introducing a repetitive sequence longer than `10` base pairs, which is necessary to ensure successful `DNA` synthesis and assembly.
 
-<h1 align="center">
+<h3 align="center">
     <a href="https://github.com/ayaanhossain/nrpcalc/img/Fig1.svg">
         <img src="./img/Fig1.svg"  alt="NRP Calculator Maker Mode" width="1000"/>
     </a>
-</h1>
+</h3>
