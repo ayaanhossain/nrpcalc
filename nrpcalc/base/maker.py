@@ -8,6 +8,7 @@ from utils        import Fold
 from kmerSetDB    import kmerSetDB
 from kmerSetArray import kmerSetArray
 
+import sys
 import random
 import uuid
 import math
@@ -24,7 +25,7 @@ from Bio.SeqUtils import MeltingTemp
 
 class NRPMaker(object):
 
-    def __init__(self, seed=None):
+    def __init__(self, part_type='RNA', seed=None):
         self.iupac_table = {
             'A': {'A'},
             'C': {'C'},
@@ -48,12 +49,16 @@ class NRPMaker(object):
             'C': set(['G']),
             'T': set(['A', 'G'])
         }
-        self.synthesis = Synthesis()
-        self.fold      = Fold()
-        self.seed      = seed
-        self.proj_id   = str(uuid.uuid4())
-        self.kmer_db   = None
-        self.seed = seed if not seed is None else random.random()
+        self.synthesis  = Synthesis()
+        self.fold       = Fold(part_type=part_type)        
+        self.proj_id    = str(uuid.uuid4())
+        self.kmer_db    = None
+        self.background = None
+        
+        if not seed is None and isinstance(seed, int):
+            self.seed = seed
+        else:
+            self.seed = random.random()
         random.seed(self.seed)
 
     def _get_adjusted_struct(self, struct, seq):
@@ -237,8 +242,9 @@ class NRPMaker(object):
             print ' [x] Local Model fn. failed to evaluate partial path: {}'.format(
                 candidate_str)
             print ' [x] Exception message: {}'.format(e)
-            print ' [+] Continuing path finding ... '
-            return None # No intelligence, no need to roll back
+            print ' [+] Exiting Maker ... '
+            sys.exit(-1) # No intelligence, halt everything!
+        # Evaluate state of conflict
         if state:
             return None # No conflict reported, no need to roll back
         elif not state: # Conflict found
@@ -246,8 +252,8 @@ class NRPMaker(object):
         else:
             print ' [x] Local Model fn. state return type is not boolean: {}'.format
             (outcome)
-            print ' [+] Continuing path finding ... '
-            return None # No valid status retported
+            print ' [+] Exiting Maker ... '
+            sys.exit(-2) # No valid status retported
 
     def _get_non_coding_candidate(self,
         meta_seq,
@@ -377,9 +383,15 @@ class NRPMaker(object):
                 mmer_seen = False
 
                 # Case: mmer is a shared repeat with
-                #       a background / previous part
+                #       a previous part
                 if mmer in self.kmer_db:
                     mmer_seen = True
+
+                # Case: mmer is a shared repeat with
+                #       background
+                if not self.background is None:
+                    if mmer in self.background:
+                        mmer_seen = True
 
                 # Case: kmer/rkmer is an internal
                 #       repeat to current part
@@ -748,7 +760,12 @@ class NRPMaker(object):
             curr_fail_prob       =  berno.get_prob(trials=total_fail_trials, success=total_fail_successes)
             curr_fail_trial      =  berno.get_trials(prob=curr_fail_prob)
 
-    def check_maker_contingents(self, seq, struct, allow_internal_repeat, target, homology):
+    def check_maker_contingents(self, seq, struct, part_type, allow_internal_repeat, target, homology):
+        # Part Legality
+        if not part_type in ['DNA', 'RNA']:
+            print '\n [ERROR]    Part Type must be \'RNA\' or \'DNA\' not \'{}\''.format(part_type)
+            print ' [SOLUTION] Try correcting Part Type'
+            return False
         # Sequence Legality
         seq_legal, seq_illegal_chars = makerchecks.is_seq_constr_legal(seq)
         if not seq_legal:
@@ -790,6 +807,7 @@ class NRPMaker(object):
         struct_list,
         target_list,
         background=None,
+        part_type='RNA',
         struct_type=None,
         synth_opt=True,
         local_model_fn=None,
@@ -816,6 +834,7 @@ class NRPMaker(object):
             check_status = self.check_maker_contingents(
                 seq,
                 struct,
+                part_type,
                 allow_internal_repeat,
                 target,
                 homology)
@@ -826,31 +845,42 @@ class NRPMaker(object):
                 print '\n Check Status : PASS'
 
         # kmerSetDB Setup
-        if background is None:
-            projector.setup_proj_dir(self.proj_id)
-            self.kmer_db = kmerSetDB(
-                path='./{}/kmerDB'.format(self.proj_id),
-                homology=homology,
-                verbose=verbose)
-        else:
+        projector.setup_proj_dir(self.proj_id)
+        self.kmer_db = kmerSetDB(
+            path='./{}/kmerDB'.format(self.proj_id),
+            homology=homology,
+            verbose=verbose)
+        
+        # Background Setup
+        if not background is None:
+            print '\n[Checking Background]:\n Background is {}'.format(background)
             if isinstance(background, kmerSetDB):
-                self.kmer_db = background
+                self.background = background
                 if background.K != homology:
                     build_parts = False
-                    print ' [ERROR] Background Lmax is {}, but Part Lmax is {}'.format(
+                    print '\n [ERROR]    Background Lmax is {}, but Part Lmax is {}'.format(
                         background.K,
                         homology)
-                    print ' [SOLUTION] Please Use Same Lmax Values'
+                    print ' [SOLUTION] Please use Same Lmax Values'
+                    print '\n Check Status : FAIL'
+                else:
+                    print '\n Check Status : PASS'
+
             else:
                 build_parts = False
-                print ' [ERROR] Background Object is not kmerSetDB'
-                print ' [SOLUTION] Please Instantiate Background via nrp_background(...)'
+                print '\n [ERROR]    Background Object is INVALID'
+                print ' [SOLUTION] Please Instantiate Background via nrpcalc.background(...)'
+                print '\n Check Status : FAIL'
 
         memory_exhausted = False
 
         if not build_parts:
-            print '\nPlease Eliminate [ERROR]s Found Above.'
-            return {} # Empty Dict ... no parts were generated
+            print '\nPlease Eliminate [ERROR]s Found Above.\n'
+            # Cleanups
+            self.background = None
+            self.kmer_db.drop()
+            self.kmer_db = None
+            raise RuntimeError('Invalid Constraints or Background')
         print
         # All Checks and Setups Completed
 
@@ -909,7 +939,11 @@ class NRPMaker(object):
                 if memory_exhausted:
                     break
 
-        # Background Post Processing
+        # Detach Background
+        self.background = None
+
+        # Remove kmerSetDB
+        self.kmer_db.drop()
         self.kmer_db = None
 
         # Pack output in dictionary
@@ -943,14 +977,14 @@ def main():
         path='./testDB',
         homology=homology,
         verbose=True)
-    background.multiadd(
-        utils.get_fasta_seq_list(
-            fasta_filename='input.fa.bk104'))
+    # background.multiadd(
+    #     utils.get_fasta_seq_list(
+    #         fasta_filename='input.fa.bk104'))
 
     # Background Based Single Part Design Works
     t0 = time()
     tt = 0
-    toolbox1 = sm_obj.nrp_maker(homology, [seq], [struct], [20],
+    toolbox1 = sm_obj.nrp_maker(homology, [seq], [struct], [10],
         struct_type='mfe',
         background=background,
         jump_count=100,
@@ -958,7 +992,7 @@ def main():
         synth_opt=False,
         verbose=True,
         abortion=True,
-        allow_internal_repeat=False,
+        allow_internal_repeat=True,
         output_file=output_file)
     tt += time() - t0
     final_toolbox.update(
@@ -966,9 +1000,7 @@ def main():
             toolbox1.values()))
 
     # Adding More Background Post Design Works
-    background.multiadd(
-        utils.get_fasta_seq_list(
-            fasta_filename='riboz.fa'))
+    background.multiadd(toolbox1.values())
 
     # Serial Designs from Multiple Constraints Works
     t0 = time()
@@ -989,7 +1021,7 @@ def main():
 
     # Assert All Parts Unique and Non-Repetitive
     assert len(set(final_toolbox.values())) == len(
-        finder.nrp_finder(final_toolbox.values(), 16, None, verbose=False))
+        finder.nrp_finder(final_toolbox.values(), homology, None, verbose=False))
 
     # Drop Background
     background.drop()

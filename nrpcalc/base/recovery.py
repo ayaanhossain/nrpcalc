@@ -22,6 +22,7 @@ def is_graph_complete(homology_graph):
 
 def completex_elimination(homology_graph, verbose):
     ### REMOVE THIS ###
+    # Completex Elimination is Slow Though
     return set()
     ### REMOVE THIS ###
     

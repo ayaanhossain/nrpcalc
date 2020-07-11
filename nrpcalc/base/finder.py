@@ -27,18 +27,28 @@ def nrp_finder(
     if not background is None:
         valid_background = True
         if not isinstance(background, kmerSetDB.kmerSetDB):
-            print ' [ERROR] Background Object is not kmerSetDB'
-            print ' [SOLUTION] Please Instantiate Background via nrp_background(...)'
+            print '\n [ERROR]    Background Object is not kmerSetDB'
+            print ' [SOLUTION] Please Instantiate Background via nrpcalc.background(...)'
             valid_background = False            
         elif background.K != homology:
-            print ' [ERROR] Background Lmax is {}, but Part Lmax is {}'.format(
+            print '\n [ERROR]    Background Lmax is {}, but Part Lmax is {}'.format(
                         background.K,
                         homology)
             print ' [SOLUTION] Please Use Same Lmax Values'
-            valid_background = False
-        if not valid_background:
-            print '\nPlease Eliminate [ERROR]s Found Above.'
-            return {} # Empty Dict ... no parts were subselected
+            valid_background = False        
+
+    # Vercov Function Check
+    valid_vercov = True
+    if not vercov_func in ['2apx', 'nrpG', 'nrp2']:
+        print ' [ERROR]    vercov_func must be \'2apx\', \'nrpG\', or \'nrp2\' not \'{}\''.format(
+            vercov_func)
+        print ' [SOLUTION] Please use One of the Correct Options'
+        valid_vercov = False
+
+
+    if not valid_background or not valid_vercov:
+        print '\nPlease Eliminate [ERROR]s Found Above.'
+        return {} # Empty Dict ... no parts were subselected
 
     # Setup Project
     current_uuid = str(uuid.uuid4())
@@ -48,7 +58,7 @@ def nrp_finder(
 
     # Build Repeat Graph
     homology_graph = hgraph.get_homology_graph(
-        seq_list,
+        list(seq_list),
         background,
         homology,
         internal_repeats,

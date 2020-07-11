@@ -4,35 +4,43 @@ from .base import kmerSetDB
 
 
 __version__ = '1.0.0'
-__authors__ = '''Ayaan Hossain <auh57@psu.edu>
-\r\t  Howard Salis <salis@psu.edu>'''
+
+__authors__ = '''
+Ayaan Hossain <auh57@psu.edu>
+Howard Salis  <salis@psu.edu>
+'''
 
 __doc__ = '''
 Non-Repetitive Parts Calculator
 
 Automated design and discovery of non-repetitive 
-genetic parts for engineering stable genetic systems
+genetic parts for engineering stable genetic systems.
 
-Version = {}
-Authors = {}
+Version: {}
 
-NRP Calculator offers two modes of operations
+Authors: {}
+         {}
+
+NRP Calculator offers two modes of operation:
+
 - Finder Mode: Discover toolboxes of non-repetitive parts
                from a list of candidate sequences
+
 -  Maker Mode: Automated design of non-repetitive parts
-               based on constraints
+               based on sequence, structure and model
+               constraints
 
-Additionally, a 'background' object is present which can
+Additionally, a 'background' object is offered which can
 be used to store background sequences against which parts
-discovered to designed are ensured to be non-repetitive
+discovered or designed are ensured to be non-repetitive.
 
-You can learn more about the modes and background via
+You can learn more about the two modes and background via
   print nrpcalc.background.__doc__
   print nrpcalc.finder.__doc__
   print nrpcalc.maker.__doc__
 '''.format(
     __version__,
-    __authors__)
+    *__authors__.strip().split('\n'))
 
 
 def background(
@@ -40,21 +48,83 @@ def background(
     Lmax,
     verbose=True):
     '''
-    NRP Calculator 'background' object for on-disk storage of background
-    sequences, as well as any sequences built using Maker. Useful when
-    chaining several Maker and Finder jobs as well as persisting background
-    developed from previous runs.
+    NRP Calculator 'background' object for on-disk storage
+    of background sequence kmers. Useful when chaining many
+    Maker and Finder jobs as well as persisting backgrounds
+    such as small genomes or other part toolboxes etc. from
+    earlier design rounds.
 
     :: path
        type - string
-       desc - ./a/path/to/store/background/object
+       desc - ./a/path/to/store/background/object for later
+              reuse and part verification    
     :: Lmax
        type - integer
-       desc - maximum allowed shared repeat length
+       desc - maximum allowed shared repeat length between
+              all sequences in a given toolbox
     :: verbose
        type - boolean
        desc - if True displays progress
               (default=True)
+
+    Note that if the path provided points to an existing
+    background object, then that background is opened for
+    reading, otherwise, a new background is instantiated
+    at the given path.
+
+    Background object API Examples
+    
+    >> import nrpcalc
+    >>
+    >> my_background_list = [...]
+    >> bkg = nrpcalc.background(
+           path='./my_backgound/',
+           Lmax=15)
+
+    (1) add(seq) - adds an IUPAC string 'seq' to background
+
+    >> bkg.add('ATGCTAGGCCAACC')
+    
+    (2) multiadd(seq_list) - adds multiple sequences in
+                             the list to background
+
+    >> bkg.multiadd(my_background_list)
+    
+    (3) __contains__(seq) - check if all k-mers from 'seq'
+                            is present in background
+
+    >> 'ATGCTAGGCCAACC' in bkg
+
+    (4) multicheck(seq_list) - check if all k-mers from given
+                               seq_list present in background
+
+    >> assert all(bkg.multicheck(my_background_list))
+
+    (5) __iter__() - iterate over all k-mers in background
+
+    >> e.g. kmers = list(iter(bkg))
+
+    (6) remove(seq) - removes all k-mers in 'seq' from the
+                      background, freeing them up for use
+
+    >> e.g. bkg.remove('ATGCTAGGCCAACC')
+
+    (7) multiremove(seq_list) - removes all k-mers in the given
+                                seq_list from background
+
+    >> e.g. bkg.multiremove(my_background_list)
+
+    (8) clear() - removes all k-mers stored in background
+
+    >> bkg.clear()
+
+    (9) close() - closes background instance
+    
+    >> bkg.close()
+
+    (10) drop() - deletes background instance from disk
+
+    >> bkg.drop()
     '''
     return kmerSetDB(
         path=path,
@@ -66,19 +136,65 @@ def finder(
     Lmax,
     internal_repeats=False,
     background=None,
-    vercov_func=None,
+    vercov_func='nrp2',
     verbose=True):
     '''
-    Holder function for Finder Mode. Given a list of sequences, and a Lmax length,
-    finds the largest possible set of sequences that are non-repetitive, i.e. they
-    do not share a subsequences greater than or equal to Lmax length.
+    NRP Calculator Finder Mode for discovering non-repetitive
+    subset of parts from a given list. All parts sharing any
+    repeat longer than Lmax are eliminated from seq_list, and
+    the approximately largest subset of non-repetitive parts
+    are returned in a dictionary indexed by their position in
+    seq_list. If internal_repeats is set to True, then parts
+    with internal repeats longer than Lmax are also preserved
+    otherwise such parts are also eliminated from seq_list.
 
-    seq_list        : a list of strings in the alphabet {A, T, C, G}
-    Lmax            : an integer, such that found sequences are non-repetitive over that length
-    internal_repeats: optional boolean, if true allows internal repeats in sequences, else selects sequences without internal repeats
-    background      : a kmerSetDB object storing strings against which found sequences must be non-repetitive
-    vercov_func     : optional string, can be '2apx' (classical 2-approximation) / 'dosG' (greedy DOS Vercov wtih Recovery) / None (default, 2-Approx DOS Vercov with recovery)
-    verbose         : optional boolean, enables/disables printing of progress
+    :: seq_list
+       type - list
+       desc - a list of IUPAC strings representing a genetic
+              part toolbox
+    :: Lmax
+       type - integer
+       desc - maximum allowed shared repeat length between
+              all sequences in a given toolbox
+    :: internal_repeats
+       type - boolean
+       desc - if True then all parts containing internal repeats
+              longer than Lmax are not eliminated
+              (default=False)
+    :: background
+       type - kmerSetDB / None
+       desc - the background object containg k-mers (k=Lmax+1)
+              which must be absent in returned non-repetitive
+              subset of parts
+              (default=None)
+    :: vercov_func
+       type - string
+       desc - must be either '2apx', 'nrpG', or 'nrp2';
+              '2apx' - use standard 2-approximation VCE
+              'nrpG' - use Greedy Vertex Cover Elimination
+              'nrp2' - use Finder Mode 2-approximation VCE
+              (default='nrp2')
+    :: verbose
+       type - boolean
+       desc - if True displays progress
+              (default=True)
+
+    Finder Mode API Examples
+
+    >> import nrpcalc
+    >>
+    >> my_background_list = [...]
+    >> bkg = nrpcalc.background(...)
+    >> bkg.multiadd(my_background_list)
+    >>
+    >> my_parts = [...]
+    >> nrpset = nrpcalc.finder(
+           seq_list=my_parts,
+           internal_repeats=False,
+           background=bkg,
+           vercov='nrp2')
+    >>
+    >> assert len(nrpset) <= len(my_parts)
     '''
     return finder.nrp_finder(
         seq_list=seq_list,
@@ -89,54 +205,171 @@ def finder(
         verbose=verbose)
 
 def maker(
-    seq_list,
-    struct_list,
-    target_list,
+    seq_constr,
+    struct_constr,
+    target_size,
     Lmax,
     internal_repeats=False,
     background=None,
+    part_type='RNA',
     struct_type=None,
     seed=None,
-    synth_opt=True,
+    synth_opt=False,
     local_model_fn=None,
     global_model_fn=None,
     jump_count=10,
     fail_count=1000,
     output_file=None,
-    verbose=False,
-    abortion=True):
+    verbose=True):
     '''
-    Holder function for Maker Mode. Given a list of sequence and structure constraints, their 
-    target counts, and a Lmax length, attempts to design the largest possible set of 
-    sequences that are non-repetitive, while optionally optimizing for synthesizability 
-    and user specified model functions, within some specified jump and failure counts.
+    NRP Calculator Maker Mode for designing non-repetitive
+    genetic part toolboxes from user defined constraints.
+    All parts are designed based on sequence and structure
+    constraints and ensured to satisfy local and global
+    model functions. The designed toolbox is returned as a
+    dictionary of parts indexed by their order of design,
+    and optionally written to a fasta output file.
 
-    seq_list        : a list of strings in IUPAC degenerate code alphabet
-    struct_list     : a list of strings in the alphabet {(, ), ., x}, can be None or a zero length string if no structure desired
-    target_list     : a list of integers specifying the target number of parts
-    Lmax            : an integer, such that made sequences are non-repetitive over that length
-    internal_repeats: optional boolean, if true allows internal repeats in sequences, else builds sequences without internal repeats
-    background      : a kmerSetDB object storing strings against which made sequences must be non-repetitive
-    struct_type     : optional string, 'mfe', 'centroid', 'both' or None (default None, uses mfe if structure given)
-    seed            : optional integer, helps the maker reproduce results by seeding the random number generator (default None)
-    synth_opt       : optional boolean, to enable/disable synthesis optimization (default True)
-    local_model_fn  : optional user supplied function, which must take a partial sequence as input, and produce a boolean tuple (boolean, index), enables local tracebacks
-    global_model_fn : optional user supplied function, which must take a sequence as input and produce a boolean as output, enables global model optimization
-    jump_count      : optional integer, a maximum count of jumps allowed to the candidate sequence generator, before following abortion parameter
-    fail_count      : optional integer, a maximum count of consecutive failures in structure, synthesis, and model function satisfiability to be tolerated before termination
-    output_file     : optional string, all generated strings are written to this output file in FASTA format
-    verbose         : optional boolean, enables/disables printing of progress
-    abortion        : optional boolean to disable traceback jumps, not recommeded to set it to False (default True)
+    :: seq_constr
+       type - string
+       desc - a string in IUPAC degenerate code describing
+              all valid nucleotide choices at each position
+              e.g. 'NNNNWWWWSSSSTTTT' imply the first four
+                   bases can be either 'A'/'T'/'G'/'C', the
+                   next four bases can be either 'A'/'T',
+                   followed by either 'G'/'C' for the next
+                   four basses, and finally ending with 'T's
+    :: struct_constr
+       type - string
+       desc - a string in dot-parenthesis-x notation that
+              describe the secondary base pairing across all
+              nucleotide position
+              e.g. '..((xx))..' imply the first, second, and
+                   the last two bases are free to either base
+                   pair or not (dot), the third and fourth
+                   bases are paired with the eighth and the
+                   seventh bases respectively (parenthesis),
+                   while the fifth and the sixth base must
+                   not  take part in any base pairing (x)
+    :: target_size
+       type - integer
+       desc - total number of genetic parts to be designed in
+              for the designed toolbox; this is not guaranteed
+              to be fulfilled reached if the constraints are
+              too strict, for example, due to low degeneracy
+              in the sequence constraint
+    :: Lmax
+       type - integer
+       desc - maximum allowed shared repeat length between
+              all sequences in a given toolbox
+    :: internal_repeats
+       type - boolean
+       desc - if True then designed parts are not eliminated
+              due to internal repeats; useful when designing
+              parts such as rho-independent terminators with
+              structure constraints that necessitate internal
+              repeats; shared repeats are eliminated however
+              (default=False)
+    :: background
+       type - kmerSetDB / None
+       desc - the background object containg k-mers (k=Lmax+1)
+              which must be absent in designed part toolbox
+              (default=None)
+    :: part_type
+       type - string
+       desc - must be either 'RNA' or 'DNA' depending on the
+              type of genetic part being designed
+              (default='RNA')
+    :: struct_type
+       type - string / None
+       desc - must be either 'mfe', 'centroid', or 'both'
+              'mfe' - use minimum free energy structure evaluation
+              'centroid' - use centroid structure evaluation
+              'both' - use both 'mfe' and 'centroid' evaluation
+    :: seed
+       type - integer / None
+       desc - integer used to seed random number generations;
+              two Maker runs with same constraints and seed
+              value will generate the exact same toolbox;
+              if None then a random seed value is used
+              (default=None)
+    :: synth_opt
+       type - boolean
+       desc - if True then designed parts containing features
+              that complicate synthesis are eliminated
+              (default=False)
+    :: local_model_fn
+       type - function / None
+       desc - a function with signature 'fn_name(seq)' that
+              takes in a partial genetic part sequence, and
+              returns either True or False and optionally a
+              traceback index depending on whether a custom
+              design objective was met or not; useful when
+              some criteria must be ensured concurrently
+              with part-design as each base is added
+              e.g. prevent_cutsites(seq) maybe be a local
+                   function that takes in a partial sequence
+                   as it is built and returns (True, None)
+                   if the last six bases of the partial
+                   part[-6:] is not the same as any of the
+                   cutsites used for cloning the part, otherwise
+                   returns a tuple (False, len(seq)-6) as the
+                   traceback location to reselect the last six
+                   bases; this naturally ensures the final part
+                   is devoid of all cutsites throughout the part
+              (default=None)
+    :: global_model_fn
+       type - function / None
+       desc - a function with signature 'fn_name(seq)' that
+              takes in a complete genetic part sequence, and
+              returns either True or False depending on whether
+              a custom design objective was met; useful for
+              design criteria that can only be evlauated when
+              the complete genetic part is available; parts that
+              are evaluated to be False are rejected and a new
+              part generation is started; global functions are
+              evaluated after the last base is added to a part
+              e.g. gc_content(seq) may be a global function that
+                   takes in a complete sequence and only accepts
+                   parts with GC content greater than threshold
+                   percentage
+              (default=None)
+    :: jump_count
+       type - integer
+       desc - maximum number of restarts in path finding due to
+              failure in meeting local_model_fn or getting stuck
+              in a local optima (auto-adjusted with iteration)
+              (default=10)
+    :: fail_count
+       type - integer
+       desc - maximum number of consecutive failures tolerated
+              when global_model_fn and synth_opt objectives are
+              not met (auto-adjusted with iteration)
+              (default=1000)
+    :: output_file
+       type - string / None
+       desc - filename to store designed non-repetitive parts
+              as they are generated consecutively; sequences
+              are written in FASTA format
+              (default=None)
+    :: verbose
+       type - boolean
+       desc - if True displays progress
+              (default=True)
     '''
-    _maker = maker.NRPMaker(seed)
+    _maker = maker.NRPMaker(
+        part_type=part_type,
+        seed=seed)
+    
     return _maker.nrp_maker(
-        seq_list=seq_list,
-        struct_list=struct_list,
+        seq_constr=seq_constr,
+        part_type=part_type,
+        struct_constr=struct_constr,
         struct_type=struct_type,
-        target_list=target_list,
+        target_size=target_size,
         homology=Lmax+1,
         allow_internal_repeat=internal_repeats,
-        background_list=background_list,        
+        background=background,        
         synth_opt=synth_opt,
         local_model_fn=local_model_fn,
         global_model_fn=global_model_fn,
@@ -144,4 +377,4 @@ def maker(
         fail_count=fail_count,
         output_file=output_file,
         verbose=verbose,
-        abortion=abortion)
+        abortion=True)

@@ -1,3 +1,5 @@
+import os
+
 from Bio    import SeqIO
 from string import maketrans
 
@@ -52,17 +54,24 @@ class Fold(object):
         self,
         temp=37.0,
         dangles=2,
-        parameter_file="rna_andronescu2007.par"):
-        self.parameter_directory = "/usr/local/share/ViennaRNA/"
+        part_type='RNA'):
+        self.parameter_directory = os.path.dirname(
+            os.path.abspath(__file__))#"/usr/local/share/ViennaRNA/"
         # Temperature in Celsius;
         # default=37.0 (float)
-        RNA.cvar.temperature     = temp
+        RNA.cvar.temperature = temp
         # Dangling end energies (0,1,2);
         # see RNAlib documentation;
         # default=2 (int)
-        RNA.cvar.dangles         = dangles
-        self.settings            = RNA.md("globals")
-        RNA.read_parameter_file(self.parameter_directory+parameter_file)
+        RNA.cvar.dangles = dangles
+        self.settings    = RNA.md("globals")
+
+        if not part_type in ['RNA', 'DNA']:
+            part_type = 'RNA'
+        
+        RNA.read_parameter_file(
+            self.parameter_directory+'/{}.par'.format(
+                part_type))
 
     def evaluate_mfe(self, seq):
         # MFE Only
