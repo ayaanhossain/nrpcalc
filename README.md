@@ -1,6 +1,6 @@
 <h1 align="center">
     <a href="https://github.com/ayaanhossain/nrpcalc/">
-        <img src="./img/logo.svg"  alt="Non-Repetitive Parts Calculator" width="500"/>
+        <img src="./img/logo.svg"  alt="Non-Repetitive Parts Calculator" width="400"/>
     </a>
 </h1>
 
