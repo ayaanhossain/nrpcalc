@@ -24,6 +24,6 @@ Non-repetitiveness is a global property of the entire genetic part toolbox, and 
 
 <h3 align="center">
     <a href="https://github.com/ayaanhossain/nrpcalc/img/Fig1.svg">
-        <img src="./img/Fig1.svg"  alt="NRP Calculator Maker Mode" width="1000"/>
+        <img src="./img/Fig1.svg"  alt="NRP Calculator Maker Mode" width="800"/>
     </a>
 </h3>
