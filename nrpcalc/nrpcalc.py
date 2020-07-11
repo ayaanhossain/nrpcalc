@@ -74,57 +74,57 @@ def background(
 
     Background object API Examples
     
-    >> import nrpcalc
-    >>
-    >> my_background_list = [...]
-    >> bkg = nrpcalc.background(
+    >>> import nrpcalc
+    >>>
+    >>> my_background_list = [...]
+    >>> bkg = nrpcalc.background(
            path='./my_backgound/',
            Lmax=15)
 
     (1) add(seq) - adds an IUPAC string 'seq' to background
 
-    >> bkg.add('ATGCTAGGCCAACC')
+    >>> bkg.add('ATGCTAGGCCAACC')
     
     (2) multiadd(seq_list) - adds multiple sequences in
                              the list to background
 
-    >> bkg.multiadd(my_background_list)
+    >>> bkg.multiadd(my_background_list)
     
     (3) __contains__(seq) - check if all k-mers from 'seq'
                             is present in background
 
-    >> 'ATGCTAGGCCAACC' in bkg
+    >>> 'ATGCTAGGCCAACC' in bkg
 
     (4) multicheck(seq_list) - check if all k-mers from given
                                seq_list present in background
 
-    >> assert all(bkg.multicheck(my_background_list))
+    >>> assert all(bkg.multicheck(my_background_list))
 
     (5) __iter__() - iterate over all k-mers in background
 
-    >> e.g. kmers = list(iter(bkg))
+    >>> e.g. kmers = list(iter(bkg))
 
     (6) remove(seq) - removes all k-mers in 'seq' from the
                       background, freeing them up for use
 
-    >> e.g. bkg.remove('ATGCTAGGCCAACC')
+    >>> e.g. bkg.remove('ATGCTAGGCCAACC')
 
     (7) multiremove(seq_list) - removes all k-mers in the given
                                 seq_list from background
 
-    >> e.g. bkg.multiremove(my_background_list)
+    >>> e.g. bkg.multiremove(my_background_list)
 
     (8) clear() - removes all k-mers stored in background
 
-    >> bkg.clear()
+    >>> bkg.clear()
 
     (9) close() - closes background instance
     
-    >> bkg.close()
+    >>> bkg.close()
 
     (10) drop() - deletes background instance from disk
 
-    >> bkg.drop()
+    >>> bkg.drop()
     '''
     return kmerSetDB(
         path=path,
@@ -181,20 +181,20 @@ def finder(
 
     Finder Mode API Examples
 
-    >> import nrpcalc
-    >>
-    >> my_background_list = [...]
-    >> bkg = nrpcalc.background(...)
-    >> bkg.multiadd(my_background_list)
-    >>
-    >> my_parts = [...]
-    >> nrpset = nrpcalc.finder(
-           seq_list=my_parts,
-           internal_repeats=False,
-           background=bkg,
-           vercov='nrp2')
-    >>
-    >> assert len(nrpset) <= len(my_parts)
+    >>> import nrpcalc
+    >>>
+    >>> my_background_list = [...]
+    >>> bkg = nrpcalc.background(...)
+    >>> bkg.multiadd(my_background_list)
+    >>>
+    >>> my_parts = [...]
+    >>> nrpset = nrpcalc.finder(
+    ...     seq_list=my_parts,
+    ...     internal_repeats=False,
+    ...     background=bkg,
+    ...     vercov='nrp2')
+    >>>
+    >>> assert len(nrpset) <= len(my_parts)
     '''
     return finder.nrp_finder(
         seq_list=seq_list,
@@ -282,10 +282,11 @@ def maker(
               (default='RNA')
     :: struct_type
        type - string / None
-       desc - must be either 'mfe', 'centroid', or 'both'
+       desc - must be either 'mfe', 'centroid', 'both' or None
               'mfe' - use minimum free energy structure evaluation
               'centroid' - use centroid structure evaluation
               'both' - use both 'mfe' and 'centroid' evaluation
+              (default=None)
     :: seed
        type - integer / None
        desc - integer used to seed random number generations;
@@ -356,6 +357,41 @@ def maker(
        type - boolean
        desc - if True displays progress
               (default=True)
+    
+    Maker Mode API Examples
+    
+    >>> import nrpcalc
+    >>>
+    >>> my_background_list = [...]
+    >>> bkg = nrpcalc.background(...)
+    >>> bkg.multiadd(my_background_list)
+    >>>
+    >>> def prevent_cutsites(seq):
+    ...     BamHI = 'GGATCC'
+    ...     XbaI  = 'TCTAGA'
+    ...     if seq[-6:] in [BamHI, XbaI]:
+    ...         return (False, len(seq)-6)
+    ...     else:
+    ...         return (True, None)
+    >>>
+    >>> def optimal_gc_content(seq):
+    ...     gcount = seq.count('G') * 1.
+    ...     ccount = seq.count('C') * 1.
+    ...     if 0.4 <= (gcount + ccount) / len(seq) <= 0.6:
+    ...         return True
+    ...     else:
+    ...         return False 
+    >>>
+    >>> promoters_1 = nrpcalc.maker(
+            seq_constr='N'*20+'TTGACA'+'N'*17+'TATAAT'+'NNNNNN',
+            struct_constr='.'*55,
+            target_size=500,
+            Lmax=15,
+            internal_repeats=False,
+            background=bkg,
+            part_type='DNA',
+            local_model_fn=prevent_cutsites,
+            global_model_fn=optimal_gc_content)
     '''
     _maker = maker.NRPMaker(
         part_type=part_type,
