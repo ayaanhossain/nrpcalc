@@ -1,4 +1,5 @@
 
+
 <h1 align="center">
     <a href="https://github.com/ayaanhossain/nrpcalc/">
         <img src="./img/logo.svg"  alt="Non-Repetitive Parts Calculator" width="418"/>
@@ -12,6 +13,8 @@
   <a href="#contributing">Citation</a> •
   <a href="#acknowledgements">Documentation</a> 
 </p>
+
+# Overview
 
 Engineering large genetic circuits, pathways and whole genomes require large toolboxes of well characterized genetic parts. Existing toolboxes for composing such genetic systems from scratch are either small and/or frequently share many repeats. Systems composed of repetitive elements are challenging to synthesize – leading to incomplete or mixed products. Additionally, repetitive constructs may trigger intrinsic homologous recombination machinery in a chassis, consequently deleting or compromising system integrity. 
 
