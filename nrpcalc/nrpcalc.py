@@ -26,7 +26,7 @@ NRP Calculator offers two modes of operation:
 - Finder Mode: Discover toolboxes of non-repetitive parts
                from a list of candidate sequences
 
--  Maker Mode: Automated design of non-repetitive parts
+-  Maker Mode: Design toolboxes of non-repetitive parts
                based on sequence, structure and model
                constraints
 
@@ -179,7 +179,7 @@ def finder(
        desc - if True displays progress
               (default=True)
 
-    Finder Mode API Examples
+    Finder Mode API Example
 
     >>> import nrpcalc
     >>>
@@ -358,7 +358,7 @@ def maker(
        desc - if True displays progress
               (default=True)
     
-    Maker Mode API Examples
+    Maker Mode API Example
     
     >>> import nrpcalc
     >>>

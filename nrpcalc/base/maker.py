@@ -761,11 +761,6 @@ class NRPMaker(object):
             curr_fail_trial      =  berno.get_trials(prob=curr_fail_prob)
 
     def check_maker_contingents(self, seq, struct, part_type, allow_internal_repeat, target, homology):
-        # Part Legality
-        if not part_type in ['DNA', 'RNA']:
-            print '\n [ERROR]    Part Type must be \'RNA\' or \'DNA\' not \'{}\''.format(part_type)
-            print ' [SOLUTION] Try correcting Part Type'
-            return False
         # Sequence Legality
         seq_legal, seq_illegal_chars = makerchecks.is_seq_constr_legal(seq)
         if not seq_legal:
@@ -799,13 +794,18 @@ class NRPMaker(object):
                     print ' [ERROR] >> Long hairpin between: {}'.format(long_hairpin)
                     print ' [SOLUTION] Try relaxing Structure Constraint or setting allow_internal_repeat=True'
                 return False
+        # Part Legality
+        if not part_type in ['DNA', 'RNA']:
+            print '\n [ERROR]    Part Type must be \'RNA\' or \'DNA\' not \'{}\''.format(part_type)
+            print ' [SOLUTION] Try correcting Part Type'
+            return False
         return True
 
     def nrp_maker(self,
         homology,
-        seq_list,
-        struct_list,
-        target_list,
+        seq_constr,
+        struct_constr,
+        target_size,
         background=None,
         part_type='RNA',
         struct_type=None,
@@ -825,12 +825,14 @@ class NRPMaker(object):
         build_parts = True
         for i, (seq, struct, target) in enumerate(
             izip(seq_list, struct_list, target_list)):
-            print '\n[Checking Constraints {}]:'.format(i+1)
+            print '\n[Checking Constraints]'
             print ' Sequence Constraint : {}'.format(seq)
             print ' Structure Constraint: {}'.format(struct)
-            print ' Internal Repeats    : {}'.format(allow_internal_repeat)
             print ' Target Size         : {}'.format(target)
             print ' Lmax                : {}'.format(homology-1)
+            print ' Internal Repeats    : {}'.format(allow_internal_repeat)
+            print ' Part Type           : {}'.format(part_type)
+            print
             check_status = self.check_maker_contingents(
                 seq,
                 struct,
@@ -880,7 +882,7 @@ class NRPMaker(object):
             self.background = None
             self.kmer_db.drop()
             self.kmer_db = None
-            raise RuntimeError('Invalid Constraints or Background')
+            raise RuntimeError('Invalid Arguments, Constraints or Background')
         print
         # All Checks and Setups Completed
 
