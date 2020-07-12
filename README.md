@@ -12,7 +12,7 @@
   <a href="#Overview">Overview</a> •
   <a href="#Installation">Installation</a> •
   <a href="#License">License</a> •
-  <a href="#Citations">Citation</a> •
+  <a href="#Citation">Citation</a> •
   <a href="#Documentation">Documentation</a> 
 </p>
 
