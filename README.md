@@ -1,5 +1,6 @@
 
 
+
 <h1 align="center">
     <a href="https://github.com/ayaanhossain/nrpcalc/">
         <img src="./img/logo.svg"  alt="Non-Repetitive Parts Calculator" width="418"/>
@@ -27,3 +28,22 @@ Non-repetitiveness is a global property of the entire genetic part toolbox, and 
         <img src="./img/Fig1.svg"  alt="NRP Calculator Maker Mode" width="1000"/>
     </a>
 </h3>
+
+## Citation
+
+If you use `Non-Repetitive Parts Calculator` or toolboxes designed or discovered using the algorithm in your research publication, please cite
+
+```
+Hossain A., Lopez E., Halper S.M., Cetnar D.P., Reis A.C., Strickland D., Klavins E., and Salis H.M.
+Automated Design of thousands of nonrepetitive parts for engineering stable genetic systems
+Nature Biotechnology, doi:10.1038/s41587-020-0584-2
+```
+
+You can read the complete paper online at [Nature Biotechnology].(https://www.nature.com/articles/s41587-020-0584-2)
+
+*Abstract* Engineered genetic systems are prone to failure when their genetic parts contain repetitive sequences. Designing many non-repetitive  genetic  parts  with  desired  functionalities  remains  a  significant  challenge  with  high  computational  complexity.  To  overcome this challenge, we developed the nonrepetitive parts calculator to rapidly generate thousands of highly nonrepetitive genetic  parts  from  specified  design  constraints,  including  promoters,  ribosome-binding  sites  and  terminators.  As  a  demonstration, we designed and experimentally characterized 4,350 nonrepetitive bacterial promoters with transcription rates that varied across a 820,000-fold range, and 1,722 highly nonrepetitive yeast promoters with transcription rates that varied across a  25,000-fold  range.  We  applied  machine  learning  to  explain  how  specific  interactions  controlled  the  promoters’  transcription rates. We also show that using nonrepetitive genetic parts substantially reduces homologous recombination, resulting in greater genetic stability. 
+
+*Acknowledgements* A.H. and H.M.S. conceived the study. A.H., E.L., D.P.C., S.M.H., A.C.R. and D.S. designed and carried out the experiments. A.H., A.C.R. and H.M.S. developed the algorithms and performed the data analysis. A.H., D.S., E.K. and H.M.S. wrote the manuscript.
+
+*Maintainers* `Non-Repetitive Parts Calculator` is currently maintained by
+- Ayaan Hossain | [github.com/ayaanhossain](https://github.com/ayaanhossain) | [@bioalgorithmist](https://twitter.com/bioalgorithmist)
