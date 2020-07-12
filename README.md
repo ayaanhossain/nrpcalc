@@ -34,8 +34,7 @@ Non-repetitiveness is a global property of the entire genetic part toolbox, and 
 If you use `Non-Repetitive Parts Calculator` or toolboxes designed or discovered using the algorithm in your research publication, please cite
 
 ```
-Hossain A., Lopez E., Halper S.M., Cetnar D.P., Reis A.C., Strickland D.,
-Klavins E., and Salis H.M.
+Hossain A., Lopez E., Halper S.M., Cetnar D.P., Reis A.C., Strickland D., Klavins E., and Salis H.M.
 Automated design of thousands of nonrepetitive parts for engineering stable genetic systems
 Nature Biotechnology, doi:10.1038/s41587-020-0584-2
 ```
@@ -48,5 +47,5 @@ You can read the complete article online at [Nature Biotechnology](https://www.n
 
 **Contributions** A.H. and H.M.S. conceived the study. A.H., E.L., D.P.C., S.M.H., A.C.R. and D.S. designed and carried out the experiments. A.H., A.C.R. and H.M.S. developed the algorithms and performed the data analysis. A.H., D.S., E.K. and H.M.S. wrote the manuscript.
 
-**Maintaine** `Non-Repetitive Parts Calculator` is currently maintained by
+**Maintenance** `Non-Repetitive Parts Calculator` is currently maintained by
 - Ayaan Hossain | [github.com/ayaanhossain](https://github.com/ayaanhossain) | [@bioalgorithmist](https://twitter.com/bioalgorithmist)
