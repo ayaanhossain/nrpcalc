@@ -29,6 +29,13 @@ Non-repetitiveness is a global property of the entire genetic part toolbox, and 
     </a>
 </h3>
 
+### License
+`Non-Repetitive Parts Calculator` (c) 2020 Ayaan Hossain.
+
+`Non-Repetitive Parts Calculator` is an **open-source software** under [MIT](https://opensource.org/licenses/MIT) License.
+
+See [LICENSE](./LICENSE) file for more details.
+
 ## Citation
 
 If you use `Non-Repetitive Parts Calculator` or toolboxes designed or discovered using the algorithm in your research publication, please cite
