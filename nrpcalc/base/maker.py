@@ -38,10 +38,27 @@ class NRPMaker(object):
             'K': {'G', 'T'},
             'M': {'A', 'C'},
             'B': {'C', 'G', 'T'},
+            'V': {'A', 'C', 'G'},
             'D': {'A', 'G', 'T'},
             'H': {'A', 'C', 'T'},
-            'V': {'A', 'C', 'G'},
             'N': {'A', 'T', 'G', 'C'}
+        }
+        self.compl_iupac_map = {
+            'A': 'T',
+            'C': 'G',
+            'G': 'C',
+            'T': 'A',
+            'R': 'Y',
+            'Y': 'R',
+            'S': 'W',
+            'W': 'S',
+            'K': 'M',
+            'M': 'K',
+            'B': 'V',
+            'V': 'B',
+            'D': 'H',
+            'H': 'D',
+            'N': 'N'
         }
         self.compl_dict = {
             'A': set(['T']),
@@ -118,14 +135,20 @@ class NRPMaker(object):
 
         return meta_struct
 
-    def _get_meta_seq(self, seq):
-        meta_seq = []
+    def _get_meta_seq(self, seq, meta_struct):
+        seq = list(seq)
+        meta_seq = [None] * len(seq)
 
-        for i, iupac_nt in enumerate(seq):
-
+        # Normalize Meta Sequence
+        for i, iupac_nt in enumerate(seq):            
             try:
-                meta_seq.append(
-                    set(self.iupac_table[iupac_nt]))
+                if i in meta_struct.paired_dict:
+                    j = meta_struct.paired_dict[i]
+                    if len(self.iupac_table[seq[j]]) < len(self.iupac_table[iupac_nt]):
+                        iupac_nt = self.compl_iupac_map[seq[j]]
+                        seq[j] = self.compl_iupac_map[iupac_nt]
+                        seq[i] = iupac_nt
+                meta_seq[i] = set(self.iupac_table[iupac_nt])
             except:
                 raise ValueError(
                     ' [X] Invalid IUPAC code at index {} in sequence constraint'.format(
@@ -226,8 +249,15 @@ class NRPMaker(object):
         
         return i
 
-    def _get_local_roll_back_index(self, candidate, i, local_model_fn, verbose):
+    def _get_local_roll_back_index(
+        self,
+        candidate,
+        i,
+        local_model_fn,
+        verbose):
+        # Prep candidate
         candidate_str = ''.join(candidate[:i+1])
+        
         # Try to evaluate the local_model_fn on candidate_str
         outcome = True
         try:
@@ -236,26 +266,34 @@ class NRPMaker(object):
                 state, index = outcome, i
             else:
                 state, index = outcome
-            index = int(index) if not index is None else i
-        # Handle exception / report exception
         except Exception as e:
-            print ' [x] Local Model fn. failed to evaluate partial path: {}'.format(
+            print '\n Local Model fn. failed to evaluate partial path: {}\n'.format(
                 candidate_str)
-            print ' [x] Exception message: {}'.format(e)
-            print ' [+] Exiting Maker ... '
-            sys.exit(-1) # No intelligence, halt everything!
-        # Evaluate state of conflict
-        if state:
-            return None # No conflict reported, no need to roll back
-        elif not state: # Conflict found
-            return min(index, i)
-        else:
-            print ' [x] Local Model fn. state return type is not boolean: {}'.format
-            (outcome)
-            print ' [+] Exiting Maker ... '
-            sys.exit(-2) # No valid status retported
+            raise e # No intelligence, halt everything!
 
-    def _get_non_coding_candidate(self,
+        # Outcome is satisfactory?
+        try:
+            assert state in [True, False]
+        except Exception as e:
+            print '\n Local Model fn. returned a non-boolean state: {}\n'.format(
+                outcome)
+            raise e
+
+        # Index is satisfactory?
+        try:
+            if state == False:
+                index = int(index)
+                assert index <= i
+        except Exception as e:
+            print '\n Local Model fn. returned a non-integer traceback index: {}\n'.format(
+                index)
+            raise e
+
+        # No conflict found!
+        return None
+
+    def _get_non_coding_candidate(
+        self,
         meta_seq,
         meta_struct,
         homology,
@@ -649,7 +687,6 @@ class NRPMaker(object):
 
     def _get_non_coding_nrps(
         self,
-        i,
         homology,
         seq,
         struct,
@@ -666,10 +703,11 @@ class NRPMaker(object):
 
         # Setup structures
         seq = seq.upper().replace('U', 'T')
-        meta_seq = self._get_meta_seq(
-            seq=seq.upper().replace('U', 'T'))
         meta_struct = self._get_meta_struct(
             struct=self._get_adjusted_struct(struct, seq))
+        meta_seq = self._get_meta_seq(
+            seq=seq.upper().replace('U', 'T'),
+            meta_struct=meta_struct)
 
         seq_count  = 0
         iter_count = 0
@@ -732,7 +770,7 @@ class NRPMaker(object):
                 iter_count += 1
 
                 if verbose:
-                    print ' [constr] {}, [parts] {}, [{}-mers] {}, [iter {}] {:.2f}s, [avg] {:.2f}s, [total time] {:.2f}h'.format(i,
+                    print ' [part] {}, [{}-mers] {}, [iter {}] {:.2f}s, [avg] {:.2f}s, [total time] {:.2f}h'.format(
                         seq_count,
                         homology,
                         len(self.kmer_db),
@@ -821,39 +859,29 @@ class NRPMaker(object):
 
         print '\n[Non-Repetitive Parts Calculator - Maker Mode]'
 
-        # Check Maker Inputs
+        # Check Maker Constraints
         build_parts = True
-        for i, (seq, struct, target) in enumerate(
-            izip(seq_list, struct_list, target_list)):
-            print '\n[Checking Constraints]'
-            print ' Sequence Constraint : {}'.format(seq)
-            print ' Structure Constraint: {}'.format(struct)
-            print ' Target Size         : {}'.format(target)
-            print ' Lmax                : {}'.format(homology-1)
-            print ' Internal Repeats    : {}'.format(allow_internal_repeat)
-            print ' Part Type           : {}'.format(part_type)
-            print
-            check_status = self.check_maker_contingents(
-                seq,
-                struct,
-                part_type,
-                allow_internal_repeat,
-                target,
-                homology)
-            if check_status == False:
-                print '\n Check Status : FAIL'
-                build_parts = False
-            else:
-                print '\n Check Status : PASS'
-
-        # kmerSetDB Setup
-        projector.setup_proj_dir(self.proj_id)
-        self.kmer_db = kmerSetDB(
-            path='./{}/kmerDB'.format(self.proj_id),
-            homology=homology,
-            verbose=verbose)
+        print '\n[Checking Constraints]'
+        print ' Sequence Constraint : {}'.format(seq_constr)
+        print ' Structure Constraint: {}'.format(struct_constr)
+        print ' Target Size         : {}'.format(target_size)
+        print ' Lmax                : {}'.format(homology-1)
+        print ' Internal Repeats    : {}'.format(allow_internal_repeat)
+        print ' Part Type           : {}'.format(part_type)
+        check_status = self.check_maker_contingents(
+            seq_constr,
+            struct_constr,
+            part_type,
+            allow_internal_repeat,
+            target_size,
+            homology)
+        if check_status == False:
+            print '\n Check Status : FAIL'
+            build_parts = False
+        else:
+            print '\n Check Status : PASS'
         
-        # Background Setup
+        # Background Check
         if not background is None:
             print '\n[Checking Background]:\n Background is {}'.format(background)
             if isinstance(background, kmerSetDB):
@@ -874,8 +902,6 @@ class NRPMaker(object):
                 print ' [SOLUTION] Please Instantiate Background via nrpcalc.background(...)'
                 print '\n Check Status : FAIL'
 
-        memory_exhausted = False
-
         if not build_parts:
             print '\nPlease Eliminate [ERROR]s Found Above.\n'
             # Cleanups
@@ -886,60 +912,67 @@ class NRPMaker(object):
         print
         # All Checks and Setups Completed
 
-        # Execute Maker
-        total_nrp_count = 0
+        # kmerSetDB Setup
+        projector.setup_proj_dir(self.proj_id)
+        self.kmer_db = kmerSetDB(
+            path='./{}/kmerDB'.format(self.proj_id),
+            homology=homology,
+            verbose=verbose)
 
-        # Setup Project
+        # Project Setup
         if output_file is None:
             projector.setup_proj_dir(self.proj_id)
             output_file = './{}/seq_list.fa'.format(self.proj_id)
 
+        # Execute Maker
         with open(output_file, 'w') as out_file:
-            for i, (seq, struct, target) in enumerate(izip(seq_list, struct_list, target_list)):
-                seq    = seq.upper().replace('U', 'T')
-                struct = self._get_adjusted_struct(struct, seq)
-                current_nrp_count = 0
+            seq_constr    = seq_constr.upper().replace('U', 'T')
+            struct_constr = self._get_adjusted_struct(
+                struct_constr,
+                seq_constr)
+            current_nrp_count = 0
+            memory_exhausted  = False
 
-                if verbose:
-                    print 'Building Parts for Constraint {}:'.format(i+1)
+            if verbose:
+                print 'Constructing Toolbox:\n'
 
-                for non_coding_nrp in self._get_non_coding_nrps(
-                    i+1,
-                    homology,
-                    seq,
-                    struct,
-                    struct_type,
-                    target,
-                    synth_opt,
-                    local_model_fn,
-                    global_model_fn,
-                    jump_count,
-                    fail_count,
-                    verbose,
-                    abortion,
-                    allow_internal_repeat):
+            for non_coding_nrp in self._get_non_coding_nrps(
+                homology,
+                seq_constr,
+                struct_constr,
+                struct_type,
+                target_size,
+                synth_opt,
+                local_model_fn,
+                global_model_fn,
+                jump_count,
+                fail_count,
+                verbose,
+                abortion,
+                allow_internal_repeat):
 
-                    if non_coding_nrp:
-                        out_file.write(
-                            '>constr {} | non-repetitive part {}\n'.format(
-                                i+1, current_nrp_count+1))
-                        non_coding_nrp = '\n'.join(
-                            textwrap.wrap(
-                                non_coding_nrp, 80))
-                        out_file.write('{}\n'.format(
-                            non_coding_nrp))
-                        current_nrp_count += 1
-                        total_nrp_count   += 1
+                # Write out genetic part
+                if non_coding_nrp:
+                    out_file.write(
+                        '>non-repetitive part {}\n'.format(
+                            current_nrp_count+1))
+                    non_coding_nrp = '\n'.join(
+                        textwrap.wrap(
+                            non_coding_nrp, 80))
+                    out_file.write('{}\n'.format(
+                        non_coding_nrp))
+                    current_nrp_count += 1
+                else:
+                    if non_coding_nrp is None:
+                        print 'Failure Limits Exceeded or k-mers Exhausted. Cannot Build More Parts.'
                     else:
-                        if non_coding_nrp is None:
-                            print 'Failure Limits Exceeded or k-mers Exhausted. Cannot Build More Parts.'
-                        else:
-                            print 'Memory Capacity at Full. Cannot Build More Parts.'
-                            memory_exhausted = True
-                print 'Construction Complete.\n'
+                        print 'Memory Capacity at Full. Cannot Build More Parts.'
+                        memory_exhausted = True
+
                 # Memory no longer available ... stop
                 if memory_exhausted:
                     break
+            print '\nConstruction Complete.\n'
 
         # Detach Background
         self.background = None
@@ -956,7 +989,7 @@ class NRPMaker(object):
        
         # Cleanups and Return
         projector.remove_proj_dir()
-        print 'Non-Repetitive Toolbox Size: {}'.format(total_nrp_count)
+        print 'Non-Repetitive Toolbox Size: {}'.format(current_nrp_count)
         return parts_dict
 
 def main():

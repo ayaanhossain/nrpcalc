@@ -24,8 +24,8 @@ def nrp_finder(
         print '\n[Non-Repetitive Parts Calculator - Finder Mode]\n'
 
     # Background Check
+    valid_background = True
     if not background is None:
-        valid_background = True
         if not isinstance(background, kmerSetDB.kmerSetDB):
             print '\n [ERROR]    Background Object is not kmerSetDB'
             print ' [SOLUTION] Please Instantiate Background via nrpcalc.background(...)'
