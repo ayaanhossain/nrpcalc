@@ -34,16 +34,19 @@ Non-repetitiveness is a global property of the entire genetic part toolbox, and 
 If you use `Non-Repetitive Parts Calculator` or toolboxes designed or discovered using the algorithm in your research publication, please cite
 
 ```
-Hossain A., Lopez E., Halper S.M., Cetnar D.P., Reis A.C., Strickland D., Klavins E., and Salis H.M.
+Hossain A., Lopez E., Halper S.M., Cetnar D.P., Reis A.C., Strickland D.,
+Klavins E., and Salis H.M.
 Automated design of thousands of nonrepetitive parts for engineering stable genetic systems
 Nature Biotechnology, doi:10.1038/s41587-020-0584-2
 ```
 
-You can read the complete paper online at [Nature Biotechnology](https://www.nature.com/articles/s41587-020-0584-2)
+You can read the complete article online at [Nature Biotechnology](https://www.nature.com/articles/s41587-020-0584-2)
 
-**Abstract** Engineered genetic systems are prone to failure when their genetic parts contain repetitive sequences. Designing many non-repetitive  genetic  parts  with  desired  functionalities  remains  a  significant  challenge  with  high  computational  complexity.  To  overcome this challenge, we developed the nonrepetitive parts calculator to rapidly generate thousands of highly nonrepetitive genetic  parts  from  specified  design  constraints,  including  promoters,  ribosome-binding  sites  and  terminators.  As  a  demonstration, we designed and experimentally characterized 4,350 nonrepetitive bacterial promoters with transcription rates that varied across a 820,000-fold range, and 1,722 highly nonrepetitive yeast promoters with transcription rates that varied across a  25,000-fold  range.  We  applied  machine  learning  to  explain  how  specific  interactions  controlled  the  promoters’  transcription rates. We also show that using nonrepetitive genetic parts substantially reduces homologous recombination, resulting in greater genetic stability. 
+**Abstract** Engineered genetic systems are prone to failure when their genetic parts contain repetitive sequences. Designing many non-repetitive  genetic  parts  with  desired  functionalities  remains  a  significant  challenge  with  high  computational  complexity.  To  overcome this challenge, we developed the nonrepetitive parts calculator to rapidly generate thousands of highly nonrepetitive genetic  parts  from  specified  design  constraints,  including  promoters,  ribosome-binding  sites  and  terminators.  As  a  demonstration, we designed and experimentally characterized 4,350 nonrepetitive bacterial promoters with transcription rates that varied across a 820,000-fold range, and 1,722 highly nonrepetitive yeast promoters with transcription rates that varied across a  25,000-fold  range.  We  applied  machine  learning  to  explain  how  specific  interactions  controlled  the  promoters’  transcription rates. We also show that using nonrepetitive genetic parts substantially reduces homologous recombination, resulting in greater genetic stability.
 
-**Acknowledgements** A.H. and H.M.S. conceived the study. A.H., E.L., D.P.C., S.M.H., A.C.R. and D.S. designed and carried out the experiments. A.H., A.C.R. and H.M.S. developed the algorithms and performed the data analysis. A.H., D.S., E.K. and H.M.S. wrote the manuscript.
+**Acknowledgements** This project was supported by funds from the Air Force Office of Scientific Research (grant no. FA9550-14-1-0089), the Defense Advanced Research Projects Agency (grant nos. FA8750-17-C-0254 and HR001117C0095), the Department of Energy (grant no. DE-SC0019090), and a Graduate Research Innovation award from the Huck Institutes of the Life Sciences.
 
-**Maintainers** `Non-Repetitive Parts Calculator` is currently maintained by
+**Contributions** A.H. and H.M.S. conceived the study. A.H., E.L., D.P.C., S.M.H., A.C.R. and D.S. designed and carried out the experiments. A.H., A.C.R. and H.M.S. developed the algorithms and performed the data analysis. A.H., D.S., E.K. and H.M.S. wrote the manuscript.
+
+**Maintaine** `Non-Repetitive Parts Calculator` is currently maintained by
 - Ayaan Hossain | [github.com/ayaanhossain](https://github.com/ayaanhossain) | [@bioalgorithmist](https://twitter.com/bioalgorithmist)
