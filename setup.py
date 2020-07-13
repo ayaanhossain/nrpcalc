@@ -14,7 +14,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 # Fields marked as "Optional" may be commented out.
 
 setup(
-    name='ShareDB',
+    name='nrpcalc',
     
     # Link: https://www.python.org/dev/peps/pep-0440/#version-scheme
     version=nrpcalc.__version__,

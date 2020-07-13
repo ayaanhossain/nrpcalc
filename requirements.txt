@@ -1,4 +1,5 @@
-lmdb>=0.98
-msgpack>=0.6.2
-configparser>=4.0.2
-pytest-cov>=2.8.1
+numpy>=1.16.6,
+biopython<=1.76,
+plyvel>=1.2.0,
+scipy>=1.2.3,
+networkx>=2.2
