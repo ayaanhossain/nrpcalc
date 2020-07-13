@@ -125,6 +125,11 @@ You can learn more about the two modes and background via
 >>> 
 ```
 
+Uninstallation of `Non-Repetitive Parts Calculator` is as easy as
+```bash
+$ pip uninstall nrpcalc
+```
+
 ## License
 
 `Non-Repetitive Parts Calculator` (c) 2020 Ayaan Hossain.
