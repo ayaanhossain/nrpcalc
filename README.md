@@ -73,7 +73,7 @@ You will next need to install the remaining dependencies for `NRP Calculator`.
 * [plyvel==1.2.0](https://pypi.org/project/plyvel/), and
 * [scipy==1.2.3](https://pypi.org/project/scipy/1.2.3/).
 
-You can either `pip` install these packages one by one, or install them in one go from the given `requirements.txt` file.
+You can either `pip` install these packages one by one, or install them directly from the given `requirements.txt` file.
 ```bash
 $ pip install -r requirements.txt
 ```
