@@ -52,9 +52,9 @@ $ conda install -c bioconda viennarna
 ```
 which will install the latest copy of `ViennaRNA` inside the `nrpcalc` environment.
 
- If you do not want to install `conda` on your system, you will need to install [ViennaRNA](https://www.tbi.univie.ac.at/RNA/ViennaRNA/doc/html/install.html) manually, ensuring proper setup of `PYTHONPATH` etc.
+If you do not want to install `conda` on your system, you will need to install `ViennaRNA` [manually](https://www.tbi.univie.ac.at/RNA/ViennaRNA/doc/html/install.html), ensuring proper setup of `PYTHONPATH` etc.
 
-Now, that `ViennaRNA` is installed, you need to download a copy of `NRP Calculator`
+Once `ViennaRNA` is installed, you need to download a copy of `NRP Calculator`
 ```bash
 $ git clone https://github.com/ayaanhossain/nrpcalc
 ```
