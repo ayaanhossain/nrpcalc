@@ -16,6 +16,26 @@ class kmerSetDB(object):
         kmerSetDB constructor.
         '''
         try:
+            # Assert path is string
+            if not isinstance(path, str):
+                print '\n[Non-Repetitive Parts Calculator - Background]'
+                print '\n [ERROR]    Path must be a string, not {}'.format(
+                    path)
+                print ' [SOLUTION] Try correcting Path\n'
+                raise Exception
+
+            # Assert homology is positive integer
+            if not isinstance(homology, int):
+                print '\n[Non-Repetitive Parts Calculator - Background]'
+                print '\n [ERROR]    Lmax must be an integer, not \'{}\''.format(homology-1)
+                print ' [SOLUTION] Try correcting Lmax\n'
+                raise Exception
+            if homology-1 < 5:
+                print '\n[Non-Repetitive Parts Calculator - Background]'
+                print '\n [ERROR]    Lmax must be greater than 4, not \'{}\''.format(homology-1)
+                print ' [SOLUTION] Try correcting Lmax\n'
+                raise Exception
+            
             # Path setup
             self.PATH = path.rstrip('/') + '/'
 
@@ -46,7 +66,7 @@ class kmerSetDB(object):
             self.ALIVE = True
 
         except Exception as E:
-            raise E
+            raise RuntimeError('Invalid Path or Lmax')
 
     def __repr__(self):
         '''

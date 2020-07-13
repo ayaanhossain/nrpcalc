@@ -271,15 +271,15 @@ class NRPMaker(object):
                 candidate_str)
             raise e # No intelligence, halt everything!
 
-        # Outcome is satisfactory?
+        # State satisfactory?
         try:
             assert state in [True, False]
         except Exception as e:
-            print '\n Local Model fn. returned a non-boolean state: {}\n'.format(
-                outcome)
+            print '\n Local Model fn. returned a non-boolean evaluation: {}\n'.format(
+                state)
             raise e
 
-        # Index is satisfactory?
+        # Index satisfactory?
         try:
             if state == False:
                 index = int(index)
@@ -627,21 +627,29 @@ class NRPMaker(object):
                 
                 # Global model optimization
                 if global_model_fn:
+
+                    # Try to evaluate the global_model_fn on candidate_str
                     outcome = True
                     try:
                         outcome = global_model_fn(candidate)
                     except Exception as e:
-                        print ' [x] Global Model fn. Execution Failed on Path: {}'.format(
+                        print '\n Global Model fn. failed to evaluate complete path: {}\n'.format(
                             candidate)
-                        print ' [x] Exception Message: {}'.format(e)
-                        print ' [+] Found Path Accepted ... '
-                    if outcome:
+                        raise e
+
+                    # Outcome satisfactory?
+                    try:
+                        assert outcome in [True, False]
+                    except Execution as e:
+                        print '\n Global Model fn. returned a non-boolean state: {}\n'.format(
+                            outcome)
+                        raise e
+
+                    # Process outcome
+                    if outcome: # True
                         opt_count += 1
-                    elif not outcome:
+                    else:       # False
                         model_fail_count += 1
-                    else:
-                        print ' [x] Global Model fn. Return Type is not Boolean: {}'.format(outcome)
-                        print ' [+] Found Path Accepted ... '
 
                 # Structural optimization
                 if meta_struct.folding['status']:
@@ -798,20 +806,56 @@ class NRPMaker(object):
             curr_fail_prob       =  berno.get_prob(trials=total_fail_trials, success=total_fail_successes)
             curr_fail_trial      =  berno.get_trials(prob=curr_fail_prob)
 
-    def check_maker_contingents(self, seq, struct, part_type, allow_internal_repeat, target, homology):
-        # Sequence Legality
+    def _check_maker_constraints(
+        self,
+        seq,
+        struct,
+        allow_internal_repeat,
+        target,
+        homology):
+        # Sequence Legality 1
+        if not isinstance(seq, str):
+            print '\n [ERROR]    Sequence Constraint must be a string, not \'{}\''.format(seq)
+            print ' [SOLUTION] Try correcting Sequence Constraint\n'
+            return False
+        # Sequence Legality 2
         seq_legal, seq_illegal_chars = makerchecks.is_seq_constr_legal(seq)
         if not seq_legal:
             print '\n [ERROR]    Sequence Constraint is not legal due to chars: {}'.format(seq_illegal_chars)
-            print ' [SOLUTION] Try correcting Sequence Constraint'
+            print ' [SOLUTION] Try correcting Sequence Constraint\n'
             return False
-        # Sequence Sufficiency -- soft check
+        # Structure Legality 1
+        if not isinstance(struct, str):
+            print '\n [ERROR]    Structure Constraint must be a string, not \'{}\''.format(struct)
+            print ' [SOLUTION] Try correcting Structure Constraint\n'
+            return False
+        # Lmax Legality 1
+        if not isinstance(homology, int):
+            print '\n [ERROR]    Lmax must be an integer, not \'{}\''.format(homology-1)
+            print ' [SOLUTION] Try correcting Lmax\n'
+            return False
+        # Lmax Legality 2
+        if homology-1 < 5:
+            print '\n [ERROR]    Lmax must be greater than 4, not \'{}\''.format(homology-1)
+            print ' [SOLUTION] Try correcting Lmax\n'
+            return False
+        # Target Size Legality 1
+        if not isinstance(target, int):
+            print '\n [ERROR]    Target Size must be an integer, not \'{}\''.format(target)
+            print ' [SOLUTION] Try correcting Target Size\n'
+            return False
+        # Target Size Legality 2
+        if target < 1:
+            print '\n [ERROR]    Target Size must be greater than 0, not \'{}\''.format(target)
+            print ' [SOLUTION] Try correcting Target Size\n'
+            return False
+        # Sequence Sufficiency 1 -- soft check
         seq_sufficient, constrained_motif_locs = makerchecks.is_seq_constr_sufficient(seq, homology, target)
         if not seq_sufficient:
             print '\n [WARNING]  Target size of {} is unreachable from given Sequence Constraint and Lmax of {}'.format(target, homology-1)
             print ' [WARNING]  >> Overly constrained motifs at locations: {}'.format(constrained_motif_locs)
             print ' [WARNING]  Fewer parts will be generated'
-        # Structure Legality
+        # Structure Legality 2
         struct_legal, unclosed, unopened, invalid = makerchecks.is_structure_valid(struct)
         if not struct_legal:
             print '\n [ERROR]    Structure Constraint is illegal or unbalanced'
@@ -821,22 +865,75 @@ class NRPMaker(object):
                 print ' [ERROR]    >> Unopened bases at locations: {}'.format(unopened)
             if invalid:
                 print ' [ERROR]    >> Invalid characters at locations: {}'.format(invalid)
-            print ' [SOLUTION] Try correcting Structure Constraint'
+            print ' [SOLUTION] Try correcting Structure Constraint\n'
             return False
-        # Structure Sufficiency
+        # Internal Repeats Legality
+        if not allow_internal_repeat in [True, False]:
+            print '\n [ERROR]    Internal Repeat must be boolean, not \'{}\''.format(allow_internal_repeat)
+            print ' [SOLUTION] Try correcting Internal Repeat\n'
+            return False
+        # Structure Sufficiency 2
         if not allow_internal_repeat:
             struct_sufficient, long_hairpins = makerchecks.is_structure_not_conflict(struct, homology)
             if not struct_sufficient:
                 print '\n [ERROR] Structure Constraint is insufficient based on given Lmax'
                 for long_hairpin in long_hairpins:
                     print ' [ERROR] >> Long hairpin between: {}'.format(long_hairpin)
-                    print ' [SOLUTION] Try relaxing Structure Constraint or setting allow_internal_repeat=True'
+                    print ' [SOLUTION] Try relaxing Structure Constraint or setting allow_internal_repeat=True\n'
                 return False
-        # Part Legality
+        return True
+
+    def _check_maker_inputs(
+        self,
+        part_type,
+        struct_type,
+        synth_opt,
+        jump_count,
+        fail_count,
+        output_file,
+        verbose):
+        # Part Type Legality
         if not part_type in ['DNA', 'RNA']:
-            print '\n [ERROR]    Part Type must be \'RNA\' or \'DNA\' not \'{}\''.format(part_type)
-            print ' [SOLUTION] Try correcting Part Type'
+            print '\n [ERROR]    Part Type must be \'RNA\' or \'DNA\', not \'{}\''.format(part_type)
+            print ' [SOLUTION] Try correcting Part Type\n'
             return False
+        # Struct Type Legality
+        if not struct_type in ['mfe', 'centroid', 'both']:
+            print '\n [ERROR]    Struct Type must be \'mfe\', \'centroid\' or \'both\', not \'{}\''.format(struct_type)
+            print ' [SOLUTION] Try correcting Part Type\n'
+            return False
+        # Synth Optimization Legality
+        if not synth_opt in [True, False]:
+            print '\n [ERROR]    Synth Opt must be True or False, not \'{}\''.format(struct_type)
+            print ' [SOLUTION] Try correcting Synth Opt\n'
+            return False
+        # Jump Count Legality 1
+        if not isinstance(jump_count, int):
+            print '\n [ERROR]    Jump Count must be an integer, not \'{}\''.format(struct_type)
+            print ' [SOLUTION] Try correcting Jump Count\n'
+            return False
+        # Jump Count Legality 2
+        if jump_count < 0:
+            print '\n [ERROR]    Jump Count must be an positive, not \'{}\''.format(struct_type)
+            print ' [SOLUTION] Try correcting Jump Count\n'
+            return False
+        # Fail Count Legality 1
+        if not isinstance(fail_count, int):
+            print '\n [ERROR]    Fail Count must be an integer, not \'{}\''.format(struct_type)
+            print ' [SOLUTION] Try correcting Fail Count\n'
+            return False
+        # Fail Count Legality 2
+        if fail_count < 0:
+            print '\n [ERROR]    Fail Count must be an positive, not \'{}\''.format(struct_type)
+            print ' [SOLUTION] Try correcting Fail Count\n'
+            return False
+        # Output File Legality
+        if not output_file is None:
+            if not isinstance(output_file, str):
+                print '\n [ERROR]    Output File must be a string or None, not \'{}\''.format(struct_type)
+                print ' [SOLUTION] Try correcting Output File\n'
+                return False
+        # Everything OK
         return True
 
     def nrp_maker(self,
@@ -857,60 +954,93 @@ class NRPMaker(object):
         abortion=True,
         allow_internal_repeat=False):
 
-        print '\n[Non-Repetitive Parts Calculator - Maker Mode]'
+        if verbose:
+            print '\n[Non-Repetitive Parts Calculator - Maker Mode]'
+        build_parts = True
 
         # Check Maker Constraints
-        build_parts = True
-        print '\n[Checking Constraints]'
-        print ' Sequence Constraint : {}'.format(seq_constr)
-        print ' Structure Constraint: {}'.format(struct_constr)
-        print ' Target Size         : {}'.format(target_size)
-        print ' Lmax                : {}'.format(homology-1)
-        print ' Internal Repeats    : {}'.format(allow_internal_repeat)
-        print ' Part Type           : {}'.format(part_type)
-        check_status = self.check_maker_contingents(
+        if verbose:
+            print '\n[Checking Constraints]'
+            print '  Sequence Constraint: {}'.format(seq_constr)
+            print ' Structure Constraint: {}'.format(struct_constr)
+            print '    Target Size      : {}'.format(target_size)
+            print '           Lmax      : {}'.format(homology-1)
+            print '  Internal Repeats   : {}'.format(allow_internal_repeat)
+        check_status1 = self._check_maker_constraints(
             seq_constr,
             struct_constr,
-            part_type,
             allow_internal_repeat,
             target_size,
             homology)
-        if check_status == False:
-            print '\n Check Status : FAIL'
+
+        if check_status1 == False:
+            if verbose:
+                print '\n Check Status: FAIL'
             build_parts = False
         else:
-            print '\n Check Status : PASS'
+            if verbose:
+                print '\n Check Status: PASS'
         
         # Background Check
-        if not background is None:
-            print '\n[Checking Background]:\n Background is {}'.format(background)
-            if isinstance(background, kmerSetDB):
-                self.background = background
-                if background.K != homology:
-                    build_parts = False
-                    print '\n [ERROR]    Background Lmax is {}, but Part Lmax is {}'.format(
-                        background.K,
-                        homology)
-                    print ' [SOLUTION] Please use Same Lmax Values'
-                    print '\n Check Status : FAIL'
-                else:
-                    print '\n Check Status : PASS'
+        if build_parts:
+            if not background is None:
+                if verbose:
+                    print '\n[Checking Background]:\n Background: {}'.format(background)
+                if isinstance(background, kmerSetDB):
+                    self.background = background
+                    if background.K != homology:
+                        build_parts = False
+                        print '\n [ERROR]    Background Lmax is {}, but Constraint Lmax is {}'.format(
+                            background.K-1,
+                            homology-1)
+                        print ' [SOLUTION] Try correcting Lmax\n'
+                        if verbose:
+                            print '\n Check Status: FAIL'
+                    else:
+                        if verbose:
+                            print '\n Check Status: PASS'
 
-            else:
+                else:
+                    build_parts = False
+                    print '\n [ERROR]    Background Object is INVALID'
+                    print ' [SOLUTION] Try instantiating background via nrpcalc.background(...)\n'
+                    if verbose:
+                        print '\n Check Status : FAIL'
+
+        # Argument Check
+        if build_parts:
+            if verbose:
+                print '\n[Checking Arguments]'
+                print '   Part Type : {}'.format(part_type)
+                print ' Struct Type : {}'.format(struct_type)
+                print '  Synth Opt  : {}'.format(synth_opt)
+                print '   Jump Count: {}'.format(jump_count)
+                print '   Fail Count: {}'.format(fail_count)
+                print ' Output File : {}'.format(output_file)
+            check_status2 = self._check_maker_inputs(
+                part_type,
+                struct_type,
+                synth_opt,
+                jump_count,
+                fail_count,
+                output_file,
+                verbose)
+
+            if check_status2 == False:
+                if verbose:
+                    print '\n Check Status: FAIL'
                 build_parts = False
-                print '\n [ERROR]    Background Object is INVALID'
-                print ' [SOLUTION] Please Instantiate Background via nrpcalc.background(...)'
-                print '\n Check Status : FAIL'
+            else:
+                if verbose:
+                    print '\n Check Status: PASS'
 
         if not build_parts:
-            print '\nPlease Eliminate [ERROR]s Found Above.\n'
             # Cleanups
             self.background = None
             self.kmer_db.drop()
             self.kmer_db = None
-            raise RuntimeError('Invalid Arguments, Constraints or Background')
+            raise RuntimeError('Invalid Constraints, Background or Arguments')
         print
-        # All Checks and Setups Completed
 
         # kmerSetDB Setup
         projector.setup_proj_dir(self.proj_id)
@@ -972,7 +1102,8 @@ class NRPMaker(object):
                 # Memory no longer available ... stop
                 if memory_exhausted:
                     break
-            print '\nConstruction Complete.\n'
+            if verbose:
+                print '\nConstruction Complete.\n'
 
         # Detach Background
         self.background = None
@@ -989,7 +1120,8 @@ class NRPMaker(object):
        
         # Cleanups and Return
         projector.remove_proj_dir()
-        print 'Non-Repetitive Toolbox Size: {}'.format(current_nrp_count)
+        if verbose:
+            print 'Non-Repetitive Toolbox Size: {}'.format(current_nrp_count)
         return parts_dict
 
 def main():

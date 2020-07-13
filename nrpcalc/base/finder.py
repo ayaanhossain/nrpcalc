@@ -11,45 +11,107 @@ import shutil
 
 import time
 
+def _check_finder_constraints(
+    seq_list,
+    homology,
+    allow_internal_repeat,
+    vercov_func):
+    # Sequence List Legality
+    for seq in seq_list:
+        if not isinstance(seq, str):
+            print ' [ERROR]    Parts in Sequence List must be string, not \'{}\''.format(seq)
+            print ' [SOLUTION] Try correcting Lmax\n'
+            return False 
+    # Lmax Legality 1
+    if not isinstance(homology, int):
+        print '\n [ERROR]    Lmax must be an integer, not \'{}\''.format(homology-1)
+        print ' [SOLUTION] Try correcting Lmax\n'
+        return False
+    # Lmax Legality 2
+    if homology-1 < 5:
+        print '\n [ERROR]    Lmax must be greater than 4, not \'{}\''.format(homology-1)
+        print ' [SOLUTION] Try correcting Lmax\n'
+        return False
+    # Internal Repeats Legality
+    if not allow_internal_repeat in [True, False]:
+        print '\n [ERROR]    Internal Repeat must be boolean, not \'{}\''.format(
+            allow_internal_repeat)
+        print ' [SOLUTION] Try correcting Internal Repeat\n'
+        return False
+    # Vertex Cover Legality
+    if not vercov_func in ['2apx', 'nrpG', 'nrp2']:
+        print '\n [ERROR]    Vertex Cover Elimination must be \'2apx\', \'nrpG\', or \'nrp2\' not \'{}\''.format(
+            vercov_func)
+        print ' [SOLUTION] Try correcting Vertex Cover Elimination\n'
+        return False
+    # Everything OK
+    return True
+
 def nrp_finder(
     seq_list,
     homology,
-    background=None,
-    internal_repeats=False,
+    allow_internal_repeat=False,
     vercov_func=None,
+    background=None,
     verbose=True):
 
     # Program Verbage
     if verbose:
-        print '\n[Non-Repetitive Parts Calculator - Finder Mode]\n'
+        print '\n[Non-Repetitive Parts Calculator - Finder Mode]'
+    find_parts = True
+    seq_list = list(seq_list)
+
+    # Check Finder Constraints
+    if verbose:
+        print '\n[Checking Constraints]'
+        print ' Sequence List   : {} parts'.format(len(seq_list))
+        print '          Lmax   : {}'.format(homology-1)
+        print ' Internal Repeats: {}'.format(allow_internal_repeat)
+        print '   Vertex Cover  : {}'.format(vercov_func)
+    check_status = _check_finder_constraints(
+        seq_list=seq_list,
+        homology=homology,
+        allow_internal_repeat=allow_internal_repeat,
+        vercov_func=vercov_func)
+
+    if check_status == False:
+        if verbose:
+            print '\n Check Status: FAIL'
+        find_parts = False
+    else:
+        if verbose:
+            print '\n Check Status: PASS'
 
     # Background Check
-    valid_background = True
-    if not background is None:
-        if not isinstance(background, kmerSetDB.kmerSetDB):
-            print '\n [ERROR]    Background Object is not kmerSetDB'
-            print ' [SOLUTION] Please Instantiate Background via nrpcalc.background(...)'
-            valid_background = False            
-        elif background.K != homology:
-            print '\n [ERROR]    Background Lmax is {}, but Part Lmax is {}'.format(
-                        background.K,
-                        homology)
-            print ' [SOLUTION] Please Use Same Lmax Values'
-            valid_background = False        
+    if find_parts:
+        if not background is None:
+            if verbose:
+                print '\n[Checking Background]:\n Background: {}'.format(background)
+            if isinstance(background, kmerSetDB.kmerSetDB):
+                self.background = background
+                if background.K != homology:
+                    find_parts = False
+                    print '\n [ERROR]    Background Lmax is {}, but Constraint Lmax is {}'.format(
+                        background.K-1,
+                        homology-1)
+                    print ' [SOLUTION] Try correcting Lmax\n'
+                    if verbose:
+                        print '\n Check Status: FAIL'
+                else:
+                    if verbose:
+                        print '\n Check Status: PASS'
 
-    # Vercov Function Check
-    valid_vercov = True
-    if not vercov_func in ['2apx', 'nrpG', 'nrp2']:
-        print ' [ERROR]    vercov_func must be \'2apx\', \'nrpG\', or \'nrp2\' not \'{}\''.format(
-            vercov_func)
-        print ' [SOLUTION] Please use One of the Correct Options'
-        valid_vercov = False
+            else:
+                find_parts = False
+                print '\n [ERROR]    Background Object is INVALID'
+                print ' [SOLUTION] Try instantiating background via nrpcalc.background(...)\n'
+                if verbose:
+                    print '\n Check Status : FAIL'
 
-
-    if not valid_background or not valid_vercov:
-        print '\nPlease Eliminate [ERROR]s Found Above.'
-        return {} # Empty Dict ... no parts were subselected
-
+    if not find_parts:
+        raise RuntimeError('Invalid Constraints, or Background')
+    print
+    
     # Setup Project
     current_uuid = str(uuid.uuid4())
     projector.setup_proj_dir(current_uuid)
@@ -58,10 +120,10 @@ def nrp_finder(
 
     # Build Repeat Graph
     homology_graph = hgraph.get_homology_graph(
-        list(seq_list),
+        seq_list,
         background,
         homology,
-        internal_repeats,
+        allow_internal_repeat,
         seq_file,
         verbose)
 
@@ -95,7 +157,7 @@ def main():
     homology = 16
     fasta_filename = 'riboz.fa' #'input.fa.bk104'
     seq_list = utils.get_fasta_seq_list(fasta_filename)
-    internal_repeats = False
+    allow_internal_repeat = False
 
     # Setup Background
     background = kmerSetDB.kmerSetDB(
@@ -110,7 +172,7 @@ def main():
         seq_list,
         homology,
         background,
-        internal_repeats,
+        allow_internal_repeat,
         verbose=True)
 
     # Drop Background

@@ -140,7 +140,7 @@ def finder(
     Lmax,
     internal_repeats=False,
     background=None,
-    vercov_func='nrp2',
+    vercov='nrp2',
     verbose=True):
     '''
     NRP Calculator Finder Mode for discovering non-repetitive
@@ -171,12 +171,15 @@ def finder(
               which must be absent in returned non-repetitive
               subset of parts
               (default=None)
-    :: vercov_func
+    :: vercov
        type - string
        desc - must be either '2apx', 'nrpG', or 'nrp2';
-              '2apx' - use standard 2-approximation VCE
+              '2apx' - use standard 2-approximation Vertex
+                       Cover Elimination algorithm
               'nrpG' - use Greedy Vertex Cover Elimination
-              'nrp2' - use Finder Mode 2-approximation VCE
+                       algorithm
+              'nrp2' - use Finder Mode 2-approximation Vertex
+                       Cover Elimination algorithm
               (default='nrp2')
     :: verbose
        type - boolean
@@ -203,8 +206,8 @@ def finder(
         seq_list=seq_list,
         homology=Lmax+1,
         background=background,        
-        internal_repeats=internal_repeats,
-        vercov_func=vercov_func,
+        allow_internal_repeat=internal_repeats,
+        vercov_func=vercov,
         verbose=verbose)
 
 def maker(
