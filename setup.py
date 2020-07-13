@@ -2,8 +2,6 @@ from setuptools import setup
 from os import path
 from io import open
 
-import nrpcalc
-
 here = path.abspath(path.dirname(__file__))
 
 # Get the long description from the README file
@@ -17,9 +15,9 @@ setup(
     name='nrpcalc',
     
     # Link: https://www.python.org/dev/peps/pep-0440/#version-scheme
-    version=nrpcalc.__version__,
+    version=1.0.0,
     
-    description=nrpcalc.__doc__,
+    description='Non-Repetitive Parts Calculator - Automated design and discovery of non-repetitive genetic parts for engineering stable genetic systems',
     
     long_description=long_description,
     
@@ -27,7 +25,7 @@ setup(
     
     url='https://github.com/ayaanhossain/nrpcalc',
     
-    author=nrpcalc.__authors__,
+    author='Ayaan Hossain',
     
     # author_email='someone@somewhere.com',  # Optional
     
