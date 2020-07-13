@@ -9,5 +9,5 @@
 * Finish docs
 * [+] Concurrently finish examples
 * [+] Write up tests
-* [+] Finish setup.py
+* ~~Finish setup.py~~
 * Publish to pip

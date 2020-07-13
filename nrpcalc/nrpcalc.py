@@ -240,9 +240,9 @@ def maker(
        type - string
        desc - a string in IUPAC degenerate code describing
               all valid nucleotide choices at each position
-              e.g. 'NNNNWWWWSSSSTTTT' imply the first four
-                   bases can be either 'A'/'T'/'G'/'C', the
-                   next four bases can be either 'A'/'T',
+              e.g. 'NNNNWWWWSSSSTTTT' implies that the first
+                   four bases can be either 'A'/'T'/'G'/'C',
+                   the next four bases can be either 'A'/'T',
                    followed by either 'G'/'C' for the next
                    four basses, and finally ending with 'T's
     :: struct_constr
@@ -250,9 +250,9 @@ def maker(
        desc - a string in dot-parenthesis-x notation that
               describe the secondary base pairing across all
               nucleotide positions
-              e.g. '..((xx))..' imply the first, second, and
-                   the last two bases are free to either base
-                   pair or not (dot), the third and fourth
+              e.g. '..((xx))..' implies that the first, second,
+                   and the last two bases are free to either
+                   base pair or not (dot), the third and fourth
                    bases are paired with the eighth and the
                    seventh bases respectively (parenthesis),
                    while the fifth and the sixth base must
