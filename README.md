@@ -1,3 +1,4 @@
+
 <h1 align="center">
     <a href="https://github.com/ayaanhossain/nrpcalc/">
         <img src="./img/logo.svg"  alt="Non-Repetitive Parts Calculator" width="418"/>
@@ -54,7 +55,7 @@ which will install the latest copy of `ViennaRNA` inside the `nrpcalc` environme
 
 If you do not want to install `conda` on your system, you will need to install `ViennaRNA` [manually](https://www.tbi.univie.ac.at/RNA/ViennaRNA/doc/html/install.html), ensuring proper setup of `PYTHONPATH` etc.
 
-Once `ViennaRNA` is installed, you need to download a copy of `NRP Calculator`
+Once `ViennaRNA` is installed, you will need to download a copy of `NRP Calculator`
 ```bash
 $ git clone https://github.com/ayaanhossain/nrpcalc
 ```
@@ -63,7 +64,7 @@ and navigate to the `nrpcalc` directory
 $ cd nrpcalc
 ```
 
-You will next need to install the remaining dependencies for `NRP Calculator`. These dependencies are:
+You will next need to install the remaining dependencies for `NRP Calculator`.
 * [certifi==2019.11.28](https://pypi.org/project/certifi/2019.11.28/)
 * [decorator==4.4.2](https://pypi.org/project/decorator/4.4.2/)
 * [biopython==1.76](https://pypi.org/project/biopython/1.76/),
@@ -72,7 +73,7 @@ You will next need to install the remaining dependencies for `NRP Calculator`. T
 * [plyvel==1.2.0](https://pypi.org/project/plyvel/), and
 * [scipy==1.2.3](https://pypi.org/project/scipy/1.2.3/).
 
-While it is okay to install these packages from PyPI via `pip` one by one, it is faster to install them via the given `requirements.txt` file.
+You can either `pip` install these packages one by one, or install them in one go from the given `requirements.txt` file.
 ```bash
 $ pip install -r requirements.txt
 ```
@@ -154,4 +155,4 @@ You can read the complete article online at [Nature Biotechnology](https://www.n
 - Ayaan Hossain | [github.com/ayaanhossain](https://github.com/ayaanhossain) | [@bioalgorithmist](https://twitter.com/bioalgorithmist)
 
 ## Documentation
-A write-up explaining the `nrpcalc` API as well as a toy example demonstrating `NRP Calculator` is in the works, and will be released by Friday, June 17, 2020. Meanwhile, please enjoy the paper!
+A write-up explaining the `nrpcalc` API as well as a toy example demonstrating `NRP Calculator` is in the works, and will be released by Friday, June 17, 2020. For the moment, please access the API documentation from within the `Python` REPL via `print nrpcalc.finder.__doc__`, `print nrpcalc.maker.__doc__` and `print nrpcalc.background.__doc__`. Meanwhile, please enjoy the paper!
