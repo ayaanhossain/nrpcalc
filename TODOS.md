@@ -5,9 +5,9 @@
 * ~~Integrate new API changes~~
 * ~~Fix Global Function Checks~~
 * ~~Write all Input Validation~~
-* Write up README sketch
+* ~~Write up README sketch~~
 * Finish docs
 * [+] Concurrently finish examples
 * [+] Write up tests
 * ~~Finish setup.py~~
-* Publish to pip
+* ~~Publish to pip~~
