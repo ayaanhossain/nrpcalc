@@ -1,7 +1,3 @@
-
-
-
-
 <h1 align="center">
     <a href="https://github.com/ayaanhossain/nrpcalc/">
         <img src="./img/logo.svg"  alt="Non-Repetitive Parts Calculator" width="418"/>
@@ -30,7 +26,106 @@ Non-repetitiveness is a global property of the entire genetic part toolbox, and 
     </a>
 </h3>
 
+## Installation
+
+`Non-Repetitive Parts Calculator` is a `Linux/MacOS`-tested software, and built with `Python 2.7`. The software is not `Python 3.x` compatible at the moment, but will be pretty soon.
+
+The best way to install `Non-Repetitive Parts Calculator` is via `conda`. If you have either `anaconda` or `miniconda` installed on your system, you are good to proceed. Otherwise, you may first need to install [miniconda](https://docs.conda.io/en/latest/miniconda.html).
+
+Assuming you have `conda` available on your system, you may first create a new environment (here we are naming it `nrpcalc` but you can name it as you like)
+```bash
+$ conda create -n nrpcalc python=2.7
+```
+Once your new environment is ready, deactivate your current environment
+```bash
+$ conda deactivate
+```
+and activate the newly created `nrpcalc` environment
+```bash
+$ conda activate nrpcalc
+```
+
+The first thing we will need is `ViennaRNA` which is an external dependency for `NRP Calculator` and not available in [PyPI](https://pypi.org). `ViennaRNA` is easily installed with
+
+```bash
+$ conda install -c bioconda viennarna
+```
+which will install the latest copy of `ViennaRNA` inside the `nrpcalc` environment.
+
+ If you do not want to install `conda` on your system, you will need to install [ViennaRNA](https://www.tbi.univie.ac.at/RNA/ViennaRNA/doc/html/install.html) manually, ensuring proper setup of `PYTHONPATH` etc.
+
+Now, that `ViennaRNA` is installed, you need to download a copy of `NRP Calculator`
+```bash
+$ git clone https://github.com/ayaanhossain/nrpcalc
+```
+and navigate to the `nrpcalc` directory
+```bash
+$ cd nrpcalc
+```
+
+You will next need to install the remaining dependencies for `NRP Calculator`. These dependencies are:
+* [certifi==2019.11.28](https://pypi.org/project/certifi/2019.11.28/)
+* [decorator==4.4.2](https://pypi.org/project/decorator/4.4.2/)
+* [biopython==1.76](https://pypi.org/project/biopython/1.76/),
+* [networkx==2.2](https://pypi.org/project/networkx/2.2/)
+* [numpy==1.16.6](https://pypi.org/project/numpy/1.16.6/),
+* [plyvel==1.2.0](https://pypi.org/project/plyvel/), and
+* [scipy==1.2.3](https://pypi.org/project/scipy/1.2.3/).
+
+While it is okay to install these packages from PyPI via `pip` one by one, it is faster to install them via the given `requirements.txt` file.
+```bash
+$ pip install -r requirements.txt
+```
+
+Finally, you may install `NRP Calculator` via the provided `setup.py` file.
+```bash
+$ python setup.py install
+```
+
+If everything went well, `NRP Calculator` is now available in your environment under the `nrpcalc` package. You may verify it like so:
+```bash
+$ python
+Python 2.7.15 | packaged by conda-forge | (default, Mar  5 2020, 14:56:06) 
+[GCC 7.3.0] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>> 
+>>> import nrpcalc
+>>> 
+>>> print nrpcalc.__doc__
+
+Non-Repetitive Parts Calculator
+
+Automated design and discovery of non-repetitive genetic
+parts for engineering stable systems.
+
+Version: 1.0.0
+
+Authors: Ayaan Hossain <auh57@psu.edu>
+         Howard Salis  <salis@psu.edu>
+
+NRP Calculator offers two modes of operation:
+
+- Finder Mode: Discover toolboxes of non-repetitive parts
+               from a list of candidate parts
+
+-  Maker Mode: Design toolboxes of non-repetitive parts
+               based on sequence, structure and model
+               constraints
+
+Additionally, a 'background' object is available which can
+be used to store background sequences against which parts
+discovered or designed are ensured to be non-repetitive.
+
+You can learn more about the two modes and background via
+  print nrpcalc.background.__doc__
+  print nrpcalc.finder.__doc__
+  print nrpcalc.maker.__doc__
+
+>>> 
+```
+
 ## License
+
 `Non-Repetitive Parts Calculator` (c) 2020 Ayaan Hossain.
 
 `Non-Repetitive Parts Calculator` is an **open-source software** under [MIT](https://opensource.org/licenses/MIT) License.
@@ -47,7 +142,7 @@ Automated design of thousands of nonrepetitive parts for engineering stable gene
 Nature Biotechnology, doi:10.1038/s41587-020-0584-2
 ```
 
-You can read the complete article online at [Nature Biotechnology](https://www.nature.com/articles/s41587-020-0584-2)
+You can read the complete article online at [Nature Biotechnology](https://www.nature.com/articles/s41587-020-0584-2).
 
 **Abstract** Engineered genetic systems are prone to failure when their genetic parts contain repetitive sequences. Designing many non-repetitive  genetic  parts  with  desired  functionalities  remains  a  significant  challenge  with  high  computational  complexity.  To  overcome this challenge, we developed the nonrepetitive parts calculator to rapidly generate thousands of highly nonrepetitive genetic  parts  from  specified  design  constraints,  including  promoters,  ribosome-binding  sites  and  terminators.  As  a  demonstration, we designed and experimentally characterized 4,350 nonrepetitive bacterial promoters with transcription rates that varied across a 820,000-fold range, and 1,722 highly nonrepetitive yeast promoters with transcription rates that varied across a  25,000-fold  range.  We  applied  machine  learning  to  explain  how  specific  interactions  controlled  the  promoters’  transcription rates. We also show that using nonrepetitive genetic parts substantially reduces homologous recombination, resulting in greater genetic stability.
 
@@ -57,3 +152,6 @@ You can read the complete article online at [Nature Biotechnology](https://www.n
 
 **Maintenance** `Non-Repetitive Parts Calculator` is currently maintained by
 - Ayaan Hossain | [github.com/ayaanhossain](https://github.com/ayaanhossain) | [@bioalgorithmist](https://twitter.com/bioalgorithmist)
+
+## Documentation
+A write-up explaining the `nrpcalc` API as well as a toy example demonstrating `NRP Calculator` is in the works, and will be released by Friday, June 17, 2020. Meanwhile, please enjoy the paper!

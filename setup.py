@@ -78,11 +78,11 @@ setup(
     python_requires='>=2.7, <3.0.*',
 
     install_requires=[
-        'numpy>=1.16.6',
-        'biopython<=1.76',
-        'plyvel>=1.2.0',
-        'scipy>=1.2.3',
-        'networkx>=2.2'],
+        'numpy==1.16.6',
+        'biopython==1.76',
+        'plyvel==1.2.0',
+        'scipy==1.2.3',
+        'networkx==2.2'],
 
     project_urls={  # Optional
         'Bug Reports': 'https://github.com/ayaanhossain/nrpcalc/issues',
