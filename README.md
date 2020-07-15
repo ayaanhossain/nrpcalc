@@ -58,7 +58,7 @@ If you are following the instructions as is, this will install the latest copy o
 
 If you do not want to install `conda` on your system, you will need to install `ViennaRNA` [manually](https://www.tbi.univie.ac.at/RNA/ViennaRNA/doc/html/install.html), ensuring proper setup of `PYTHONPATH` etc.
 
-**Note** If you are using `conda` then the following step will make `NRP Calculator` available only inside the environment in which it is being installed. If you want to use software, you will always need to activate that specific environment, for example, here the environment is named `nrpenv`.
+**Note** If you are using `conda` then the following step will make `NRP Calculator` available only inside the environment in which it is being installed. If you want to use the software, you will always need to activate that specific environment, for example, here the environment is named `nrpenv`.
 
 Once `ViennaRNA` is installed, you can easily install `NRP Calculator` from PyPI, where it is published as the packaged `nrpcalc` via
 ```bash
