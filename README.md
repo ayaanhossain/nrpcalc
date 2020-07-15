@@ -58,7 +58,7 @@ If you are following the instructions as is, this will install the latest copy o
 
 If you do not want to install `conda` on your system, you will need to install `ViennaRNA` [manually](https://www.tbi.univie.ac.at/RNA/ViennaRNA/doc/html/install.html), ensuring proper setup of `PYTHONPATH` etc.
 
-**Note** If you are using `conda` then the following steps will make `NRP Calculator` available only inside the environment in which it is being installed. If you want to use software, you will always need to activate that specific environment, for example, here the environment is named `nrpcalc`.
+**Note** If you are using `conda` then the following step will make `NRP Calculator` available only inside the environment in which it is being installed. If you want to use software, you will always need to activate that specific environment, for example, here the environment is named `nrpcalc`.
 
 Once `ViennaRNA` is installed, you can easily install `NRP Calculator` via
 ```bash
@@ -82,7 +82,7 @@ Non-Repetitive Parts Calculator
 Automated design and discovery of non-repetitive genetic
 parts for engineering stable systems.
 
-Version: 1.1.2
+Version: 1.1.3
 
 Authors: Ayaan Hossain <auh57@psu.edu>
          Howard Salis  <salis@psu.edu>

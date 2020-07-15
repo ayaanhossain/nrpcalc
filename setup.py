@@ -15,7 +15,7 @@ setup(
     name='nrpcalc',
     
     # Link: https://www.python.org/dev/peps/pep-0440/#version-scheme
-    version='1.1.2',
+    version='1.1.3',
     
     description='Non-Repetitive Parts Calculator - Automated design and discovery of non-repetitive genetic parts for engineering stable genetic systems',
     
