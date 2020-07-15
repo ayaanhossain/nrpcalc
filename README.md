@@ -2,7 +2,7 @@
 
 <h1 align="center">
     <a href="https://github.com/ayaanhossain/nrpcalc/">
-        <img src="./img/logo.svg"  alt="Non-Repetitive Parts Calculator" width="418"/>
+        <img src="https://raw.githubusercontent.com/ayaanhossain/nrpcalc/img/logo.svg"  alt="Non-Repetitive Parts Calculator" width="418"/>
     </a>
 </h1>
 
@@ -24,7 +24,7 @@ Non-repetitiveness is a global property of the entire genetic part toolbox, and 
 
 <h3 align="center">
     <a href="https://github.com/ayaanhossain/nrpcalc/img/Fig1.svg">
-        <img src="./img/Fig1.svg"  alt="NRP Calculator Maker Mode" width="1000"/>
+        <img src="https://raw.githubusercontent.com/ayaanhossain/nrpcalc/img/Fig1.svg"  alt="NRP Calculator Maker Mode" width="1000"/>
     </a>
 </h3>
 
@@ -56,7 +56,7 @@ which will install the latest copy of `ViennaRNA` inside the `nrpcalc` environme
 
 If you do not want to install `conda` on your system, you will need to install `ViennaRNA` [manually](https://www.tbi.univie.ac.at/RNA/ViennaRNA/doc/html/install.html), ensuring proper setup of `PYTHONPATH` etc.
 
-**Note** If you are using `conda` then the following steps will make `NRP Calculator` available only within the environment within which it is being installed. If you want to use software, you will always need to activate the environment, for example, here it is named `nrpcalc`.
+**Note** If you are using `conda` then the following steps will make `NRP Calculator` available only within the environment within in which it is being installed. If you want to use software, you will always need to activate the environment, for example, here the environment is named `nrpcalc`.
 
 Once `ViennaRNA` is installed, you will need to download a copy of `NRP Calculator`
 ```bash
