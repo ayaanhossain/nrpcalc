@@ -84,6 +84,6 @@ setup(
 
     project_urls={  # Optional
         'Bug Reports': 'https://github.com/ayaanhossain/nrpcalc/issues',
-        'Source'     : 'https://github.com/ayaanhossain/nrpcalc/',
+        'Source'     : 'https://github.com/ayaanhossain/nrpcalc/nrpcalc',
     },
 )
