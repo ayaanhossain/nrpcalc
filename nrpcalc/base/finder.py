@@ -8,6 +8,7 @@ import os
 import uuid
 import atexit
 import shutil
+import textwrap
 
 import time
 
@@ -170,6 +171,14 @@ def nrp_finder(
             index = int(index)
             if index in indi_seqs_indx:
                 parts_dict[index] = seq
+
+    # Optionally, write output
+    if output_file:
+        with open(output_file, 'w') as outfile:
+            for index,seq in parts_dict.iteritems():
+                outfile.write('>index {}\n'.format(index))
+                seq_wrap = '\n'.join(textwrap.wrap(seq, 80))
+                outfile.write('{}\n'.format(seq_wrap))
 
     # Cleanups and Return
     projector.remove_proj_dir()

@@ -3,7 +3,7 @@ from .base import finder    as nrpfinder
 from .base import kmerSetDB
 
 
-__version__ = '1.1.6'
+__version__ = '1.1.7'
 
 __authors__ = '''
 Ayaan Hossain <auh57@psu.edu>
@@ -216,6 +216,7 @@ def finder(
         background=background,        
         allow_internal_repeat=internal_repeats,
         vercov_func=vercov,
+        output_file=output_file,
         verbose=verbose)
 
 def maker(
