@@ -1,7 +1,0 @@
-biopython==1.76
-certifi==2019.11.28
-decorator==4.4.2
-networkx==2.2
-numpy==1.16.6
-plyvel==1.2.0
-scipy==1.2.3
