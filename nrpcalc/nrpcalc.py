@@ -3,7 +3,7 @@ from .base import finder    as nrpfinder
 from .base import kmerSetDB
 
 
-__version__ = '1.0.1'
+__version__ = '1.1.0'
 
 __authors__ = '''
 Ayaan Hossain <auh57@psu.edu>
@@ -141,6 +141,7 @@ def finder(
     internal_repeats=False,
     background=None,
     vercov='nrp2',
+    output_file=None,
     verbose=True):
     '''
     NRP Calculator Finder Mode for discovering non-repetitive
@@ -181,6 +182,12 @@ def finder(
               'nrp2' - use Finder Mode 2-approximation Vertex
                        Cover Elimination algorithm
               (default='nrp2')
+    :: output_file
+       type - string / None
+       desc - filename to store discovered non-repetitive parts
+              indexed by their position in seq_list; sequences
+              are written in FASTA format
+              (default=None)
     :: verbose
        type - boolean
        desc - if True displays progress
@@ -197,6 +204,7 @@ def finder(
     >>> my_parts = [...]
     >>> nrpset = nrpcalc.finder(
     ...     seq_list=my_parts,
+    ...     Lmax=15,
     ...     internal_repeats=False,
     ...     background=bkg,
     ...     vercov='nrp2')

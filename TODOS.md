@@ -6,6 +6,7 @@
 * ~~Fix Global Function Checks~~
 * ~~Write all Input Validation~~
 * ~~Write up README sketch~~
+* ~~Integrate output_file for Finder~~
 * Finish docs
 * [+] Concurrently finish examples
 * [+] Write up tests

@@ -38,12 +38,24 @@ def _check_finder_constraints(
             allow_internal_repeat)
         print ' [SOLUTION] Try correcting Internal Repeat\n'
         return False
+    # Everything OK
+    return True
+
+def _check_finder_arguments(
+    vercov_func,
+    output_file):
     # Vertex Cover Legality
     if not vercov_func in ['2apx', 'nrpG', 'nrp2']:
         print '\n [ERROR]    Vertex Cover Elimination must be \'2apx\', \'nrpG\', or \'nrp2\' not \'{}\''.format(
             vercov_func)
         print ' [SOLUTION] Try correcting Vertex Cover Elimination\n'
         return False
+    # Output File Legality
+    if not output_file is None:
+        if not isinstance(output_file, str):
+            print '\n [ERROR]    Output File must be a string or None, not \'{}\''.format(struct_type)
+            print ' [SOLUTION] Try correcting Output File\n'
+            return False
     # Everything OK
     return True
 
@@ -51,8 +63,9 @@ def nrp_finder(
     seq_list,
     homology,
     allow_internal_repeat=False,
-    vercov_func=None,
     background=None,
+    vercov_func=None,
+    output_file=None,
     verbose=True):
 
     # Program Verbage
@@ -67,7 +80,6 @@ def nrp_finder(
         print ' Sequence List   : {} parts'.format(len(seq_list))
         print '          Lmax   : {}'.format(homology-1)
         print ' Internal Repeats: {}'.format(allow_internal_repeat)
-        print '   Vertex Cover  : {}'.format(vercov_func)
     check_status = _check_finder_constraints(
         seq_list=seq_list,
         homology=homology,
@@ -76,7 +88,7 @@ def nrp_finder(
 
     if check_status == False:
         if verbose:
-            print '\n Check Status: FAIL'
+            print ' Check Status: FAIL\n'
         find_parts = False
     else:
         if verbose:
@@ -88,7 +100,6 @@ def nrp_finder(
             if verbose:
                 print '\n[Checking Background]:\n Background: {}'.format(background)
             if isinstance(background, kmerSetDB.kmerSetDB):
-                self.background = background
                 if background.K != homology:
                     find_parts = False
                     print '\n [ERROR]    Background Lmax is {}, but Constraint Lmax is {}'.format(
@@ -96,7 +107,7 @@ def nrp_finder(
                         homology-1)
                     print ' [SOLUTION] Try correcting Lmax\n'
                     if verbose:
-                        print '\n Check Status: FAIL'
+                        print ' Check Status: FAIL\n'
                 else:
                     if verbose:
                         print '\n Check Status: PASS'
@@ -106,7 +117,24 @@ def nrp_finder(
                 print '\n [ERROR]    Background Object is INVALID'
                 print ' [SOLUTION] Try instantiating background via nrpcalc.background(...)\n'
                 if verbose:
-                    print '\n Check Status : FAIL'
+                    print ' Check Status : FAIL\n'
+
+    # Arguments Check
+    if find_parts:
+        print '\n[Checking Arguments]'
+        print '   Vertex Cover: {}'.format(vercov_func)
+        print '   Output  File: {}'.format(output_file)
+        check_status = _check_finder_arguments(
+            vercov_func=vercov_func,
+            output_file=output_file)
+
+        if check_status == False:
+            if verbose:
+                print ' Check Status: FAIL\n'
+            find_parts = False
+        else:
+            if verbose:
+                print '\n Check Status: PASS'
 
     if not find_parts:
         raise RuntimeError('Invalid Constraints, or Background')

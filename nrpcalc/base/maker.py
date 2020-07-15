@@ -966,16 +966,16 @@ class NRPMaker(object):
             print '    Target Size      : {}'.format(target_size)
             print '           Lmax      : {}'.format(homology-1)
             print '  Internal Repeats   : {}'.format(allow_internal_repeat)
-        check_status1 = self._check_maker_constraints(
+        check_status = self._check_maker_constraints(
             seq_constr,
             struct_constr,
             allow_internal_repeat,
             target_size,
             homology)
 
-        if check_status1 == False:
+        if check_status == False:
             if verbose:
-                print '\n Check Status: FAIL'
+                print ' Check Status: FAIL\n'
             build_parts = False
         else:
             if verbose:
@@ -995,7 +995,7 @@ class NRPMaker(object):
                             homology-1)
                         print ' [SOLUTION] Try correcting Lmax\n'
                         if verbose:
-                            print '\n Check Status: FAIL'
+                            print ' Check Status: FAIL\n'
                     else:
                         if verbose:
                             print '\n Check Status: PASS'
@@ -1005,9 +1005,9 @@ class NRPMaker(object):
                     print '\n [ERROR]    Background Object is INVALID'
                     print ' [SOLUTION] Try instantiating background via nrpcalc.background(...)\n'
                     if verbose:
-                        print '\n Check Status : FAIL'
+                        print ' Check Status : FAIL\n'
 
-        # Argument Check
+        # Arguments Check
         if build_parts:
             if verbose:
                 print '\n[Checking Arguments]'
@@ -1017,7 +1017,7 @@ class NRPMaker(object):
                 print '   Jump Count: {}'.format(jump_count)
                 print '   Fail Count: {}'.format(fail_count)
                 print ' Output File : {}'.format(output_file)
-            check_status2 = self._check_maker_inputs(
+            check_status = self._check_maker_inputs(
                 part_type,
                 struct_type,
                 synth_opt,
@@ -1026,9 +1026,9 @@ class NRPMaker(object):
                 output_file,
                 verbose)
 
-            if check_status2 == False:
+            if check_status == False:
                 if verbose:
-                    print '\n Check Status: FAIL'
+                    print ' Check Status: FAIL\n'
                 build_parts = False
             else:
                 if verbose:
