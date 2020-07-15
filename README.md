@@ -47,44 +47,24 @@ and activate the newly created `nrpcalc` environment
 $ conda activate nrpcalc
 ```
 
-The first thing we will need is `ViennaRNA` which is an external dependency for `NRP Calculator` and not available in [PyPI](https://pypi.org). `ViennaRNA` is easily installed with
+**Note** You don't necessarily need to make a new environment, as long as you know which environment you want `NRP Calculator` installed in, and have it activated during installation. For example, you might have a different project environment inside which you want to install `NRP Calculator`.
+
+The first thing we will need to install in a new environment is `ViennaRNA` which is an external dependency for `NRP Calculator` and not available in [PyPI](https://pypi.org). `ViennaRNA` is easily installed with
 
 ```bash
 $ conda install -c bioconda viennarna
 ```
-which will install the latest copy of `ViennaRNA` inside the `nrpcalc` environment.
+If you are following the instructions as is, this will install the latest copy of `ViennaRNA` inside the new `nrpcalc` environment.
 
 If you do not want to install `conda` on your system, you will need to install `ViennaRNA` [manually](https://www.tbi.univie.ac.at/RNA/ViennaRNA/doc/html/install.html), ensuring proper setup of `PYTHONPATH` etc.
 
-**Note** If you are using `conda` then the following steps will make `NRP Calculator` available only within the environment within in which it is being installed. If you want to use software, you will always need to activate the environment, for example, here the environment is named `nrpcalc`.
+**Note** If you are using `conda` then the following steps will make `NRP Calculator` available only inside the environment in which it is being installed. If you want to use software, you will always need to activate that specific environment, for example, here the environment is named `nrpcalc`.
 
-Once `ViennaRNA` is installed, you will need to download a copy of `NRP Calculator`
+Once `ViennaRNA` is installed, you can easily install `NRP Calculator` via
 ```bash
-$ git clone https://github.com/ayaanhossain/nrpcalc
+$ pip install --upgrade nrpcalc
 ```
-and navigate to the `nrpcalc` directory
-```bash
-$ cd nrpcalc
-```
-
-You will next need to install the remaining dependencies for `NRP Calculator`.
-* [certifi==2019.11.28](https://pypi.org/project/certifi/2019.11.28/)
-* [decorator==4.4.2](https://pypi.org/project/decorator/4.4.2/)
-* [biopython==1.76](https://pypi.org/project/biopython/1.76/),
-* [networkx==2.2](https://pypi.org/project/networkx/2.2/)
-* [numpy==1.16.6](https://pypi.org/project/numpy/1.16.6/),
-* [plyvel==1.2.0](https://pypi.org/project/plyvel/), and
-* [scipy==1.2.3](https://pypi.org/project/scipy/1.2.3/).
-
-You can either `pip` install these packages one by one, or install them directly from the given `requirements.txt` file.
-```bash
-$ pip install -r requirements.txt
-```
-
-Finally, you may install `NRP Calculator` via the provided `setup.py` file.
-```bash
-$ python setup.py install
-```
+which will additionally install all PyPI dependencies.
 
 If everything went well, `NRP Calculator` is now available in your environment under the `nrpcalc` package. You may verify it like so:
 ```bash
@@ -128,7 +108,7 @@ You can learn more about the two modes and background via
 >>> 
 ```
 
-Uninstallation of `Non-Repetitive Parts Calculator` is as easy as
+**Uninstallation** of `Non-Repetitive Parts Calculator` is as easy as
 ```bash
 $ pip uninstall nrpcalc
 ```
