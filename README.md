@@ -129,7 +129,7 @@ Automated design of thousands of nonrepetitive parts for engineering stable gene
 Nature Biotechnology, doi:10.1038/s41587-020-0584-2
 ```
 
-You can read the complete article online at [Nature Biotechnology](https://www.nature.com/articles/s41587-020-0584-2). A free PDF copy of the paper is accessible [here](https://rdcu.be/b5BIL).
+You can read the complete article online at [Nature Biotechnology](https://www.nature.com/articles/s41587-020-0584-2). A free PDF copy of the paper is accessible [here](https://rdcu.be/b5Aw0).
 
 **Abstract** Engineered genetic systems are prone to failure when their genetic parts contain repetitive sequences. Designing many non-repetitive  genetic  parts  with  desired  functionalities  remains  a  significant  challenge  with  high  computational  complexity.  To  overcome this challenge, we developed the nonrepetitive parts calculator to rapidly generate thousands of highly nonrepetitive genetic  parts  from  specified  design  constraints,  including  promoters,  ribosome-binding  sites  and  terminators.  As  a  demonstration, we designed and experimentally characterized 4,350 nonrepetitive bacterial promoters with transcription rates that varied across a 820,000-fold range, and 1,722 highly nonrepetitive yeast promoters with transcription rates that varied across a  25,000-fold  range.  We  applied  machine  learning  to  explain  how  specific  interactions  controlled  the  promoters’  transcription rates. We also show that using nonrepetitive genetic parts substantially reduces homologous recombination, resulting in greater genetic stability.
 
