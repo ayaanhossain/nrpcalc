@@ -1,5 +1,3 @@
-
-
 <h1 align="center">
     <a href="https://github.com/ayaanhossain/nrpcalc/">
         <img src="https://raw.githubusercontent.com/ayaanhossain/nrpcalc/master/img/logo.svg?sanitize=true"  alt="Non-Repetitive Parts Calculator" width="418" class="center"/>
@@ -24,7 +22,7 @@ Non-repetitiveness is a global property of the entire genetic part toolbox, and 
 
 <h3 align="center">
     <a href="https://github.com/ayaanhossain/nrpcalc/img/Fig1.svg">
-        <img src="https://raw.githubusercontent.com/ayaanhossain/nrpcalc/master/img/Fig1.svg?sanitize=true"  alt="NRP Calculator Maker Mode" width="1000" class="center"/>
+        <img src="https://raw.githubusercontent.com/ayaanhossain/nrpcalc/master/img/Fig1.svg?sanitize=true"  alt="NRP Calculator Maker Mode" width="800" class="center"/>
     </a>
 </h3>
 
@@ -82,7 +80,7 @@ Non-Repetitive Parts Calculator
 Automated design and discovery of non-repetitive genetic
 parts for engineering stable systems.
 
-Version: 1.1.8
+Version: 1.1.9
 
 Authors: Ayaan Hossain <auh57@psu.edu>
          Howard Salis  <salis@psu.edu>

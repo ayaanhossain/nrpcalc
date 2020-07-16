@@ -3,7 +3,7 @@ from .base import finder    as nrpfinder
 from .base import kmerSetDB
 
 
-__version__ = '1.1.8'
+__version__ = '1.1.9'
 
 __authors__ = '''
 Ayaan Hossain <auh57@psu.edu>
@@ -151,7 +151,8 @@ def finder(
     is returned in a dictionary indexed by their position in
     seq_list. If internal_repeats is set to True, then parts
     with internal repeats are preserved, otherwise such parts
-    are eliminated from seq_list.
+    are eliminated from seq_list. Optionally, the subset of
+    parts are written to an output file in FASTA format.
 
     :: seq_list
        type - list

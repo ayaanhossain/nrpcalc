@@ -140,19 +140,16 @@ class NRPMaker(object):
         meta_seq = [None] * len(seq)
 
         # Normalize Meta Sequence
-        for i, iupac_nt in enumerate(seq):            
+        for i in xrange(len(seq)):            
             try:
                 if i in meta_struct.paired_dict:
                     j = meta_struct.paired_dict[i]
-                    if len(self.iupac_table[seq[j]]) < len(self.iupac_table[iupac_nt]):
-                        iupac_nt = self.compl_iupac_map[seq[j]]
-                        seq[j] = self.compl_iupac_map[iupac_nt]
-                        seq[i] = iupac_nt
-                meta_seq[i] = set(self.iupac_table[iupac_nt])
+                    if len(self.iupac_table[seq[j]]) < len(self.iupac_table[seq[i]]):
+                        seq[i] = self.compl_iupac_map[seq[j]]
+                meta_seq[i] = set(self.iupac_table[seq[i]])
             except:
                 raise ValueError(
-                    ' [X] Invalid IUPAC code at index {} in sequence constraint'.format(
-                        i))
+                    ' [X] Invalid IUPAC code at index {} in sequence constraint'.format(i))
 
         return tuple(meta_seq)
 

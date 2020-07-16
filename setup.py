@@ -15,7 +15,7 @@ setup(
     name='nrpcalc',
     
     # Link: https://www.python.org/dev/peps/pep-0440/#version-scheme
-    version='1.1.8',
+    version='1.1.9',
     
     description='Non-Repetitive Parts Calculator - Automated design and discovery of non-repetitive genetic parts for engineering stable genetic systems',
     
@@ -80,7 +80,9 @@ setup(
         'biopython==1.76',
         'plyvel==1.2.0',
         'scipy==1.2.3',
-        'networkx==2.2'],
+        'networkx==2.2',
+        'jupyter==1.0.0',
+        'scikit-learn==0.20.4'],
 
     project_urls={  # Optional
         'Bug Reports': 'https://github.com/ayaanhossain/nrpcalc/issues',

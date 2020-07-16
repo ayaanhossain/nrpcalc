@@ -7,6 +7,7 @@
 * ~~Write all Input Validation~~
 * ~~Write up README sketch~~
 * ~~Integrate output_file for Finder~~
+* ~~Add jupyter and scikit-learn dependencies~~
 * Finish docs
 * [+] Concurrently finish examples
 * [+] Write up tests
