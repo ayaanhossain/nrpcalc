@@ -3,7 +3,7 @@ from .base import finder    as nrpfinder
 from .base import kmerSetDB
 
 
-__version__ = '1.1.12'
+__version__ = '1.1.13'
 
 __authors__ = '''
 Ayaan Hossain <auh57@psu.edu>
@@ -273,7 +273,7 @@ def maker(
               for the generated toolbox; target_size may not
               be reached if the constraints are too strict,
               for example, due to low degeneracy in the given
-              sequence constraint
+              sequence constraint, or a low Lmax
     :: Lmax
        type - integer
        desc - maximum allowed shared repeat length between
@@ -288,14 +288,14 @@ def maker(
               (default=False)
     :: background
        type - kmerSetDB / None
-       desc - the background object containg k-mers (k=Lmax+1)
+       desc - a background object containing k-mers (k=Lmax+1)
               which must be absent in the designed toolbox
               (default=None)
     :: part_type
        type - string
        desc - must be either 'RNA' or 'DNA' depending on the
               type of genetic part being designed; ensures
-              that correct free-energy folding parameters are
+              that correct folding free-energy parameters are
               used during structure evaluation
               (default='RNA')
     :: struct_type
@@ -338,7 +338,7 @@ def maker(
                    the traceback location to reselect the
                    last six bases; this naturally ensures
                    the final part is devoid of all cutsites
-                   throughout the part
+                   used experimentally throughout the part
               (default=None)
     :: global_model_fn
        type - function / None
@@ -350,18 +350,20 @@ def maker(
               the complete genetic part is available; parts
               that are evaluated to be False are rejected and
               a new part generation is started; global model
-              functions are evaluated after the last base has
-              been added to the genetic part being evaluated
+              functions are evaluated only after the last base
+              has been added to a genetic part under design
               e.g. gc_content(seq) may be a global function
                    that takes in a complete sequence and only
                    accepts parts with GC content greater than
-                   threshold percentage
+                   threshold percentage (although, technically
+                   one can enforce this condition via a well
+                   planned local model function)
               (default=None)
     :: jump_count
        type - integer
        desc - maximum number of restarts in path finding due
-              to failure in meeting local_model_fn or getting
-              stuck in a local optima
+              to failure in finding suitable k-mers, meeting
+              local_model_fn, or being stuck in local optima
               (auto-adjusted with each iteration)
               (default=10)
     :: fail_count
