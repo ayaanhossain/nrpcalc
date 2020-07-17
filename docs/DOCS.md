@@ -27,7 +27,7 @@
 
 **_Returns_**: A `kmerSetDB` object.
 
-**_Note:_** If the path provided points to an existing `background` object, then that `background` is opened for reading, and the new `Lmax` is ignored, otherwise, a new background is instantiated at the given path.
+**_Note:_** If the path provided points to an existing `background` object, then that `background` is opened for reading, and the new `Lmax` is ignored, otherwise, a new `background` is instantiated at the given path.
 
 `background` / `kmerSetDB` **API Examples**
 
