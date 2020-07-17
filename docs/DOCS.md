@@ -16,7 +16,7 @@
 
 `NRP Calculator` `kmerSetDB` `background` object for on-disk storage of background sequence _k_-mers (where _k_=`Lmax`+1). When a sequence is added to `background`, _k_-mers from the sequence are added instead of the actual sequence itself. A sequence queried for existence in the given `background` is evaluated to be `True` if any _k_-mer from the sequence exists in the background. This object is useful when chaining multiple `Maker Mode` and `Finder Mode` jobs as well as persisting any backgrounds such as small genomes or other part toolboxes from earlier design rounds.
 
-**background(path, Lmax, verbose=True)**
+**nrpcalc.background(path, Lmax, verbose=True)**
 
 | argument | type | description | default |
 |--|--|--|--|
@@ -157,7 +157,7 @@ RuntimeError: kmerSetDB was dropped
 
 `NRP Calculator` `Finder Mode` for discovering non-repetitive subset of parts from a given list. All parts sharing any repeat longer than `Lmax` are eliminated from `seq_list`, and the approximately largest subset of non-repetitive parts is returned in a dictionary indexed by their position in `seq_list`. If `internal_repeats` is set to True, then parts with internal repeats are preserved, otherwise such parts are eliminated from `seq_list`. Optionally, the discovered subset of parts is written to an output `FASTA` file.
 
-**background(path, Lmax, verbose=True)**
+**nrpcalc.finder(seq_list, Lmax, internal_repeats, background, vercov, output_file, verbose=True)**
 
 | argument | type | description | default |
 |--|--|--|--|
