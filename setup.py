@@ -15,7 +15,7 @@ setup(
     name='nrpcalc',
     
     # Link: https://www.python.org/dev/peps/pep-0440/#version-scheme
-    version='1.1.11',
+    version='1.1.12',
     
     description='Non-Repetitive Parts Calculator - Automated design and discovery of non-repetitive genetic parts for engineering stable genetic systems',
     
@@ -25,7 +25,7 @@ setup(
     
     url='https://github.com/ayaanhossain/nrpcalc',
     
-    author='Ayaan Hossain, Howard Salis',
+    author='Ayaan Hossain and Howard Salis',
     
     author_email='auh57@psu.edu, salis@psu.edu',  # Optional
     
@@ -82,7 +82,9 @@ setup(
         'scipy==1.2.3',
         'networkx==2.2',
         'jupyter==1.0.0',
-        'scikit-learn==0.20.4'],
+        'scikit-learn==0.20.4',
+        'seaborn==0.9.1',
+        'statsmodels==0.11.0'],
 
     project_urls={  # Optional
         'Bug Reports': 'https://github.com/ayaanhossain/nrpcalc/issues',

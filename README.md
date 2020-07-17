@@ -30,7 +30,7 @@ Non-repetitiveness is a global property of the entire genetic part toolbox, and 
 
 `Non-Repetitive Parts Calculator` is a `Linux/MacOS`-tested software, and built with `Python 2.7`. The software is not `Python 3.x` compatible at the moment, but will be pretty soon.
 
-The best way to install `Non-Repetitive Parts Calculator` is via `conda`. If you have either `anaconda` or `miniconda` installed on your system, you are good to proceed. Otherwise, you may first need to install [miniconda](https://docs.conda.io/en/latest/miniconda.html).
+The best way to install `NRP Calculator` is via `conda`. If you have either `anaconda` or `miniconda` installed on your system, you are good to proceed. Otherwise, you may first need to install [miniconda](https://docs.conda.io/en/latest/miniconda.html).
 
 Assuming you have `conda` available on your system, you may first create a new environment (here we are naming it `nrpenv` but you can name it as you like)
 ```bash
@@ -80,7 +80,7 @@ Non-Repetitive Parts Calculator
 Automated design and discovery of non-repetitive genetic
 parts for engineering stable systems.
 
-Version: 1.1.11
+Version: 1.1.12
 
 Authors: Ayaan Hossain <auh57@psu.edu>
          Howard Salis  <salis@psu.edu>
