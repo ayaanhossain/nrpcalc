@@ -12,4 +12,4 @@
 * [+] Concurrently finish examples
 * [+] Write up tests
 * ~~Finish setup.py~~
-* ~~Publish to pip~~
+* ~~Publish to PyPI~~

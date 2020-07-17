@@ -3,7 +3,7 @@ from .base import finder    as nrpfinder
 from .base import kmerSetDB
 
 
-__version__ = '1.1.13'
+__version__ = '1.1.14'
 
 __authors__ = '''
 Ayaan Hossain <auh57@psu.edu>
@@ -408,7 +408,7 @@ def maker(
     ...     else:
     ...         return False 
     >>>
-    >>> promoters_1 = nrpcalc.maker(
+    >>> promoters = nrpcalc.maker(
     ...     seq_constr='N'*20+'TTGACA'+'N'*17+'TATAAT'+'NNNNNN',
     ...     struct_constr='.'*55,
     ...     target_size=500,

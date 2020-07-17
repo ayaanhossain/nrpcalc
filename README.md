@@ -56,13 +56,13 @@ If you are following the instructions as is, this will install the latest copy o
 
 If you do not want to install `conda` on your system, you will need to install `ViennaRNA` [manually](https://www.tbi.univie.ac.at/RNA/ViennaRNA/doc/html/install.html), ensuring proper setup of `PYTHONPATH` etc.
 
-**Note** If you are using `conda` then the following step will make `NRP Calculator` available only inside the environment in which it is being installed. If you want to use the software, you will always need to activate that specific environment, for example, here the environment is named `nrpenv`.
+**Note** You will always need to activate the specific environment in which `NRP Calculator` is installed in order to use it. For example, here the environment is named `nrpenv`.
 
-Once `ViennaRNA` is installed, you can easily install `NRP Calculator` from PyPI, where it is published as the package `nrpcalc` via
+Once `ViennaRNA` is installed, you can easily install `NRP Calculator` from PyPI, where it is published as the `nrpcalc` package. This is as easy as
 ```bash
 $ pip install --upgrade nrpcalc --no-cache-dir
 ```
-This will additionally install all PyPI dependencies as well.
+which will additionally install all dependencies from PyPI as well.
 
 If everything went well, `NRP Calculator` is now available in your environment under the `nrpcalc` package. You may verify it like so:
 ```bash
@@ -80,7 +80,7 @@ Non-Repetitive Parts Calculator
 Automated design and discovery of non-repetitive genetic
 parts for engineering stable systems.
 
-Version: 1.1.13
+Version: 1.1.14
 
 Authors: Ayaan Hossain <auh57@psu.edu>
          Howard Salis  <salis@psu.edu>
@@ -110,6 +110,8 @@ You can learn more about the two modes and background via
 ```bash
 $ pip uninstall nrpcalc
 ```
+
+If you encounter any problems during installation, please feel free to [open an issue](https://github.com/ayaanhossain/nrpcalc/issues) describing your problem along with any console output that shows the error.
 
 ## License
 
