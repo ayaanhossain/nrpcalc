@@ -1,7 +1,6 @@
-
 <h1 align="center">
     <a href="https://github.com/ayaanhossain/nrpcalc/">
-        <img src="https://raw.githubusercontent.com/ayaanhossain/nrpcalc/master/img/logo.svg?sanitize=true"  alt="Non-Repetitive Parts Calculator" width="460" class="center"/>
+        <img src="https://raw.githubusercontent.com/ayaanhossain/nrpcalc/master/img/logo.svg?sanitize=true"  alt="Non-Repetitive Parts Calculator" width="418" class="center"/>
     </a>
 </h1>
 
@@ -9,8 +8,8 @@
   <a href="#Background">Background</a> •
   <a href="#Finder-Mode">Finder Mode</a> •
   <a href="#Maker-Mode">Maker Mode</a> •
-  <a href="#NRP-Calculator-in-Action">NRP Calculator in Action</a> •
-  <a href="../README.md">README</a>
+  <a href="../README.md">README</a> •
+  <a href="../README.md">EXAMPLES</a>
 </p>
 
 ## Background
