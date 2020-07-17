@@ -64,7 +64,7 @@ $ pip install --upgrade nrpcalc --no-cache-dir
 which will additionally install all dependencies from PyPI as well.
 
 If everything went well, `NRP Calculator` is now available in your environment under the `nrpcalc` package. You may verify it like so:
-```bash
+```python
 $ python
 Python 2.7.15 | packaged by conda-forge | (default, Mar  5 2020, 14:56:06) 
 [GCC 7.3.0] on linux2
