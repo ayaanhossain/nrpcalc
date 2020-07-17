@@ -3,7 +3,7 @@ from .base import finder    as nrpfinder
 from .base import kmerSetDB
 
 
-__version__ = '1.1.15'
+__version__ = '1.1.16'
 
 __authors__ = '''
 Ayaan Hossain <auh57@psu.edu>
@@ -48,20 +48,21 @@ def background(
     Lmax,
     verbose=True):
     '''
-    NRP Calculator kmerSetDB 'background' object for on-disk
-    storage of background sequence k-mers. When a sequence is
-    added to background, k-mers from the sequence is added in
-    instead of the actual sequence itself. A sequence queried
-    for existence in background, is evaluated to be True if
-    any k-mer from the sequence exists in the background.
-    Useful in chaining multiple Maker and Finder jobs as well
-    as persisting any backgrounds such as small genomes or
-    other part toolboxes from earlier design rounds.
+    NRP Calculator kmerSetDB background object for on-disk
+    storage of background sequence k-mers (where k=Lmax+1).
+    When a sequence is added to background, k-mers from the
+    sequence are added instead of the actual sequence itself.
+    A sequence queried for existence in the given background
+    is evaluated to be True if any k-mer from the sequence
+    exists in the background. This object is useful when
+    chaining multiple Maker Mode and Finder Mode jobs as
+    well as persisting any backgrounds such as small genomes
+    or other part toolboxes from earlier design rounds.
 
     :: path
        type - string
        desc - ./a/path/to/store/background/object for later
-              reuse and part verification    
+              reuse and part verification
     :: Lmax
        type - integer
        desc - maximum allowed shared repeat length between
@@ -71,62 +72,125 @@ def background(
        desc - if True displays progress
               (default=True)
 
-    Note that if the path provided points to an existing
-    background object, then that background is opened for
-    reading, otherwise, a new background is instantiated
-    at the given path.
+    Returns: A kmerSetDB object.
 
-    Background / kmerSetDB API Examples
+    Note: If the path provided points to an existing background
+          object, then that background is opened for reading, and
+          and the new Lmax is ignored, otherwise, a new background
+          is instantiated at the given path.
+
+    background / kmerSetDB API Examples
     
     >>> import nrpcalc
-    >>>
-    >>> my_background_list = [...]
+    >>> my_background_list = [
+        'ATGAGATCGTAGCAACC',
+        'GACGATTACGTCAGGTA',
+        'ACAGTAGAGACGAGTAA',
+        'CCAGTACGAAAAGGCCC',
+        'TTAGCTTGATAGTTTTA']
     >>> bkg = nrpcalc.background(
-           path='./my_backgound/',
-           Lmax=15)
+            path='./prj_bkg/',
+            Lmax=15)
+    >>> bkg
+    kmerSetDB stored at ./prj_bkg/ with 0 16-mers
+    >>>    
+
+    background / kmerSetDB offers the following methods
 
     (1) add(seq) - adds an IUPAC string 'seq' to background
 
-    >>> bkg.add('ATGCTAGGCCAACC')
+    >>> bkg.add('ATGCTTAGTGCCATACC')
     
-    (2) multiadd(seq_list) - adds multiple sequences in
+    (2) multiadd(seq_list) - adds multiple sequences from
                              the list to background
 
     >>> bkg.multiadd(my_background_list)
     
-    (3) __contains__(seq) - check if all k-mers from 'seq'
+    [Background Processing]
+      Adding Seq 4: TTAGCTTGAT...
+    
+    (3) __contains__(seq) - checks if all k-mers from seq
                             is present in background
 
-    >>> 'ATGCTAGGCCAACC' in bkg
+    >>> 'ATGCTTAGTGCCATACC' in bkg
+    True
 
-    (4) multicheck(seq_list) - check if all k-mers from given
+    (4) multicheck(seq_list) - checks if all k-mers from given
                                seq_list present in background
 
     >>> assert all(bkg.multicheck(my_background_list))
 
     (5) __iter__() - iterate over all k-mers in background
 
-    >>> e.g. kmers = list(iter(bkg))
+    >>> pprint(list(bkg))
+    ['AAAACTATCAAGCTAA',
+     'ACAGTAGAGACGAGTA',
+     'ACCTGACGTAATCGTC',
+     'ACGATTACGTCAGGTA',
+     'ATGAGATCGTAGCAAC',
+     'ATGCTTAGTGCCATAC',
+     'CAGTACGAAAAGGCCC',
+     'CAGTAGAGACGAGTAA',
+     'CCAGTACGAAAAGGCC',
+     'GGTATGGCACTAAGCA',
+     'GGTTGCTACGATCTCA',
+     'TAAAACTATCAAGCTA']
 
-    (6) remove(seq) - removes all k-mers in 'seq' from the
+    (6) __len__() - returns the number of k-mers in background
+
+    >>> len(bkg)
+    12
+
+    (7) remove(seq) - removes all k-mers in seq from the
                       background, freeing them up for use
 
-    >>> e.g. bkg.remove('ATGCTAGGCCAACC')
+    >>> 'ATGCTTAGTGCCATACC' in bkg
+    True
+    >>> bkg.remove('ATGCTTAGTGCCATACC')
+    >>> 'ATGCTTAGTGCCATACC' in bkg
+    False
+    >>> len(bkg)
+    10
 
-    (7) multiremove(seq_list) - removes all k-mers in the given
+    (8) multiremove(seq_list) - removes all k-mers from given
                                 seq_list from background
 
-    >>> e.g. bkg.multiremove(my_background_list)
+    >>> bkg.multiremove(my_background_list)
 
-    (8) clear() - removes all k-mers stored in background
+    [Background Processing]
+      Removing Seq 4: TTAGCTTGAT
+    >>> len(bkg)
+    0
 
+    (9) clear() - removes all k-mers stored in background
+
+    >>> bkg.add('ATGCTTAGTGCCATACC')
+    >>> len(bkg)
+    2
     >>> bkg.clear()
 
-    (9) close() - closes background instance
+    [Background Processing]
+      Removing Seq 1: GGTATGGCAC...
+    >>> len(bkg)
+    0
+
+    (10) close() - closes background instance; once closed
+                   operations on the instance raises error
     
     >>> bkg.close()
+    True
+    >>> bkg.close()
+    False
+    >>> bkg.add('ATGCTTAGTGCCATACC')
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+      File "nrpcalc/base/kmerSetDB.py", line 96, in wrapper
+        raise RuntimeError('kmerSetDB was dropped')
+    RuntimeError: kmerSetDB was closed or dropped
 
-    (10) drop() - deletes background instance from disk
+    (11) drop() - deletes unclosed `background` from disk;
+                  once dropped operations on the instance
+                  raises error
 
     >>> bkg.drop()
     '''

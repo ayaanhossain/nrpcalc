@@ -22,19 +22,19 @@ class kmerSetDB(object):
                 print '\n [ERROR]    Path must be a string, not {}'.format(
                     path)
                 print ' [SOLUTION] Try correcting Path\n'
-                raise Exception
+                raise ValueError
 
             # Assert homology is positive integer
             if not isinstance(homology, int):
                 print '\n[Non-Repetitive Parts Calculator - Background]'
                 print '\n [ERROR]    Lmax must be an integer, not \'{}\''.format(homology-1)
                 print ' [SOLUTION] Try correcting Lmax\n'
-                raise Exception
+                raise ValueError
             if homology-1 < 5:
                 print '\n[Non-Repetitive Parts Calculator - Background]'
                 print '\n [ERROR]    Lmax must be greater than 4, not \'{}\''.format(homology-1)
                 print ' [SOLUTION] Try correcting Lmax\n'
-                raise Exception
+                raise ValueError
             
             # Path setup
             self.PATH = path.rstrip('/') + '/'
@@ -65,8 +65,10 @@ class kmerSetDB(object):
             # Object ALIVE status
             self.ALIVE = True
 
+        except ValueError as E:
+            raise ValueError('Invalid Path or Lmax')
         except Exception as E:
-            raise RuntimeError('Invalid Path or Lmax')
+            raise E
 
     def __repr__(self):
         '''
@@ -91,7 +93,7 @@ class kmerSetDB(object):
             if self.ALIVE:
                 return method(self, *args, **kwargs)
             else:
-                raise RuntimeError('kmerSetDB was dropped')
+                raise RuntimeError('kmerSetDB was closed or dropped')
         return wrapper
 
     def __len__(self):
@@ -144,9 +146,11 @@ class kmerSetDB(object):
             with self.DB.write_batch(
                 transaction=True,
                 sync=False) as wb:
-                if self.VERB:
-                    print '\n[Background Processing]'
+                pt = False
                 for index, seq in enumerate(seq_list):
+                    if not pt and self.VERB:
+                        print '\n[Background Processing]'
+                        pt = True
                     if not seq in ['K', 'LEN']:
                         self._verb_action(
                             action='Adding',
@@ -158,7 +162,8 @@ class kmerSetDB(object):
                                 wb.put(kmer, '1')
                                 self.LEN += 1
                 self.DB.put('LEN', str(self.LEN))
-                if self.VERB: print
+                if self.VERB:
+                    print
         except Exception as E:
             raise E
 
@@ -205,6 +210,13 @@ class kmerSetDB(object):
                 if not key in ['K', 'LEN']:
                     yield key
 
+    def __len__(self):
+        '''
+        User function to check the number of k-mers stored
+        in kmerSetDB.
+        '''
+        return self.LEN
+
     @alivemethod
     def remove(self, seq):
         '''
@@ -236,9 +248,11 @@ class kmerSetDB(object):
             with self.DB.write_batch(
                 transaction=True,
                 sync=False) as wb:
-                if self.VERB:
-                    print '\n[Background Processing]'
+                pt = False
                 for index, seq in enumerate(seq_list):
+                    if not pt and self.VERB:
+                        print '\n[Background Processing]'
+                        pt = True
                     if not seq in ['K', 'LEN']:
                         self._verb_action(
                             action='Removing',
@@ -259,7 +273,8 @@ class kmerSetDB(object):
         User function to clear all k-mers stored in
         kmerSetDB.
         '''
-        self.multiremove(iter(self))
+        if self.LEN:
+            self.multiremove(iter(self))
 
     def close(self):
         '''
