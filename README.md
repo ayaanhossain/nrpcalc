@@ -9,7 +9,8 @@
   <a href="#Installation">Installation</a> •
   <a href="#License">License</a> •
   <a href="#Citation">Citation</a> •
-  <a href="#Documentation">Documentation</a> 
+  <a href=./docs/DOCS.md>DOCS</a> •
+  <a href="#Examples">EXAMPLES</a> 
 </p>
 
 ## Overview
@@ -142,5 +143,11 @@ You can read the complete article online at [Nature Biotechnology](https://www.n
 **Maintenance** `Non-Repetitive Parts Calculator` is currently maintained by
 - Ayaan Hossain | [github.com/ayaanhossain](https://github.com/ayaanhossain) | [@bioalgorithmist](https://twitter.com/bioalgorithmist)
 
-## Documentation
-A write-up explaining the `nrpcalc` API as well as a toy example demonstrating `NRP Calculator` is in the works, and will be released by Friday, June 17, 2020. For the moment, please access the API documentation from within the `Python` REPL via `print nrpcalc.finder.__doc__`, `print nrpcalc.maker.__doc__` and `print nrpcalc.background.__doc__`. Meanwhile, please enjoy the paper!
+## API Documentation
+A write-up explaining the `nrpcalc` API can be found in [DOCS.md](./docs/DOCS.md). You may also check API documentation from within the `Python` REPL via
+* `print nrpcalc.maker.__doc__`,
+* `print nrpcalc.finder.__doc__`, and
+* `print nrpcalc.background.__doc__`.
+
+## `NRP Calculator` in Action
+A write-up showing the use of `NRP Calculator` in designing promoters and hammerhead ribozymes for E. coli systems engineering is in the works, and will be released by Sunday, June 19, 2020.
