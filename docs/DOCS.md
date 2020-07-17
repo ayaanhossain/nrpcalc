@@ -154,3 +154,38 @@ RuntimeError: kmerSetDB was dropped
 ```
 
 ## Finder Mode
+
+`NRP Calculator` `Finder Mode` for discovering non-repetitive subset of parts from a given list. All parts sharing any repeat longer than `Lmax` are eliminated from `seq_list`, and the approximately largest subset of non-repetitive parts is returned in a dictionary indexed by their position in `seq_list`. If `internal_repeats` is set to True, then parts with internal repeats are preserved, otherwise such parts are eliminated from `seq_list`. Optionally, the discovered subset of parts is written to an output `FASTA` file.
+
+**background(path, Lmax, verbose=True)**
+
+| argument | type | description | default |
+|--|--|--|--|
+| `seq_list` | `list` | a list of IUPAC strings representing a genetic part toolbox | -- |
+| `Lmax` | `integer` | maximum allowed shared repeat length between all sequences in a given toolbox | -- |
+| `internal_repeats` | `boolean` | if `False` then parts containing internal repeats longer than Lmax are eliminated; shared repeats are always eliminated | `False` |
+| `background` | `kmerSetDB` / `None` | the `background` object containing _k_-mers (_k_=`Lmax`+1) which must be absent in discovered non-repetitive subset of parts | `None` |
+| `vercov` | `string` | must be either `'2apx'`, `'nrpG'`, or `'nrp2'` <br> `'2apx'` - use standard 2-approximation Vertex Cover Elimination algorithm <br> `'nrpG'` - use Greedy Vertex Cover Elimination algorithm <br> `'nrp2'` - user `Finder Mode` 2-approximation Vertex Cover Elimination Algorithm | `'nrp2'` |
+| `output_file` | `string` / `None` | filename to store discovered non-repetitive parts indexed by their position in `seq_list`; sequences are written in `FASTA` format | `None` |
+| `verbose` | `boolean` | if `True` displays progress | `True` |
+
+**_Returns_**: A `dictionary` of IUPAC strings with integer keys.
+
+`background` / `kmerSetDB` **API Examples**
+
+```python
+>>> from pprint import pprint
+>>> import nrpcalc
+>>> my_background_list = [
+    'ATGAGATCGTAGCAACC',
+    'GACGATTACGTCAGGTA',
+    'ACAGTAGAGACGAGTAA',
+    'CCAGTACGAAAAGGCCC',
+    'TTAGCTTGATAGTTTTA']
+>>> bkg = nrpcalc.background(
+        path='./prj_bkg/',
+        Lmax=15)
+>>> bkg
+kmerSetDB stored at ./prj_bkg/ with 0 16-mers
+>>>
+```
