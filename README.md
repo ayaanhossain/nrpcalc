@@ -10,7 +10,7 @@
   <a href="#License">License</a> •
   <a href="#Citation">Citation</a> •
   <a href=./docs/DOCS.md>DOCS</a> •
-  <a href="#Examples">EXAMPLES</a> 
+  <a href="#NRP-Calculator-in-Action">EXAMPLES</a> 
 </p>
 
 ## Overview
@@ -150,4 +150,4 @@ A write-up explaining the `nrpcalc` API can be found in [DOCS.md](./docs/DOCS.md
 * `print nrpcalc.background.__doc__`.
 
 ## `NRP Calculator` in Action
-A write-up showing the use of `NRP Calculator` in designing promoters and hammerhead ribozymes for E. coli systems engineering is in the works, and will be released by Sunday, June 19, 2020.
+A write-up showing the use of `NRP Calculator` in designing promoters and hammerhead ribozymes for _E. coli_ systems engineering is in the works, and will be released by Sunday, June 19, 2020.
