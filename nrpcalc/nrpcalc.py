@@ -215,8 +215,8 @@ def finder(
     is returned in a dictionary indexed by their position in
     seq_list. If internal_repeats is set to True, then parts
     with internal repeats are preserved, otherwise such parts
-    are eliminated from seq_list. Optionally, the subset of
-    parts are written to an output file in FASTA format.
+    are eliminated from seq_list. Optionally, the discovered
+    subset of parts is written to an output FASTA file.
 
     :: seq_list
        type - list
