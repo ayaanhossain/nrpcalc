@@ -393,8 +393,14 @@ def maker(
     NRP Calculator Maker Mode for designing non-repetitive
     genetic part toolboxes from user defined sequence and
     structure constraints and based on custom local and/or
-    global model functions. All shared repeats
-    longer than Lmax are preserved if desired and, parts are optimized for DNA synthesis. Error tolerance is adaptive and auto-adjusted based on recorded failures. Designed toolbox is returned as a dictionary of parts indexed by their order of design, and optionally written to a `FASTA` output file.
+    global model functions. All shared repeats longer than
+    Lmax are eliminated, and internal repeats longer than
+    Lmax are preserved if desired. Parts are optimized for
+    DNA synthesis if desired. Error tolerance is adaptive
+    and auto-adjusted based on recorded failures. Designed
+    toolbox is returned as a dictionary of parts indexed by
+    their order of design, and optionally written to a FASTA
+    output file.
 
     :: seq_constr
        type - string
@@ -416,7 +422,7 @@ def maker(
                    bases are paired with the eighth and the
                    seventh bases respectively (parenthesis),
                    while the fifth and the sixth base must
-                   not  take part in any base pairing (x)
+                   not take part in any base pairing (x) at all
     :: target_size
        type - integer
        desc - maximum number of genetic parts to be designed
@@ -427,7 +433,7 @@ def maker(
     :: Lmax
        type - integer
        desc - maximum allowed shared repeat length between
-              all sequences in a given toolbox
+              all sequences in designed toolbox
     :: internal_repeats
        type - boolean
        desc - if True then designed parts are not eliminated

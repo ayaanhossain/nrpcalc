@@ -290,7 +290,7 @@ Non-Repetitive Toolbox Size: 3
 | argument | type | description | default |
 |--|--|--|--|
 | `seq_constr` | `string` | a string in IUPAC degenerate code describing all valid nucleotide choices at each position <br> e.g. `'NNNNWWWWSSSSTTTT'` implies that the first four bases can be either `'A'`/`'T'`/`'G'`/`'C'`, the next four bases can be either `'A'`/`'T'`, followed by either `'G'`/`'C'` for the next four basses, and finally ending with `'T'`s | -- |
-| `struct_constr` | `string` |  | -- |
+| `struct_constr` | `string` | a string in `dot-parenthesis-x` notation that describe the secondary base pairing across all nucleotide positions <br> e.g. `'..((xx))..'` implies that the first, second, and the last two bases are free to either base pair or not (`dot`), the third and fourth bases are paired with the eighth and the seventh bases respectively (`parenthesis`), while the fifth and the sixth base must not take part in any base pairing (`x`) at all | -- |
 | `target_size` | `integer` |  | -- |
 | `Lmax` | `integer` |  | -- |
 | `internal_repeats` | `boolean` |  | `False` |
