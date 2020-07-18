@@ -299,12 +299,12 @@ Non-Repetitive Toolbox Size: 3
 | `struct_type` | `string` | must be either `'mfe'`, `'centroid'`, or `'both'` <br> `'mfe'` - use minimum free energy structure evaluation <br> `'centroid'` - use centroid structure evaluation <br> `'both'` - use both `'mfe'` and `'centroid'` evaluation | `'mfe'` |
 | `seed` | `integer`/`None` | integer used to seed random number generations; two Maker runs with same constraints and seed value will generate the exact same toolbox; if `None` then a random seed value is used | `None` |
 | `synth_opt` | `boolean` | if `True` then designed parts containing features that complicate DNA synthesis are eliminated | `False` |
-| `local_model_fn` | `function`/`None` |  | `None` |
-| `global_model_fn` | `function`/`None` |  | `None` |
-| `jump_count` | `integer` |  | `10` |
-| `fail_count` | `integer` |  | `1000` |
-| `output_file` | `string`/`None` |  | `None` |
-| `verbose` | `boolean` |  | `True` |
+| `local_model_fn` | `function`/`None` | a function with signature `'fn_name(seq)'` that takes in a partial genetic part sequence, and returns a tuple `(state, index)`, where `state` is either `True` or `False` and `index` is a traceback index / location or `None` depending on whether a custom design objective was met or not; useful for providing concurrent feedback to the path-finding process by steering nucleotide selection choices e.g. `prevent_cutsites(seq)` maybe be a local function that takes in a partial sequence as it is built and returns `(True, None)` if the last six bases of the partial `seq[-6:]` is not the same as any of the cutsites used for cloning the part, else returns a tuple `(False, len(seq)-6)` as the traceback location to reselect the last six bases; this naturally ensures the final part is devoid of any cutsites used experimentally throughout the part | `None` |
+| `global_model_fn` | `function`/`None` | a function with signature `'fn_name(seq)'` that takes in a complete genetic part sequence, and returns either `True` or `False` depending on whether a custom design objective was met; useful for design criteria that can only be evaluated when the complete genetic part is available; parts that are evaluated to be `False` are rejected and a new part generation is started; global model functions are evaluated only after the last base has been added to a genetic part under design <br> **e.g.** `gc_content(seq)` may be a global function that takes in a complete sequence and only accepts parts with GC content greater than threshold percentage (although, technically one can enforce this condition via a well planned local model function) | `None` |
+| `jump_count` | `integer` | maximum number of restarts in path finding due to failure in finding suitable _k_-mers, meeting `local_model_fn`, or being stuck in local optima <br> (auto-adjusted with each iteration) | `10` |
+| `fail_count` | `integer` | maximum number of consecutive failures tolerated when structure constraints, global model functions and synthesis objectives are not met <br> (auto-adjusted with each iteration) | `1000` |
+| `output_file` | `string`/`None` | filename to store designed non-repetitive parts as they are generated consecutively; sequences are written in `FASTA` format | `None` |
+| `verbose` | `boolean` | if `True` displays progress | `True` |
 
 **_Returns_**: A `dictionary` of IUPAC strings with integer keys.
 

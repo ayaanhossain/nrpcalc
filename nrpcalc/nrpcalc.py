@@ -244,7 +244,7 @@ def finder(
        type - boolean
        desc - if False then parts containing internal repeats
               longer than Lmax are eliminated; shared repeats
-              are always eliminated
+              are eliminated regardless
               (default=False)
     :: background
        type - kmerSetDB / None
@@ -436,11 +436,11 @@ def maker(
               all sequences in designed toolbox
     :: internal_repeats
        type - boolean
-       desc - if True then designed parts are not eliminated
-              due to internal repeats; useful when designing
-              parts such as rho-independent terminators with
-              structure constraints that necessitate internal
-              repeats; shared repeats are always eliminated
+       desc - if True then internal repeats in designed parts
+              are not eliminated; useful when designing parts
+              such as rho-independent terminators with structure
+              constraints that necessitate internal repeats;
+              shared repeats are eliminated regardless
               (default=False)
     :: background
        type - kmerSetDB / None
@@ -471,7 +471,7 @@ def maker(
     :: synth_opt
        type - boolean
        desc - if True then designed parts containing features
-              that complicate synthesis are eliminated
+              that complicate DNA synthesis are eliminated
               (default=False)
     :: local_model_fn
        type - function / None
@@ -481,19 +481,19 @@ def maker(
               either True or False and index is a traceback
               index / location or None depending on whether
               a custom design objective was met or not;
-              useful for providing direct feedback to the
+              useful for providing concurrent feedback to the
               path-finding process by steering nucleotide
               selection choices
               e.g. prevent_cutsites(seq) maybe be a local
                    function that takes in a partial sequence
                    as it is built and returns (True, None)
                    if the last six bases of the partial
-                   part[-6:] is not the same as any of the
+                   seq[-6:] is not the same as any of the
                    cutsites used for cloning the part, else
                    returns a tuple (False, len(seq)-6) as
                    the traceback location to reselect the
                    last six bases; this naturally ensures
-                   the final part is devoid of all cutsites
+                   the final part is devoid of any cutsites
                    used experimentally throughout the part
               (default=None)
     :: global_model_fn
@@ -502,7 +502,7 @@ def maker(
               takes in a complete genetic part sequence, and
               returns either True or False depending on whether
               a custom design objective was met; useful for
-              design criteria that can only be evlauated when
+              design criteria that can only be evaluated when
               the complete genetic part is available; parts
               that are evaluated to be False are rejected and
               a new part generation is started; global model
