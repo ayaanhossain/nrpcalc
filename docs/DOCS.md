@@ -32,7 +32,7 @@
 
 **_Note:_** If the path provided points to an existing `background` object, then that `background` is opened for reading, and the new `Lmax` is ignored, otherwise, a new `background` is instantiated at the given path.
 
-`background` / `kmerSetDB` **API Examples**
+`background` / `kmerSetDB` **API Example**
 
 ```python
 >>> from pprint import pprint
@@ -183,7 +183,7 @@ RuntimeError: kmerSetDB was closed or dropped
 
 **_Returns_**: A `dictionary` of IUPAC strings with integer keys.
 
-`Finder Mode` **API Examples**
+`Finder Mode` **API Example**
 
 ```python
 >>> import nrpcalc
@@ -308,4 +308,4 @@ Non-Repetitive Toolbox Size: 3
 
 **_Returns_**: A `dictionary` of IUPAC strings with integer keys.
 
-`Maker Mode` **API Examples**
+`Maker Mode` **API Example**
