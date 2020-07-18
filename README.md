@@ -111,7 +111,7 @@ You can learn more about the two modes and background via
 >>> 
 ```
 
-> **Note** Remember to activate the specific environment in which `NRP Calculator` is installed in order to use it. For example, if you followed the above instructions exactly, then the environment you created and installed `NRP Calculator` is named `nrpenv`.
+> **Note** Remember to activate the specific environment in which `NRP Calculator` is installed in order to use it. For example, if you followed the instructions above exactly, then the environment you created and installed `NRP Calculator` in is named `nrpenv`.
 
 **Uninstallation** of `Non-Repetitive Parts Calculator` is as easy as
 ```bash
@@ -152,9 +152,9 @@ You can read the complete article online at [Nature Biotechnology](https://www.n
 
 ## API Documentation
 Detailed explanation and toy examples of `nrpcalc` API can be found in [DOCS.md](./docs/DOCS.md). You may also check the API documentation from within the `Python` REPL via
-* `print nrpcalc.background.__doc__`.
+* `print nrpcalc.background.__doc__`,
 * `print nrpcalc.finder.__doc__`, and
-* `print nrpcalc.maker.__doc__`,
+* `print nrpcalc.maker.__doc__`.
 
 ## `NRP Calculator` in Action
 A write-up showing the use of `NRP Calculator` in designing promoters and hammerhead ribozymes for _E. coli_ systems engineering is in the works, and will be released by Sunday, June 19, 2020.
