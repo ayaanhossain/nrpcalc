@@ -1,4 +1,5 @@
 
+
 <h1 align="center">
     <a href="https://github.com/ayaanhossain/nrpcalc/">
         <svg>
@@ -219,7 +220,7 @@ RuntimeError: kmerSetDB was closed or dropped
 
 [Checking Constraints]
  Sequence List   : 4 parts
-          Lmax   : 15
+          Lmax   : 15 bp
  Internal Repeats: False
 
  Check Status: PASS
