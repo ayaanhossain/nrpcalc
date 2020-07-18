@@ -196,7 +196,7 @@ RuntimeError: kmerSetDB was closed or dropped
 >>> genomic_kmers.multiadd(my_chromosomes)
 
 [Background Processing]
-  Adding Seq 4: AAAAAAAAAA
+  Adding Seq 4: AAAAAAAAAA...
 >>> 
 >>> my_toolbox = [
         'AGAGCTATGACTGACGT',
