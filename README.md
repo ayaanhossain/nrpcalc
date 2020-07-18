@@ -151,7 +151,7 @@ You can read the complete article online at [Nature Biotechnology](https://www.n
 - Howard Salis | [github.com/hsalis](https://github.com/hsalis) | [@hsalis](https://twitter.com/hsalis)
 
 ## API Documentation
-A write-up explaining the `nrpcalc` API can be found in [DOCS.md](./docs/DOCS.md). You may also check API documentation from within the `Python` REPL via
+Detailed explanation and toy examples of `nrpcalc` API can be found in [DOCS.md](./docs/DOCS.md). You may also check the API documentation from within the `Python` REPL via
 * `print nrpcalc.background.__doc__`.
 * `print nrpcalc.finder.__doc__`, and
 * `print nrpcalc.maker.__doc__`,
