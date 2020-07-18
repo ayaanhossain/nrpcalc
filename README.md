@@ -148,6 +148,7 @@ You can read the complete article online at [Nature Biotechnology](https://www.n
 
 **Maintenance** `Non-Repetitive Parts Calculator` is currently maintained by
 - Ayaan Hossain | [github.com/ayaanhossain](https://github.com/ayaanhossain) | [@bioalgorithmist](https://twitter.com/bioalgorithmist)
+- Howard Salis | [github.com/hsalis](https://github.com/hsalis) | [@hsalis](https://twitter.com/hsalis)
 
 ## API Documentation
 A write-up explaining the `nrpcalc` API can be found in [DOCS.md](./docs/DOCS.md). You may also check API documentation from within the `Python` REPL via
