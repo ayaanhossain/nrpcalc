@@ -332,7 +332,7 @@ def finder(
     Written 4 unique sequences out to ./5ebb5779-5314-41ce-8114-2d858ef41e2e/seq_list.txt in 9.68e-05 seconds
 
      [Sequence processing remaining] = 1 
-     [Cliques inserted] = 3 
+     [Cliques inserted] = 3
 
     Built homology graph in 0.000263 seconds. [Edges = 0] [Nodes = 3]
      [Intital Nodes = 4] - [Repetitive Nodes = 1] = [Final Nodes = 3]
@@ -391,12 +391,10 @@ def maker(
     verbose=True):
     '''
     NRP Calculator Maker Mode for designing non-repetitive
-    genetic part toolboxes from user defined constraints
-    such as sequence and structure constraints and ensured
-    to satisfy specified local and global model functions.
-    The designed toolbox is returned as a dictionary of
-    parts indexed by their order of design, and optionally
-    written to a FASTA output file.
+    genetic part toolboxes from user defined sequence and
+    structure constraints and based on custom local and/or
+    global model functions. All shared repeats
+    longer than Lmax are preserved if desired and, parts are optimized for DNA synthesis. Error tolerance is adaptive and auto-adjusted based on recorded failures. Designed toolbox is returned as a dictionary of parts indexed by their order of design, and optionally written to a `FASTA` output file.
 
     :: seq_constr
        type - string
