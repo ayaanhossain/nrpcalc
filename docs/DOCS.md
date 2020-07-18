@@ -1,6 +1,9 @@
+
 <h1 align="center">
     <a href="https://github.com/ayaanhossain/nrpcalc/">
-        <img src="https://raw.githubusercontent.com/ayaanhossain/nrpcalc/master/img/logo.svg?sanitize=true"  alt="Non-Repetitive Parts Calculator" width="418" class="center"/>
+        <svg>
+            <img src="https://raw.githubusercontent.com/ayaanhossain/nrpcalc/master/img/logo.svg?sanitize=true"  alt="Non-Repetitive Parts Calculator" width="418" class="center"/>
+        </svg>
     </a>
 </h1>
 
@@ -159,7 +162,9 @@ RuntimeError: kmerSetDB was closed or dropped
 
 <h3 align="center">
     <a href="https://github.com/ayaanhossain/nrpcalc/img/Fig2.svg">
-        <img src="https://raw.githubusercontent.com/ayaanhossain/nrpcalc/master/img/Fig2.svg?sanitize=true"  alt="NRP Calculator Finder Mode Algorithm" width="800" class="center"/>
+        <svg>
+            <img src="https://raw.githubusercontent.com/ayaanhossain/nrpcalc/master/img/Fig2.svg?sanitize=true"  alt="NRP Calculator Finder Mode Algorithm" width="800" class="center"/>
+        </svg>
     </a>
 </h3>
 
@@ -266,3 +271,31 @@ Now running iteration: 0
 Non-Repetitive Toolbox Size: 3
 {0: 'AGAGCTATGACTGACGT', 1: 'GCAGATAGGGGGTAGTA', 3: 'CAGATGATGCTAGGACT'}
 ```
+
+## Maker Mode
+
+`NRP Calculator` `Finder Mode` for discovering non-repetitive subset of parts from a given list. All parts sharing any repeat longer than `Lmax` are eliminated from `seq_list`, and the approximately largest subset of non-repetitive parts is returned in a dictionary indexed by their position in `seq_list`. If `internal_repeats` is set to True, then parts with internal repeats are preserved, otherwise such parts are eliminated from `seq_list`. Optionally, the discovered subset of parts is written to an output `FASTA` file.
+
+<h3 align="center">
+    <a href="https://github.com/ayaanhossain/nrpcalc/img/Fig3.svg">
+        <svg>
+            <img src="https://raw.githubusercontent.com/ayaanhossain/nrpcalc/master/img/Fig3.svg?sanitize=true"  alt="NRP Calculator Finder Mode Algorithm" width="800" class="center"/>
+        </svg>
+    </a>
+</h3>
+
+**nrpcalc.finder(seq_list, Lmax, internal_repeats=False, background=None, vercov='nrp2', output_file=None, verbose=True)**
+
+| argument | type | description | default |
+|--|--|--|--|
+| `seq_list` | `list` | a list of IUPAC strings representing a genetic part toolbox | -- |
+| `Lmax` | `integer` | maximum allowed shared repeat length between all sequences in a given toolbox | -- |
+| `internal_repeats` | `boolean` | if `False` then parts containing internal repeats longer than `Lmax` are eliminated; shared repeats are always eliminated | `False` |
+| `background` | `kmerSetDB` / `None` | the `background` object containing _k_-mers (_k_=`Lmax`+1) which must be absent in discovered non-repetitive subset of parts | `None` |
+| `vercov` | `string` | must be either `'2apx'`, `'nrpG'`, or `'nrp2'` <br> `'2apx'` - use standard 2-approximation Vertex Cover Elimination algorithm <br> `'nrpG'` - use Greedy Vertex Cover Elimination algorithm <br> `'nrp2'` - user `Finder Mode` 2-approximation Vertex Cover Elimination Algorithm | `'nrp2'` |
+| `output_file` | `string` / `None` | filename to store discovered non-repetitive parts indexed by their position in `seq_list`; sequences are written in `FASTA` format | `None` |
+| `verbose` | `boolean` | if `True` displays progress | `True` |
+
+**_Returns_**: A `dictionary` of IUPAC strings with integer keys.
+
+`Finder Mode` **API Examples**
