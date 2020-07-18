@@ -67,7 +67,7 @@ which will additionally install all dependencies from PyPI as well.
 > ```
 > $ brew install leveldb
 > ```
-> if you have `homebrew` installed. For details please look [here](https://brewinstall.org/Install-leveldb-on-Mac-with-Brew/).
+> if you have `homebrew` installed. For details please look [here](https://brewinstall.org/Install-leveldb-on-Mac-with-Brew/). Once `leveldb` is installed, try installing `NRP Calculator` again, as shown above.
 
 If everything went well, `NRP Calculator` is now available in your environment under the `nrpcalc` package. You may verify it like so:
 ```python
