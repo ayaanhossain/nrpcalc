@@ -122,9 +122,10 @@ def nrp_finder(
 
     # Arguments Check
     if find_parts:
-        print '\n[Checking Arguments]'
-        print '   Vertex Cover: {}'.format(vercov_func)
-        print '   Output  File: {}'.format(output_file)
+        if verbose:
+            print '\n[Checking Arguments]'
+            print '   Vertex Cover: {}'.format(vercov_func)
+            print '   Output  File: {}'.format(output_file)
         check_status = _check_finder_arguments(
             vercov_func=vercov_func,
             output_file=output_file)
