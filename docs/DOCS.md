@@ -285,10 +285,29 @@ Non-Repetitive Toolbox Size: 3
     </a>
 </h3>
 
-**nrpcalc.maker(seq_list, Lmax, internal_repeats=False, background=None, vercov='nrp2', output_file=None, verbose=True)**
+**nrpcalc.maker(seq_constr, struct_constr, target_size, Lmax, internal_repeats=False, background=None, part_type='RNA', struct_type='mfe', seed=None, synth_opt=False, local_model_fn=None, global_model_fn=None, jump_count=10, fail_count=1000, output_file=None, verbose=True)**
 
 | argument | type | description | default |
 |--|--|--|--|
+| `seq_constr` | `string` |  | -- |
+| `struct_constr` | `string` |  | -- |
+| `target_size` | `integer` |  | -- |
+| `Lmax` | `integer` |  | -- |
+| `internal_repeats` | `boolean` |  | `False` |
+| `background` | `kmerSetDB`/`None` |  | `None` |
+| `part_type` | `string` |  | `'RNA'` |
+| `struct_type` | `string` |  | `'mfe'` |
+| `seed` | `integer`/`None` |  | `None` |
+| `synth_opt` | `boolean` |  | `False` |
+| `local_model_fn` | `function`/`None` |  | `None` |
+| `global_model_fn` | `function`/`None` |  | `None` |
+| `jump_count` | `integer` |  | `10` |
+| `fail_count` | `integer` |  | `1000` |
+| `output_file` | `string`/`None` |  | `None` |
+| `verbose` | `boolean` |  | `True` |
+
+
+
 | `seq_list` | `list` | a list of IUPAC strings representing a genetic part toolbox | -- |
 | `Lmax` | `integer` | maximum allowed shared repeat length between all sequences in a given toolbox | -- |
 | `internal_repeats` | `boolean` | if `False` then parts containing internal repeats longer than `Lmax` are eliminated; shared repeats are always eliminated | `False` |
