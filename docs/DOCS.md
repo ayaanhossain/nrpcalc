@@ -157,7 +157,7 @@ RuntimeError: kmerSetDB was dropped
 
 `NRP Calculator` `Finder Mode` for discovering non-repetitive subset of parts from a given list. All parts sharing any repeat longer than `Lmax` are eliminated from `seq_list`, and the approximately largest subset of non-repetitive parts is returned in a dictionary indexed by their position in `seq_list`. If `internal_repeats` is set to True, then parts with internal repeats are preserved, otherwise such parts are eliminated from `seq_list`. Optionally, the discovered subset of parts is written to an output `FASTA` file.
 
-**nrpcalc.finder(seq_list, Lmax, internal_repeats, background, vercov, output_file, verbose=True)**
+**nrpcalc.finder(seq_list, Lmax, internal_repeats=False, background=None, vercov='nrp2', output_file=None, verbose=True)**
 
 | argument | type | description | default |
 |--|--|--|--|
