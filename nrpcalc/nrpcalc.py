@@ -482,7 +482,7 @@ def maker(
               index / location or None depending on whether
               a custom design objective was met or not;
               useful for providing concurrent feedback to the
-              path-finding process by steering nucleotide
+              path-finding process and steering nucleotide
               selection choices
               e.g. prevent_cutsites(seq) maybe be a local
                    function that takes in a partial sequence
