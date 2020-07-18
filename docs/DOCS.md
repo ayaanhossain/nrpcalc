@@ -157,6 +157,12 @@ RuntimeError: kmerSetDB was dropped
 
 `NRP Calculator` `Finder Mode` for discovering non-repetitive subset of parts from a given list. All parts sharing any repeat longer than `Lmax` are eliminated from `seq_list`, and the approximately largest subset of non-repetitive parts is returned in a dictionary indexed by their position in `seq_list`. If `internal_repeats` is set to True, then parts with internal repeats are preserved, otherwise such parts are eliminated from `seq_list`. Optionally, the discovered subset of parts is written to an output `FASTA` file.
 
+<h3 align="center">
+    <a href="https://github.com/ayaanhossain/nrpcalc/img/Fig2.svg">
+        <img src="https://raw.githubusercontent.com/ayaanhossain/nrpcalc/master/img/Fig2.svg?sanitize=true"  alt="NRP Calculator Finder Mode Algorithm" width="800" class="center"/>
+    </a>
+</h3>
+
 **nrpcalc.finder(seq_list, Lmax, internal_repeats=False, background=None, vercov='nrp2', output_file=None, verbose=True)**
 
 | argument | type | description | default |
@@ -171,7 +177,7 @@ RuntimeError: kmerSetDB was dropped
 
 **_Returns_**: A `dictionary` of IUPAC strings with integer keys.
 
-`background` / `kmerSetDB` **API Examples**
+`Finder Mode` **API Examples**
 
 ```python
 >>> from pprint import pprint
