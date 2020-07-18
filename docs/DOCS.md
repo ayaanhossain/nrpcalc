@@ -183,31 +183,32 @@ RuntimeError: kmerSetDB was closed or dropped
 >>> import nrpcalc
 >>> 
 >>> my_chromosomes = [
-        'ATGAGATCGTAGCAACC',
-        'GACGATTACGTCAGGTA',
-        'ACAGTAGAGACGAGTAA',
-        'CCAGTACGAAAAGGCCC',
-        'AAAAAAAAAAAAAAAAA']
+    'ATGAGATCGTAGCAACC',
+    'GACGATTACGTCAGGTA',
+    'ACAGTAGAGACGAGTAA',
+    'CCAGTACGAAAAGGCCC',
+    'AAAAAAAAAAAAAAAAA']
 >>> 
 >>> genomic_kmers = nrpcalc.background(
-            path='./my_genome/',
-            Lmax=15)
+    path='./my_genome/',
+    Lmax=15)
 >>> 
->>> genomic_kmers.multiadd(my_chromosomes)
+>>> genomic_kmers.multiadd(
+    my_chromosomes)
 
 [Background Processing]
   Adding Seq 4: AAAAAAAAAA...
 >>> 
 >>> my_toolbox = [
-        'AGAGCTATGACTGACGT',
-        'GCAGATAGGGGGTAGTA',
-        'TAAAAAAAAAAAAAAAA', # Repeats with last chromosome
-        'CAGATGATGCTAGGACT']
+    'AGAGCTATGACTGACGT',
+    'GCAGATAGGGGGTAGTA',
+    'TAAAAAAAAAAAAAAAA', # Repeats with last chromosome
+    'CAGATGATGCTAGGACT']
 >>> 
 >>> nrpcalc.finder(
-        seq_list=my_toolbox,
-        Lmax=15,
-        background=genomic_kmers)
+    seq_list=my_toolbox,
+    Lmax=15,
+    background=genomic_kmers)
 
 [Non-Repetitive Parts Calculator - Finder Mode]
 
