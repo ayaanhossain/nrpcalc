@@ -175,7 +175,7 @@ RuntimeError: kmerSetDB was closed or dropped
 |--|--|--|--|
 | `seq_list` | `list` | a list of IUPAC strings representing a genetic part toolbox | -- |
 | `Lmax` | `integer` | maximum allowed shared repeat length between all sequences in a given toolbox | -- |
-| `internal_repeats` | `boolean` | if `False` then parts containing internal repeats longer than `Lmax` are eliminated; shared repeats are always eliminated | `False` |
+| `internal_repeats` | `boolean` | if `False` then parts containing internal repeats longer than `Lmax` are eliminated; shared repeats are eliminated regardless | `False` |
 | `background` | `kmerSetDB`/`None` | the `background` object containing _k_-mers (_k_=`Lmax`+1) which must be absent in discovered non-repetitive subset of parts | `None` |
 | `vercov` | `string` | must be either `'2apx'`, `'nrpG'`, or `'nrp2'` <br> `'2apx'` - use standard 2-approximation Vertex Cover Elimination algorithm <br> `'nrpG'` - use Greedy Vertex Cover Elimination algorithm <br> `'nrp2'` - user `Finder Mode` 2-approximation Vertex Cover Elimination Algorithm | `'nrp2'` |
 | `output_file` | `string`/`None` | filename to store discovered non-repetitive parts indexed by their position in `seq_list`; sequences are written in `FASTA` format | `None` |
@@ -289,16 +289,16 @@ Non-Repetitive Toolbox Size: 3
 
 | argument | type | description | default |
 |--|--|--|--|
-| `seq_constr` | `string` | a string in IUPAC degenerate code describing all valid nucleotide choices at each position <br> e.g. `'NNNNWWWWSSSSTTTT'` implies that the first four bases can be either `'A'`/`'T'`/`'G'`/`'C'`, the next four bases can be either `'A'`/`'T'`, followed by either `'G'`/`'C'` for the next four basses, and finally ending with `'T'`s | -- |
-| `struct_constr` | `string` | a string in `dot-parenthesis-x` notation that describe the secondary base pairing across all nucleotide positions <br> e.g. `'..((xx))..'` implies that the first, second, and the last two bases are free to either base pair or not (`dot`), the third and fourth bases are paired with the eighth and the seventh bases respectively (`parenthesis`), while the fifth and the sixth base must not take part in any base pairing (`x`) at all | -- |
-| `target_size` | `integer` |  | -- |
-| `Lmax` | `integer` |  | -- |
-| `internal_repeats` | `boolean` |  | `False` |
-| `background` | `kmerSetDB`/`None` |  | `None` |
-| `part_type` | `string` |  | `'RNA'` |
-| `struct_type` | `string` |  | `'mfe'` |
-| `seed` | `integer`/`None` |  | `None` |
-| `synth_opt` | `boolean` |  | `False` |
+| `seq_constr` | `string` | a string in IUPAC degenerate code describing all valid nucleotide choices at each position <br> **e.g.** `'NNNNWWWWSSSSTTTT'` implies that the first four bases can be either `'A'`/`'T'`/`'G'`/`'C'`, the next four bases can be either `'A'`/`'T'`, followed by either `'G'`/`'C'` for the next four basses, and finally ending with `'T'`s | -- |
+| `struct_constr` | `string` | a string in `dot-parenthesis-x` notation that describe the secondary base pairing across all nucleotide positions <br> **e.g.** `'..((xx))..'` implies that the first, second, and the last two bases are free to either base pair or not (`dot`), the third and fourth bases are paired with the eighth and the seventh bases respectively (`parenthesis`), while the fifth and the sixth base must not take part in any base pairing (`x`) at all | -- |
+| `target_size` | `integer` | maximum number of genetic parts to be designed for the generated toolbox; `target_size` may not be reached if the constraints are too strict, for example, due to low degeneracy in the given sequence constraint, or a low `Lmax` | -- |
+| `Lmax` | `integer` | maximum allowed shared repeat length between all sequences in designed toolbox | -- |
+| `internal_repeats` | `boolean` | if `True` then internal repeats in designed parts are not eliminated; useful when designing parts such as rho-independent terminators with structure constraints that necessitate internal repeats; shared repeats are always eliminated | `False` |
+| `background` | `kmerSetDB`/`None` | a `background` object containing _k_-mers (_k_=`Lmax`+1) which must be absent in the designed toolbox | `None` |
+| `part_type` | `string` | must be either `'RNA'` or `'DNA'` depending on the type of genetic part being designed; ensures that correct folding free-energy parameters are used during structure evaluation | `'RNA'` |
+| `struct_type` | `string` | must be either `'mfe'`, `'centroid'`, or `'both'` <br> `'mfe'` - use minimum free energy structure evaluation <br> `'centroid'` - use centroid structure evaluation <br> `'both'` - use both `'mfe'` and `'centroid'` evaluation | `'mfe'` |
+| `seed` | `integer`/`None` | integer used to seed random number generations; two Maker runs with same constraints and seed value will generate the exact same toolbox; if `None` then a random seed value is used | `None` |
+| `synth_opt` | `boolean` | if `True` then designed parts containing features that complicate DNA synthesis are eliminated | `False` |
 | `local_model_fn` | `function`/`None` |  | `None` |
 | `global_model_fn` | `function`/`None` |  | `None` |
 | `jump_count` | `integer` |  | `10` |
