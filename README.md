@@ -46,7 +46,7 @@ and activate the newly created `nrpenv` environment
 $ conda activate nrpenv
 ```
 
-**Note** You don't necessarily need to make a new environment, as long as you know which environment you want `NRP Calculator` installed in, and have it activated during installation. For example, you might have a different project environment inside which you want to install `NRP Calculator`.
+> **Note** You don't necessarily need to make a new environment, as long as you know which environment you want `NRP Calculator` installed in, and have it activated during installation. For example, you might have a different project environment inside which you want to install `NRP Calculator`.
 
 The first thing we will need to install in a new environment is `ViennaRNA` which is an external dependency for `NRP Calculator` and not available in [PyPI](https://pypi.org). `ViennaRNA` is easily installed with
 
@@ -62,6 +62,12 @@ Once `ViennaRNA` is installed, you can easily install `NRP Calculator` from PyPI
 $ pip install --upgrade nrpcalc --no-cache-dir
 ```
 which will additionally install all dependencies from PyPI as well.
+
+> **Note** If you are installing `NRP Calculator` on `MacOS`, it is possible that you will run into issues when `pip` tries to install `plyvel` as a dependency. This is quickly resolved via executing
+> ```
+> $ brew install leveldb
+> ```
+> if you have `homebrew` installed. For details please look [here](https://brewinstall.org/Install-leveldb-on-Mac-with-Brew/).
 
 If everything went well, `NRP Calculator` is now available in your environment under the `nrpcalc` package. You may verify it like so:
 ```python
@@ -105,7 +111,7 @@ You can learn more about the two modes and background via
 >>> 
 ```
 
-**Note** Remember to activate the specific environment in which `NRP Calculator` is installed in order to use it. For example, if you followed the above instructions exactly, then the environment you created and installed `NRP Calculator` is named `nrpenv`.
+> **Note** Remember to activate the specific environment in which `NRP Calculator` is installed in order to use it. For example, if you followed the above instructions exactly, then the environment you created and installed `NRP Calculator` is named `nrpenv`.
 
 **Uninstallation** of `Non-Repetitive Parts Calculator` is as easy as
 ```bash
