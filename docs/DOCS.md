@@ -289,7 +289,7 @@ Non-Repetitive Toolbox Size: 3
 
 | argument | type | description | default |
 |--|--|--|--|
-| `seq_constr` | `string` | a string in IUPAC degenerate code describing all valid nucleotide choices at each position <br> e.g. 'NNNNWWWWSSSSTTTT' implies that the first four bases can be either 'A'/'T'/'G'/'C', the next four bases can be either 'A'/'T', followed by either 'G'/'C' for the next four basses, and finally ending with 'T's | -- |
+| `seq_constr` | `string` | a string in IUPAC degenerate code describing all valid nucleotide choices at each position <br> e.g. `'NNNNWWWWSSSSTTTT'` implies that the first four bases can be either `'A'`/`'T'`/`'G'`/`'C'`, the next four bases can be either `'A'`/`'T'`, followed by either `'G'`/`'C'` for the next four basses, and finally ending with `'T'`s | -- |
 | `struct_constr` | `string` |  | -- |
 | `target_size` | `integer` |  | -- |
 | `Lmax` | `integer` |  | -- |
