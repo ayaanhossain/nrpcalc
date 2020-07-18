@@ -309,3 +309,166 @@ Non-Repetitive Toolbox Size: 3
 **_Returns_**: A `dictionary` of IUPAC strings with integer keys.
 
 `Maker Mode` **API Example**
+
+```python
+>>> import nrpcalc
+>>>
+>>> Lmax = 15  # for global use
+>>>
+>>> # initialize background
+>>> bkg = nrpcalc.background(
+  path='./my_toolbox_kmers',
+  Lmax=Lmax)
+>>> bkg
+kmerSetDB stored at ./my_toolbox_kmers/ with 0 16-mers
+>>>
+>>> # A local model function
+>>> def prevent_cutsites(seq):
+        BamHI = 'GGATCC' # cutsite 1
+        XbaI  = 'TCTAGA' # cutsite 2
+        # evaluate part concurrently
+        if seq[-6:] in [BamHI, XbaI]:
+            return (False, len(seq)-6)
+        else:
+            return (True, None)
+>>>
+>>> # A global model function
+>>> def optimal_gc_content(seq):
+        # compute gc count
+        gcount = seq.count('G') * 1.
+        ccount = seq.count('C') * 1.
+        # evaluate on complete part
+        if 0.4 <= (gcount + ccount) / len(seq) <= 0.6:
+            return True
+        else:
+            return False
+>>>
+>>> # final toolbox storage
+>>> final_toolbox = []
+>>>
+>>> # build a toolbox of non-repetitive sigma70 promoters
+>>> promoters_strong = nrpcalc.maker(
+    seq_constr='N'*20+'TTGACA'+'N'*17+'TATAAT'+'NNNNNN',
+    struct_constr='.'*55,
+    target_size=500,
+    Lmax=Lmax,
+    internal_repeats=False,
+    background=None,
+    part_type='DNA',
+    local_model_fn=prevent_cutsites,
+    global_model_fn=optimal_gc_content)
+WARNING: stacking enthalpies not symmetric
+WARNING: stacking enthalpies not symmetric
+WARNING: stacking enthalpies not symmetric
+WARNING: stacking enthalpies not symmetric
+
+[Non-Repetitive Parts Calculator - Maker Mode]
+
+[Checking Constraints]
+  Sequence Constraint: NNNNNNNNNNNNNNNNNNNNTTGACANNNNNNNNNNNNNNNNNTATAATNNNNNN
+ Structure Constraint: .......................................................
+    Target Size      : 500 parts
+           Lmax      : 15 bp
+  Internal Repeats   : False
+
+ Check Status: PASS
+
+[Checking Arguments]
+   Part Type : DNA
+ Struct Type : mfe
+  Synth Opt  : False
+   Jump Count: 10
+   Fail Count: 1000
+ Output File : None
+
+ Check Status: PASS
+
+Constructing Toolbox:
+
+ [part] 1, [16-mers] 40, [iter 1] 0.00s, [avg] 0.00s, [total time] 0.00h
+ [part] 2, [16-mers] 80, [iter 2] 0.01s, [avg] 0.01s, [total time] 0.00h
+ ...
+ [part] 499, [16-mers] 19960, [iter 499] 0.00s, [avg] 0.00s, [total time] 0.00h
+ [part] 500, [16-mers] 20000, [iter 500] 0.00s, [avg] 0.00s, [total time] 0.00h
+
+Construction Complete.
+
+Non-Repetitive Toolbox Size: 500
+>>>
+>>> # add promoter toolbox to background
+>>> bkg.multiadd(promoters_strong.values())
+
+[Background Processing]
+  Adding Seq 499: AACATCGATG... 
+>>>
+>>> # add promoters to final_toolbox
+>>> final_toolbox.extend(promoters_strong.values())
+>>>
+>>> # build another toolbox of sigma70 promoters
+>>> # non-repetitive to the previous toolbox
+>>> promoters_variable = nrpcalc.maker(
+    seq_constr='N'*20+'TTGACA'+'N'*16+'WWWWWWW'+'NNNNN',
+    struct_constr='.'*55,
+    target_size=500,
+    Lmax=Lmax,
+    internal_repeats=False,
+    background=bkg,
+    part_type='DNA',
+    local_model_fn=prevent_cutsites,
+    global_model_fn=optimal_gc_content)
+WARNING: stacking enthalpies not symmetric
+WARNING: stacking enthalpies not symmetric
+WARNING: stacking enthalpies not symmetric
+WARNING: stacking enthalpies not symmetric
+
+[Non-Repetitive Parts Calculator - Maker Mode]
+
+[Checking Constraints]
+  Sequence Constraint: NNNNNNNNNNNNNNNNNNNNTTGACANNNNNNNNNNNNNNNNWWWWWWWNNNNN
+ Structure Constraint: .......................................................
+    Target Size      : 500 parts
+           Lmax      : 15 bp
+  Internal Repeats   : False
+
+ Check Status: PASS
+
+[Checking Background]:
+ Background: kmerSetDB stored at ./my_toolbox_kmers/ with 20000 16-mers
+
+ Check Status: PASS
+
+[Checking Arguments]
+   Part Type : DNA
+ Struct Type : mfe
+  Synth Opt  : False
+   Jump Count: 10
+   Fail Count: 1000
+ Output File : None
+
+ Check Status: PASS
+
+Constructing Toolbox:
+
+ [part] 1, [16-mers] 39, [iter 1] 0.01s, [avg] 0.01s, [total time] 0.00h
+ [part] 2, [16-mers] 78, [iter 2] 0.00s, [avg] 0.01s, [total time] 0.00h
+ ...
+ [part] 499, [16-mers] 19461, [iter 499] 0.00s, [avg] 0.00s, [total time] 0.00h
+ [part] 500, [16-mers] 19500, [iter 500] 0.00s, [avg] 0.00s, [total time] 0.00h
+
+Construction Complete.
+
+Non-Repetitive Toolbox Size: 500
+>>>
+>>> # remove background .. it's served its purpose
+>>> bkg.drop()
+True
+>>>
+>>> # add new promoters to final_toolbox
+>>> final_toolbox.extend(promoters_variable.values())
+>>>
+>>> # verify all promoters are non-repetitive
+>>> assert len(nrpcalc.finder(
+  seq_list=final_toolbox,
+  Lmax=Lmax,
+  verbose=False)) == 1000
+```
