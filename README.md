@@ -9,7 +9,7 @@
   <a href="#Installation">Installation</a> •
   <a href="#License">License</a> •
   <a href="#Citation">Citation</a> •
-  <a href=./docs/DOCS.md>DOCS</a> •
+  <a href="https://github.com/ayaanhossain/nrpcalc/blob/master/docs/DOCS.md">DOCS</a> •
   <a href="#NRP-Calculator-in-Action">EXAMPLES</a> 
 </p>
 
@@ -85,7 +85,7 @@ Non-Repetitive Parts Calculator
 Automated design and discovery of non-repetitive genetic
 parts for engineering stable systems.
 
-Version: 1.1.17
+Version: 1.1.18
 
 Authors: Ayaan Hossain <auh57@psu.edu>
          Howard Salis  <salis@psu.edu>

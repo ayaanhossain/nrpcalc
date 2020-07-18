@@ -12,8 +12,8 @@
   <a href="#Background">Background</a> •
   <a href="#Finder-Mode">Finder Mode</a> •
   <a href="#Maker-Mode">Maker Mode</a> •
-  <a href="../README.md">README</a> •
-  <a href="../README.md">EXAMPLES</a>
+  <a href="https://github.com/ayaanhossain/nrpcalc/blob/master/README.md">README</a> •
+  <a href="https://github.com/ayaanhossain/nrpcalc/blob/master/README.md">EXAMPLES</a>
 </p>
 
 ## Background
