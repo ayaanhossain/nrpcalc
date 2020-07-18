@@ -67,7 +67,7 @@ which will additionally install all dependencies from PyPI as well.
 > ```
 > $ brew install leveldb
 > ```
-> if you have `homebrew` installed. Details can be found [here](https://brewinstall.org/Install-leveldb-on-Mac-with-Brew/). Once `leveldb` is installed, try installing `NRP Calculator` again, as shown above.
+> if you have [homebrew](https://brew.sh/) installed. Details can also be found [here](https://brewinstall.org/Install-leveldb-on-Mac-with-Brew/). Once `leveldb` is installed, try installing `NRP Calculator` again, as shown above.
 
 If everything went well, `NRP Calculator` is now available in your environment under the `nrpcalc` package. You may verify it like so:
 ```python
@@ -85,7 +85,7 @@ Non-Repetitive Parts Calculator
 Automated design and discovery of non-repetitive genetic
 parts for engineering stable systems.
 
-Version: 1.1.18
+Version: 1.1.19
 
 Authors: Ayaan Hossain <auh57@psu.edu>
          Howard Salis  <salis@psu.edu>
