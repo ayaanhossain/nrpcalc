@@ -79,7 +79,7 @@ def nrp_finder(
     if verbose:
         print '\n[Checking Constraints]'
         print ' Sequence List   : {} parts'.format(len(seq_list))
-        print '          Lmax   : {}'.format(homology-1)
+        print '          Lmax   : {} bp'.format(homology-1)
         print ' Internal Repeats: {}'.format(allow_internal_repeat)
     check_status = _check_finder_constraints(
         seq_list=seq_list,

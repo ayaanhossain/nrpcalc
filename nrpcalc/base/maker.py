@@ -960,8 +960,8 @@ class NRPMaker(object):
             print '\n[Checking Constraints]'
             print '  Sequence Constraint: {}'.format(seq_constr)
             print ' Structure Constraint: {}'.format(struct_constr)
-            print '    Target Size      : {}'.format(target_size)
-            print '           Lmax      : {}'.format(homology-1)
+            print '    Target Size      : {} parts'.format(target_size)
+            print '           Lmax      : {} bp'.format(homology-1)
             print '  Internal Repeats   : {}'.format(allow_internal_repeat)
         check_status = self._check_maker_constraints(
             seq_constr,
