@@ -289,7 +289,7 @@ Non-Repetitive Toolbox Size: 3
 
 | argument | type | description | default |
 |--|--|--|--|
-| `seq_constr` | `string` |  | -- |
+| `seq_constr` | `string` | a string in IUPAC degenerate code describing all valid nucleotide choices at each position <br> e.g. 'NNNNWWWWSSSSTTTT' implies that the first four bases can be either 'A'/'T'/'G'/'C', the next four bases can be either 'A'/'T', followed by either 'G'/'C' for the next four basses, and finally ending with 'T's | -- |
 | `struct_constr` | `string` |  | -- |
 | `target_size` | `integer` |  | -- |
 | `Lmax` | `integer` |  | -- |
@@ -306,16 +306,6 @@ Non-Repetitive Toolbox Size: 3
 | `output_file` | `string`/`None` |  | `None` |
 | `verbose` | `boolean` |  | `True` |
 
-
-
-| `seq_list` | `list` | a list of IUPAC strings representing a genetic part toolbox | -- |
-| `Lmax` | `integer` | maximum allowed shared repeat length between all sequences in a given toolbox | -- |
-| `internal_repeats` | `boolean` | if `False` then parts containing internal repeats longer than `Lmax` are eliminated; shared repeats are always eliminated | `False` |
-| `background` | `kmerSetDB` / `None` | the `background` object containing _k_-mers (_k_=`Lmax`+1) which must be absent in discovered non-repetitive subset of parts | `None` |
-| `vercov` | `string` | must be either `'2apx'`, `'nrpG'`, or `'nrp2'` <br> `'2apx'` - use standard 2-approximation Vertex Cover Elimination algorithm <br> `'nrpG'` - use Greedy Vertex Cover Elimination algorithm <br> `'nrp2'` - user `Finder Mode` 2-approximation Vertex Cover Elimination Algorithm | `'nrp2'` |
-| `output_file` | `string` / `None` | filename to store discovered non-repetitive parts indexed by their position in `seq_list`; sequences are written in `FASTA` format | `None` |
-| `verbose` | `boolean` | if `True` displays progress | `True` |
-
 **_Returns_**: A `dictionary` of IUPAC strings with integer keys.
 
-`Finder Mode` **API Examples**
+`Maker Mode` **API Examples**
