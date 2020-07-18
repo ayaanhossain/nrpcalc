@@ -63,11 +63,11 @@ $ pip install --upgrade nrpcalc --no-cache-dir
 ```
 which will additionally install all dependencies from PyPI as well.
 
-> **Note** If you are installing `NRP Calculator` on `MacOS`, it is possible that you will run into issues when `pip` tries to install `plyvel` as a dependency. This is quickly resolved via executing
+> **Note** If you are installing `NRP Calculator` on `MacOS`, it is possible that you will run into issues when `pip` tries to install `plyvel` (a wrapper over [LevelDB](https://github.com/google/leveldb)) as a dependency. This is quickly resolved via executing
 > ```
 > $ brew install leveldb
 > ```
-> if you have `homebrew` installed. For details please look [here](https://brewinstall.org/Install-leveldb-on-Mac-with-Brew/). Once `leveldb` is installed, try installing `NRP Calculator` again, as shown above.
+> if you have `homebrew` installed. Details can be found found [here](https://brewinstall.org/Install-leveldb-on-Mac-with-Brew/). Once `leveldb` is installed, try installing `NRP Calculator` again, as shown above.
 
 If everything went well, `NRP Calculator` is now available in your environment under the `nrpcalc` package. You may verify it like so:
 ```python
