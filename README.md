@@ -85,7 +85,7 @@ Non-Repetitive Parts Calculator
 Automated design and discovery of non-repetitive genetic
 parts for engineering stable systems.
 
-Version: 1.1.16
+Version: 1.1.17
 
 Authors: Ayaan Hossain <auh57@psu.edu>
          Howard Salis  <salis@psu.edu>
@@ -151,10 +151,12 @@ You can read the complete article online at [Nature Biotechnology](https://www.n
 - Howard Salis | [github.com/hsalis](https://github.com/hsalis) | [@hsalis](https://twitter.com/hsalis)
 
 ## API Documentation
-Detailed explanation and toy examples of `nrpcalc` API can be found in [DOCS.md](./docs/DOCS.md). You may also check the API documentation from within the `Python` REPL via
+A detailed description of `nrpcalc` `Maker Mode`, `Finder Mode`, and `Background` API, along with example use cases can be found in [DOCS.md](./docs/DOCS.md). You may also check the API documentation from within the `Python` REPL via
 * `print nrpcalc.background.__doc__`,
 * `print nrpcalc.finder.__doc__`, and
 * `print nrpcalc.maker.__doc__`.
+
+If you enconter any problem using the API, please feel free to [open an issue](https://github.com/ayaanhossain/nrpcalc/issues) describing your use case, along with minimal code snippets reproducing the problem and any console output that shows the problem or error.
 
 ## `NRP Calculator` in Action
 A write-up showing the use of `NRP Calculator` in designing promoters and hammerhead ribozymes for _E. coli_ systems engineering is in the works, and will be released by Sunday, June 19, 2020.

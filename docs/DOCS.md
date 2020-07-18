@@ -181,7 +181,7 @@ RuntimeError: kmerSetDB was closed or dropped
 | `output_file` | `string`/`None` | filename to store discovered non-repetitive parts indexed by their position in `seq_list`; sequences are written in `FASTA` format | `None` |
 | `verbose` | `boolean` | if `True` displays progress | `True` |
 
-**_Returns_**: A `dictionary` of IUPAC strings with integer keys.
+**_Returns_**: A `dictionary` of `DNA` strings with integer keys.
 
 `Finder Mode` **API Example**
 
@@ -306,7 +306,7 @@ Non-Repetitive Toolbox Size: 3
 | `output_file` | `string`/`None` | filename to store designed non-repetitive parts as they are generated consecutively; sequences are written in `FASTA` format | `None` |
 | `verbose` | `boolean` | if `True` displays progress | `True` |
 
-**_Returns_**: A `dictionary` of IUPAC strings with integer keys.
+**_Returns_**: A `dictionary` of `DNA` strings with integer keys.
 
 `Maker Mode` **API Example**
 

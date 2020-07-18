@@ -3,7 +3,7 @@ from .base import finder    as nrpfinder
 from .base import kmerSetDB
 
 
-__version__ = '1.1.16'
+__version__ = '1.1.17'
 
 __authors__ = '''
 Ayaan Hossain <auh57@psu.edu>
@@ -273,7 +273,7 @@ def finder(
        desc - if True displays progress
               (default=True)
 
-    Returns: A dictionary of IUPAC strings with integer keys.
+    Returns: A dictionary of DNA strings with integer keys.
 
     Finder Mode API Example
 
@@ -539,6 +539,8 @@ def maker(
        type - boolean
        desc - if True displays progress
               (default=True)
+
+    Returns: A dictionary of DNA strings with integer keys.
     
     Maker Mode API Example
     
