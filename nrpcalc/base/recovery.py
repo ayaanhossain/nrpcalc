@@ -13,93 +13,6 @@ def is_graph_empty(homology_graph):
         return True
     return False
 
-def is_graph_complete(homology_graph):
-    num_nodes = homology_graph.number_of_nodes()
-    num_edges = homology_graph.number_of_edges()
-    if float(num_edges) == num_nodes * (num_nodes - 1) * 0.5:
-        return True
-    return False
-
-def completex_elimination(homology_graph, verbose):
-    ### REMOVE THIS ###
-    # Completex Elimination is Slow Though
-    return set()
-    ### REMOVE THIS ###
-    
-    indiset_nodes   = []
-    eliminated_subs = 0
-    retained_subs   = 0
-    nodes_to_delete = []
-
-    if verbose:
-        clear_length = 0
-        print '\nCompletex processing'
-
-    for homology_sub_graph in nx.connected_component_subgraphs(homology_graph):
-        if is_graph_complete(homology_sub_graph):
-            eliminated_subs += 1
-            indiset_nodes.append(homology_sub_graph.nodes().iterkeys().next())
-            nodes_to_delete.append(homology_sub_graph.nodes())
-        else:
-            retained_subs += 1
-        if verbose:
-            printed = ' [Components processed = {}] [Eliminated = {}] [Retained = {}]\r'.format(eliminated_subs + retained_subs, eliminated_subs, retained_subs)
-            sys.stdout.write(' '*clear_length+'\r')
-            sys.stdout.write(printed)
-            clear_length = len(printed)
-            sys.stdout.flush()
-            # print ' [Components processed = {}] [Eliminated = {}] [Retained = {}]\r'.format(eliminated_subs + retained_subs, eliminated_subs, retained_subs)
-    for nodeset_to_delete in nodes_to_delete:
-        homology_graph.remove_nodes_from(nodeset_to_delete)
-    
-    if verbose: print
-    
-    return indiset_nodes
-
-def get_powertex_degree(homology_graph, powertex_coeff, verbose):
-    max_degree = max(len(homology_graph[node]) for node in homology_graph)
-    avg_degree = (homology_graph.number_of_edges() * 1.0) / homology_graph.number_of_nodes()
-    ptx_degree = max_degree - max_degree*powertex_coeff + avg_degree*powertex_coeff # y = -(M - A)*x + M
-    try:
-        ptx_degree = ptx_degree if int(log10(max_degree)) - int(log10(avg_degree)) > 0 else 0
-    except:
-        ptx_degree = 0
-    if verbose:
-        print ' [Max degree = {}] [Avg degree = {}] [Powertex degree = {}]'.format(max_degree, avg_degree, ptx_degree)
-    return ptx_degree
-
-def powertex_elimination(homology_graph, verbose):
-    if verbose:
-        clear_length    = 0
-        print '\nPowertex processing'
-
-    powertex_coeff      = 0.3
-    powertex_degree     = get_powertex_degree(homology_graph, powertex_coeff, verbose)
-    eliminated_powertex = []
-    processed_nodes     = 0
-
-    if powertex_degree > 0:
-        for processed_nodes, node in enumerate(homology_graph.nodes()):
-            # In case we are dealing with a complete graph
-            if homology_graph.number_of_nodes() - len(eliminated_powertex) == 1:
-                break
-            if len(homology_graph[node]) > powertex_degree:
-                eliminated_powertex.append(node)
-                if verbose:
-                    printed = ' [Nodes processed = {}] [Powertex eliminated = {}] [Retained = {}]\r'.format(processed_nodes+1, len(eliminated_powertex), homology_graph.number_of_nodes()-len(eliminated_powertex))
-                    sys.stdout.write(' '*clear_length+'\r')
-                    sys.stdout.write(printed)
-                    clear_length = len(printed)
-                    sys.stdout.flush()
-    
-    if verbose:
-        if not eliminated_powertex:
-            print ' [Nodes processed = {}] [Powertex eliminated = 0] [Retained = {}]\r'.format(processed_nodes, homology_graph.number_of_nodes())
-        else:
-            print
-
-    homology_graph.remove_nodes_from(eliminated_powertex)
-
 def get_vercov_func(vercov_func, homology_graph):
     # TO DO: NEED TO USE DIFFERENT FUNCTIONS AT DIFFERENT EDGE COUNT SCALES!!
     if vercov_func == 'nrpG':
@@ -125,7 +38,7 @@ def get_recovered_non_homologs(homology_graph, graph_file, vercov_func=None, ver
     possible_nodes  = set(homology_graph.nodes())   
     
     if verbose:
-        print '\n [+] Initial independent set = {} [{} completex], computing vertex cover on remaining {} nodes.'.format(len(indiset_nodes), len(completex_nodes), len(possible_nodes))
+        print '\n [+] Initial independent set = {}, computing vertex cover on remaining {} nodes.'.format(len(indiset_nodes), len(completex_nodes), len(possible_nodes))
     
     if is_graph_empty(homology_graph):
         if verbose:

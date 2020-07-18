@@ -193,6 +193,20 @@ def background(
                   raises error
 
     >>> bkg.drop()
+    False
+    >>> bkg = nrpcalc.background(
+            path='./prj_bkg/',
+            Lmax=15)
+    >>> bkg
+    kmerSetDB stored at ./prj_bkg/ with 0 16-mers
+    >>> bkg.drop()
+    True
+    >>> bkg.add('ATGCTTAGTGCCATACC')
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+      File "nrpcalc/base/kmerSetDB.py", line 96, in wrapper
+        raise RuntimeError('kmerSetDB was closed or dropped')
+    RuntimeError: kmerSetDB was closed or dropped
     '''
     return kmerSetDB.kmerSetDB(
         path=path,
@@ -229,17 +243,18 @@ def finder(
     :: internal_repeats
        type - boolean
        desc - if False then parts containing internal repeats
-              longer than Lmax are eliminated
+              longer than Lmax are eliminated; shared repeats
+              are always eliminated
               (default=False)
     :: background
        type - kmerSetDB / None
-       desc - the background object containg k-mers (k=Lmax+1)
-              which must be absent in returned non-repetitive
+       desc - the background object containing k-mers (k=Lmax+1)
+              which must be absent in discovered non-repetitive
               subset of parts
               (default=None)
     :: vercov
        type - string
-       desc - must be either '2apx', 'nrpG', or 'nrp2';
+       desc - must be either '2apx', 'nrpG', or 'nrp2'
               '2apx' - use standard 2-approximation Vertex
                        Cover Elimination algorithm
               'nrpG' - use Greedy Vertex Cover Elimination
@@ -257,6 +272,8 @@ def finder(
        type - boolean
        desc - if True displays progress
               (default=True)
+
+    Returns: A dictionary of IUPAC strings with integer keys.
 
     Finder Mode API Example
 

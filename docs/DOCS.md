@@ -150,7 +150,7 @@ Traceback (most recent call last):
   File "<stdin>", line 1, in <module>
   File "nrpcalc/base/kmerSetDB.py", line 96, in wrapper
     raise RuntimeError('kmerSetDB was closed or dropped')
-RuntimeError: kmerSetDB was dropped
+RuntimeError: kmerSetDB was closed or dropped
 ```
 
 ## Finder Mode
@@ -169,7 +169,7 @@ RuntimeError: kmerSetDB was dropped
 |--|--|--|--|
 | `seq_list` | `list` | a list of IUPAC strings representing a genetic part toolbox | -- |
 | `Lmax` | `integer` | maximum allowed shared repeat length between all sequences in a given toolbox | -- |
-| `internal_repeats` | `boolean` | if `False` then parts containing internal repeats longer than Lmax are eliminated; shared repeats are always eliminated | `False` |
+| `internal_repeats` | `boolean` | if `False` then parts containing internal repeats longer than `Lmax` are eliminated; shared repeats are always eliminated | `False` |
 | `background` | `kmerSetDB` / `None` | the `background` object containing _k_-mers (_k_=`Lmax`+1) which must be absent in discovered non-repetitive subset of parts | `None` |
 | `vercov` | `string` | must be either `'2apx'`, `'nrpG'`, or `'nrp2'` <br> `'2apx'` - use standard 2-approximation Vertex Cover Elimination algorithm <br> `'nrpG'` - use Greedy Vertex Cover Elimination algorithm <br> `'nrp2'` - user `Finder Mode` 2-approximation Vertex Cover Elimination Algorithm | `'nrp2'` |
 | `output_file` | `string` / `None` | filename to store discovered non-repetitive parts indexed by their position in `seq_list`; sequences are written in `FASTA` format | `None` |
@@ -180,18 +180,88 @@ RuntimeError: kmerSetDB was dropped
 `Finder Mode` **API Examples**
 
 ```python
->>> from pprint import pprint
 >>> import nrpcalc
->>> my_background_list = [
-    'ATGAGATCGTAGCAACC',
-    'GACGATTACGTCAGGTA',
-    'ACAGTAGAGACGAGTAA',
-    'CCAGTACGAAAAGGCCC',
-    'TTAGCTTGATAGTTTTA']
->>> bkg = nrpcalc.background(
-        path='./prj_bkg/',
-        Lmax=15)
->>> bkg
-kmerSetDB stored at ./prj_bkg/ with 0 16-mers
->>>
+>>> 
+>>> my_chromosomes = [
+        'ATGAGATCGTAGCAACC',
+        'GACGATTACGTCAGGTA',
+        'ACAGTAGAGACGAGTAA',
+        'CCAGTACGAAAAGGCCC',
+        'AAAAAAAAAAAAAAAAA']
+>>> 
+>>> genomic_kmers = nrpcalc.background(
+            path='./my_genome/',
+            Lmax=15)
+>>> 
+>>> genomic_kmers.multiadd(my_chromosomes)
+
+[Background Processing]
+  Adding Seq 4: AAAAAAAAAA
+>>> 
+>>> my_toolbox = [
+        'AGAGCTATGACTGACGT',
+        'GCAGATAGGGGGTAGTA',
+        'TAAAAAAAAAAAAAAAA', # Repeats with last chromosome
+        'CAGATGATGCTAGGACT']
+>>> 
+>>> nrpcalc.finder(
+        seq_list=my_toolbox,
+        Lmax=15,
+        background=genomic_kmers)
+
+[Non-Repetitive Parts Calculator - Finder Mode]
+
+[Checking Constraints]
+ Sequence List   : 4 parts
+          Lmax   : 15
+ Internal Repeats: False
+
+ Check Status: PASS
+
+[Checking Background]:
+ Background: kmerSetDB stored at ./my_genome/ with 10 16-mers
+
+ Check Status: PASS
+
+[Checking Arguments]
+   Vertex Cover: nrp2
+   Output  File: None
+
+ Check Status: PASS
+
+Extracted 4 unique sequences out of 4 sequences in 1.693e-05 seconds
+
+Written 4 unique sequences out to ./5ebb5779-5314-41ce-8114-2d858ef41e2e/seq_list.txt in 9.68e-05 seconds
+
+ [Sequence processing remaining] = 1 
+ [Cliques inserted] = 3 
+
+Built homology graph in 0.000263 seconds. [Edges = 0] [Nodes = 3]
+ [Intital Nodes = 4] - [Repetitive Nodes = 1] = [Final Nodes = 3]
+
+ [+] Initial independent set = 0 [0 completex], computing vertex cover on remaining 3 nodes.
+ [+] Vertex Cover Function: NRP 2-approximation
+ [+] Dumping graph into: ./5ebb5779-5314-41ce-8114-2d858ef41e2e/repeat_graph.txt in 0.000402927398682 seconds
+
+----------------------
+Now running iteration: 0
+----------------------
+
+ Pendant checking is in progress...
+  [+] 3 Pendants found
+
+ Pendant elimination initiated...
+  [x] Isolated node 0 eliminated
+  [x] Isolated node 1 eliminated
+  [x] Isolated node 3 eliminated
+
+
+ [+] Computed vertex cover of size: 0 (in 0.000123 seconds)
+ [+] Loading graph from: ./5ebb5779-5314-41ce-8114-2d858ef41e2e/repeat_graph.txt
+ [+] Current independent set size:  3
+ [+] Potential nodes for expansion: 0 (projected independent set size: 3)
+ [X] Cannot expand independent set, terminating.
+
+Non-Repetitive Toolbox Size: 3
+{0: 'AGAGCTATGACTGACGT', 1: 'GCAGATAGGGGGTAGTA', 3: 'CAGATGATGCTAGGACT'}
 ```
