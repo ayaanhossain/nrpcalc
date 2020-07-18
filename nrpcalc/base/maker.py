@@ -481,11 +481,11 @@ class NRPMaker(object):
             if i in meta_struct.paired_dict:
                 j = meta_struct.paired_dict[i]
                 if not candidate[j] in self.compl_dict[candidate[i]]:
-                    '{}th Nucleotide {} not compementary to {}th Nucleotide {}'.format(
-                        i,
-                        candidate[i],
-                        j,
-                        candidate[j])
+                    # print '{}th Nucleotide {} not compementary to {}th Nucleotide {}'.format(
+                    #     i,
+                    #     candidate[i],
+                    #     j,
+                    #     candidate[j])
                     return False
             i += 1
         return True
