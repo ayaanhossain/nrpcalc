@@ -142,7 +142,7 @@ You can learn more about the two modes and background via
 
 ### Uninstalling `NRP Calculator`
 
-**Uninstallation** of `Non-Repetitive Parts Calculator` is as easy as
+You can easily remove `Non-Repetitive Parts Calculator` with
 ```bash
 $ pip uninstall nrpcalc
 ```
