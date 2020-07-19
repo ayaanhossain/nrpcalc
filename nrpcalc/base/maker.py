@@ -982,7 +982,7 @@ class NRPMaker(object):
         if build_parts:
             if not background is None:
                 if verbose:
-                    print '\n[Checking Background]:\n Background: {}'.format(background)
+                    print '\n[Checking Background]\n Background: {}'.format(background)
                 if isinstance(background, kmerSetDB):
                     self.background = background
                     if background.K != homology:

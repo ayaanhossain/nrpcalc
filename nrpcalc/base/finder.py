@@ -99,7 +99,7 @@ def nrp_finder(
     if find_parts:
         if not background is None:
             if verbose:
-                print '\n[Checking Background]:\n Background: {}'.format(background)
+                print '\n[Checking Background]\n Background: {}'.format(background)
             if isinstance(background, kmerSetDB.kmerSetDB):
                 if background.K != homology:
                     find_parts = False
