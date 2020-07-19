@@ -225,7 +225,7 @@ RuntimeError: kmerSetDB was closed or dropped
 
  Check Status: PASS
 
-[Checking Background]:
+[Checking Background]
  Background: kmerSetDB stored at ./my_genome/ with 10 16-mers
 
  Check Status: PASS
@@ -432,7 +432,7 @@ WARNING: stacking enthalpies not symmetric
 
  Check Status: PASS
 
-[Checking Background]:
+[Checking Background]
  Background: kmerSetDB stored at ./my_toolbox_kmers/ with 20000 16-mers
 
  Check Status: PASS
