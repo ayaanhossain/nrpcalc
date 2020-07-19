@@ -49,25 +49,29 @@ $ conda activate nrpenv
 > **Note** You don't necessarily need to make a new environment, as long as you know which environment you want `NRP Calculator` installed in, and have it activated during installation. For example, you might have a different project environment inside which you want to install `NRP Calculator`.
 
 The first thing we will need to install in a new environment is `ViennaRNA` which is an external dependency for `NRP Calculator` and not available in [PyPI](https://pypi.org). `ViennaRNA` is easily installed with
-
 ```bash
 $ conda install -c bioconda viennarna
 ```
-If you are following the instructions as is, this will install the latest copy of `ViennaRNA` inside the new `nrpenv` environment.
 
-If you do not want to install `conda` on your system, you will need to install `ViennaRNA` [manually](https://www.tbi.univie.ac.at/RNA/ViennaRNA/doc/html/install.html), ensuring proper setup of `PYTHONPATH` etc.
-
-Once `ViennaRNA` is installed, you can easily install `NRP Calculator` from PyPI, where it is published as the `nrpcalc` package. This is as easy as
+The next thing we will need to install in our new environment is `LevelDB` which is the other external dependency for `NRP Calculator`. This is easily done with
 ```bash
-$ pip install --upgrade nrpcalc --no-cache-dir
+$ conda install -c anaconda leveldb
 ```
-which will additionally install all dependencies from PyPI as well.
 
-> **Note** If you are installing `NRP Calculator` on `MacOS`, it is possible that you will run into issues when `pip` tries to install `plyvel` (a wrapper over [LevelDB](https://github.com/google/leveldb)) as a dependency. This is quickly resolved via executing
+If you are following the instructions as is, this will install the latest copy of `ViennaRNA` and `LevelDB` inside the new `nrpenv` environment.
+
+If you do not want to install `conda` on your system, you will need to install `ViennaRNA` [manually](https://www.tbi.univie.ac.at/RNA/ViennaRNA/doc/html/install.html), ensuring proper setup of `PYTHONPATH` etc. Similarly, you will also need to install `LevelDB` [manually](https://github.com/google/leveldb) ensuring all necessary development headers are found from within `Python`.
+
+> **Note** It is also possible to install `LevelDB` through [homebrew](https://brew.sh/) via
 > ```
 > $ brew install leveldb
 > ```
-> if you have [homebrew](https://brew.sh/) installed. Details can also be found [here](https://brewinstall.org/Install-leveldb-on-Mac-with-Brew/). Once `leveldb` is installed, try installing `NRP Calculator` again, as shown above.
+
+Once `ViennaRNA` and `LevelDB` is installed, you can easily install `NRP Calculator` from PyPI, where it is published as the `nrpcalc` package. This is as easy as
+```bash
+$ pip install --upgrade nrpcalc --no-cache-dir
+```
+which will additionally install all remaining dependencies from PyPI as well.
 
 If everything went well, `NRP Calculator` is now available in your environment under the `nrpcalc` package. You may verify it like so:
 ```python
@@ -85,7 +89,7 @@ Non-Repetitive Parts Calculator
 Automated design and discovery of non-repetitive genetic
 parts for engineering stable systems.
 
-Version: 1.1.19
+Version: 1.1.20
 
 Authors: Ayaan Hossain <auh57@psu.edu>
          Howard Salis  <salis@psu.edu>
