@@ -53,16 +53,16 @@ The first thing we will need to install in a new environment is `ViennaRNA` whic
 $ conda install -c bioconda viennarna
 ```
 
-The next thing we will need to install in our new environment is `LevelDB` which is the other external dependency for `NRP Calculator`. This is easily done with
+Next, we will need to install `LevelDB` in our new environment, which is easily done with
 ```bash
 $ conda install -c anaconda leveldb
 ```
 
 If you are following the instructions as is, this will install the latest copy of `ViennaRNA` and `LevelDB` inside the new `nrpenv` environment.
 
-If you do not want to install `conda` on your system, you will need to install `ViennaRNA` [manually](https://www.tbi.univie.ac.at/RNA/ViennaRNA/doc/html/install.html), ensuring proper setup of `PYTHONPATH` etc. Similarly, you will also need to install `LevelDB` [manually](https://github.com/google/leveldb) ensuring all necessary development headers are found from within `Python`.
+If you do not want to install `conda` on your system, you will need to install both [ViennaRNA](https://www.tbi.univie.ac.at/RNA/ViennaRNA/doc/html/install.html), and [LevelDB](https://github.com/google/leveldb) manually.
 
-> **Note** It is also possible to install `LevelDB` through [homebrew](https://brew.sh/) via
+> **Note** If you are on `MacOS` you can install `LevelDB` through [homebrew](https://brew.sh/) via
 > ```
 > $ brew install leveldb
 > ```
@@ -71,7 +71,7 @@ Once `ViennaRNA` and `LevelDB` is installed, you can easily install `NRP Calcula
 ```bash
 $ pip install --upgrade nrpcalc --no-cache-dir
 ```
-which will additionally install all remaining dependencies from PyPI as well.
+which will additionally install all remaining dependencies from PyPI.
 
 If everything went well, `NRP Calculator` is now available in your environment under the `nrpcalc` package. You may verify it like so:
 ```python
@@ -89,7 +89,7 @@ Non-Repetitive Parts Calculator
 Automated design and discovery of non-repetitive genetic
 parts for engineering stable systems.
 
-Version: 1.1.20
+Version: 1.1.21
 
 Authors: Ayaan Hossain <auh57@psu.edu>
          Howard Salis  <salis@psu.edu>
