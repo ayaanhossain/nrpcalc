@@ -89,7 +89,10 @@ Once downloaded, navigate into the `nrpcalc` directory with
 ```bash
 $ cd nrpcalc
 ```
-and install `NRP Calculator` using the included `setup.py`
+and install `NRP Calculator` using the included `setup.py` via
+```bash
+$ python setup.py install
+```
 
 ### Verifying Installation
 
