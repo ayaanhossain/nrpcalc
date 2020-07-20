@@ -329,13 +329,17 @@ kmerSetDB stored at ./my_toolbox_kmers/ with 0 16-mers
 >>>
 >>> # a local model function
 >>> def prevent_cutsites(seq):
-        BamHI = 'GGATCC' # cutsite 1
-        XbaI  = 'TCTAGA' # cutsite 2
-        # evaluate part concurrently
-        if seq[-6:] in [BamHI, XbaI]:
-            return (False, len(seq)-6)
-        else:
-            return (True, None)
+        # part is long enough to evaluate
+        if len(seq) >= 6:
+            BamHI = 'GGATCC' # cutsite 1
+            XbaI  = 'TCTAGA' # cutsite 2
+            # evaluate part concurrently
+            if seq[-6:] in [BamHI, XbaI]:
+                return (False, len(seq)-6)
+            else:
+                return (True, None)
+        # part is short enough .. pass
+        return (True, None)
 >>>
 >>> # a global model function
 >>> def optimal_gc_content(seq):
