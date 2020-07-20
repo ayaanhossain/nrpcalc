@@ -112,7 +112,7 @@ Non-Repetitive Parts Calculator
 Automated design and discovery of non-repetitive genetic
 parts for engineering stable systems.
 
-Version: 1.2.1
+Version: 1.2.2
 
 Authors: Ayaan Hossain <auh57@psu.edu>
          Howard Salis  <salis@psu.edu>
