@@ -35,9 +35,9 @@ be used to store background sequences against which parts
 discovered or designed are ensured to be non-repetitive.
 
 You can learn more about the two modes and background via
-  print nrpcalc.background.__doc__
-  print nrpcalc.finder.__doc__
-  print nrpcalc.maker.__doc__
+  print(nrpcalc.background.__doc__)
+  print(nrpcalc.finder.__doc__)
+  print(nrpcalc.maker.__doc__)
 '''.format(
     __version__,
     *__authors__.strip().split('\n'))
@@ -279,6 +279,7 @@ def finder(
 
     >>> import nrpcalc
     >>> 
+    >>> # define background corpus
     >>> my_chromosomes = [
         'ATGAGATCGTAGCAACC',
         'GACGATTACGTCAGGTA',
@@ -286,22 +287,25 @@ def finder(
         'CCAGTACGAAAAGGCCC',
         'AAAAAAAAAAAAAAAAA']
     >>> 
+    >>> # initialize background
     >>> genomic_kmers = nrpcalc.background(
         path='./my_genome/',
         Lmax=15)
-    >>> 
     >>> genomic_kmers.multiadd(
         my_chromosomes)
 
     [Background Processing]
       Adding Seq 4: AAAAAAAAAA...
     >>> 
+    >>> # fetch part toolbox
     >>> my_toolbox = [
         'AGAGCTATGACTGACGT',
         'GCAGATAGGGGGTAGTA',
         'TAAAAAAAAAAAAAAAA', # Repeats with last chromosome
-        'CAGATGATGCTAGGACT']
+        'GAGCTATGACTGACGTC'] # Repeats with first part
     >>> 
+    >>> # fine non-repetitive subset
+    >>> # with respect to background
     >>> nrpcalc.finder(
         seq_list=my_toolbox,
         Lmax=15,
@@ -316,7 +320,7 @@ def finder(
 
      Check Status: PASS
 
-    [Checking Background]:
+    [Checking Background]
      Background: kmerSetDB stored at ./my_genome/ with 10 16-mers
 
      Check Status: PASS
@@ -327,19 +331,19 @@ def finder(
 
      Check Status: PASS
 
-    Extracted 4 unique sequences out of 4 sequences in 1.693e-05 seconds
+    Extracted 4 unique sequences out of 4 sequences in 3.91e-05 seconds
 
-    Written 4 unique sequences out to ./5ebb5779-5314-41ce-8114-2d858ef41e2e/seq_list.txt in 9.68e-05 seconds
+    Written 4 unique sequences out to ./30c21235-e3f6-47f5-bce1-f99f47053e0b/seq_list.txt in 0.0002167 seconds
 
      [Sequence processing remaining] = 1 
-     [Cliques inserted] = 3
+     [Cliques inserted] = 2 
 
-    Built homology graph in 0.000263 seconds. [Edges = 0] [Nodes = 3]
+    Built homology graph in 0.0006673 seconds. [Edges = 1] [Nodes = 3]
      [Intital Nodes = 4] - [Repetitive Nodes = 1] = [Final Nodes = 3]
 
-     [+] Initial independent set = 0 [0 completex], computing vertex cover on remaining 3 nodes.
+     [+] Initial independent set = 0, computing vertex cover on remaining 0 nodes.
      [+] Vertex Cover Function: NRP 2-approximation
-     [+] Dumping graph into: ./5ebb5779-5314-41ce-8114-2d858ef41e2e/repeat_graph.txt in 0.000402927398682 seconds
+     [+] Dumping graph into: ./30c21235-e3f6-47f5-bce1-f99f47053e0b/repeat_graph.txt in 0.00023055076599121094 seconds
 
     ----------------------
     Now running iteration: 0
@@ -349,19 +353,21 @@ def finder(
       [+] 3 Pendants found
 
      Pendant elimination initiated...
-      [x] Isolated node 0 eliminated
       [x] Isolated node 1 eliminated
-      [x] Isolated node 3 eliminated
+      [x] Pendant node 0 eliminated
+      [+] Node 3 covered
 
 
-     [+] Computed vertex cover of size: 0 (in 0.000123 seconds)
-     [+] Loading graph from: ./5ebb5779-5314-41ce-8114-2d858ef41e2e/repeat_graph.txt
-     [+] Current independent set size:  3
-     [+] Potential nodes for expansion: 0 (projected independent set size: 3)
+     [+] Computed vertex cover of size: 1 (in 0.0002351 seconds)
+     [+] Loading graph from: ./30c21235-e3f6-47f5-bce1-f99f47053e0b/repeat_graph.txt
+     [+] Current independent set size:  2
+     [+] Potential nodes for expansion: 0 (projected independent set size: 2)
      [X] Cannot expand independent set, terminating.
 
-    Non-Repetitive Toolbox Size: 3
-    {0: 'AGAGCTATGACTGACGT', 1: 'GCAGATAGGGGGTAGTA', 3: 'CAGATGATGCTAGGACT'}
+    Non-Repetitive Toolbox Size: 2
+    {1: 'GCAGATAGGGGGTAGTA', 0: 'AGAGCTATGACTGACGT'}
+    >>>
+    >>> genomic_kmers.drop() # we're done with this background
     '''
     return nrpfinder.nrp_finder(
         seq_list=seq_list,
@@ -555,7 +561,7 @@ def maker(
     >>> bkg
     kmerSetDB stored at ./my_toolbox_kmers/ with 0 16-mers
     >>>
-    >>> # A local model function
+    >>> # a local model function
     >>> def prevent_cutsites(seq):
             BamHI = 'GGATCC' # cutsite 1
             XbaI  = 'TCTAGA' # cutsite 2
@@ -565,7 +571,7 @@ def maker(
             else:
                 return (True, None)
     >>>
-    >>> # A global model function
+    >>> # a global model function
     >>> def optimal_gc_content(seq):
             # compute gc count
             gcount = seq.count('G') * 1.
@@ -639,6 +645,7 @@ def maker(
     >>>
     >>> # build another toolbox of sigma70 promoters
     >>> # non-repetitive to the previous toolbox
+    >>> # (this is called toolbox chaining)
     >>> promoters_variable = nrpcalc.maker(
         seq_constr='N'*20+'TTGACA'+'N'*16+'WWWWWWW'+'NNNNN',
         struct_constr='.'*55,
@@ -665,7 +672,7 @@ def maker(
 
      Check Status: PASS
 
-    [Checking Background]:
+    [Checking Background]
      Background: kmerSetDB stored at ./my_toolbox_kmers/ with 20000 16-mers
 
      Check Status: PASS

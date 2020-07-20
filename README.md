@@ -29,7 +29,7 @@ Non-repetitiveness is a global property of the entire genetic part toolbox, and 
 
 ## Installation
 
-`Non-Repetitive Parts Calculator` is a `Linux`/`MacOS`-tested software, and built with `Python 2.7`. The software is not `Python 3.x` compatible at the moment, but will be pretty soon.
+`Non-Repetitive Parts Calculator` is a `Linux`/`MacOS`-tested software, and was originally built with `Python2.7`. The software is now `Python3` exclusive, and compatible only with `Python3.6` and above. `Python2.7` is no longer supported.
 
 **Setting up the Environment**
 
@@ -52,33 +52,28 @@ $ conda activate nrpenv
 
 **Installing External Dependencies**
 
-The first thing we will need to install in a new environment is `ViennaRNA` which is an external dependency for `NRP Calculator` and not available in [PyPI](https://pypi.org). `ViennaRNA` is easily installed with
+To use `NRP Calculator` in a new environment, we must first install `ViennaRNA`, which is an external dependency for the software and not available in [PyPI](https://pypi.org). `ViennaRNA` is easily installed with
 ```bash
 $ conda install -c bioconda viennarna
 ```
 
-Next, we will need to install `LevelDB` in our new environment, which is easily done with
-```bash
-$ conda install -c anaconda leveldb
+If you are following the instructions as is, this will install the latest copy of `ViennaRNA` inside the new `nrpenv` environment.
+
+If you do not want to install `conda` on your system, you will need to install [ViennaRNA](https://www.tbi.univie.ac.at/RNA/ViennaRNA/doc/html/install.html), and its `Python` bindings manually.
+
+Once completed, you can verify your installation of `ViennaRNA` via:
+```python
+$ python
+Python 3.6.10 | packaged by conda-forge | (default, Apr 24 2020, 16:44:11) 
+[GCC 7.3.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import RNA
+>>> 
 ```
-
-If you are following the instructions as is, this will install the latest copy of `ViennaRNA` and `LevelDB` inside the new `nrpenv` environment.
-
-If you do not want to install `conda` on your system, you will need to install both [ViennaRNA](https://www.tbi.univie.ac.at/RNA/ViennaRNA/doc/html/install.html), [LevelDB](https://github.com/rjpower/py-leveldb) and their `Python` bindings manually.
-
-> **Note** If you are on `MacOS` you can install `LevelDB` through [homebrew](https://brew.sh/) via
-> ```bash
-> $ brew install leveldb
-> ```
-> On `Debian`/`Ubuntu` derivatives, you may use
-> ```bash
-$ sudo apt-get install libleveldb1v5 libleveldb-dev
-> ```
-
 
 **Approach 1: Install from PyPI**
 
-Once `ViennaRNA` and `LevelDB` is installed, you can easily install `NRP Calculator` from PyPI, where it is published as the `nrpcalc` package. This is as easy as
+Once `ViennaRNA` is installed, you can install `NRP Calculator` from PyPI, where it is published as the `nrpcalc` package. This is as easy as
 ```bash
 $ pip install --upgrade nrpcalc --no-cache-dir
 ```
@@ -94,7 +89,7 @@ Once downloaded, navigate into the `nrpcalc` directory with
 ```bash
 $ cd nrpcalc
 ```
-and install `NRP Calculator` using the included `setup.py` via
+and install `NRP Calculator` using the included `setup.py`
 ```bash
 $ python setup.py install
 ```
@@ -104,13 +99,13 @@ $ python setup.py install
 If everything went well, `NRP Calculator` is now available in your environment under the `nrpcalc` package. You may verify it like so:
 ```python
 $ python
-Python 2.7.15 | packaged by conda-forge | (default, Mar  5 2020, 14:56:06) 
-[GCC 7.3.0] on linux2
+Python 3.6.10 | packaged by conda-forge | (default, Apr 24 2020, 16:44:11) 
+[GCC 7.3.0] on linux
 Type "help", "copyright", "credits" or "license" for more information.
 >>> 
 >>> import nrpcalc
 >>> 
->>> print nrpcalc.__doc__
+>>> print(nrpcalc.__doc__)
 
 Non-Repetitive Parts Calculator
 
@@ -136,9 +131,9 @@ be used to store background sequences against which parts
 discovered or designed are ensured to be non-repetitive.
 
 You can learn more about the two modes and background via
-  print nrpcalc.background.__doc__
-  print nrpcalc.finder.__doc__
-  print nrpcalc.maker.__doc__
+  print(nrpcalc.background.__doc__)
+  print(nrpcalc.finder.__doc__)
+  print(nrpcalc.maker.__doc__)
 
 >>> 
 ```
@@ -152,7 +147,7 @@ You can easily remove `Non-Repetitive Parts Calculator` with
 $ pip uninstall nrpcalc
 ```
 
-### Reporting Installation Issues
+**Reporting Installation Issues**
 
 If you encounter any problems during installation, please feel free to [open an issue](https://github.com/ayaanhossain/nrpcalc/issues) describing your problem along with your OS details, and any console output that shows the error.
 
@@ -188,9 +183,9 @@ You can read the complete article online at [Nature Biotechnology](https://www.n
 
 ## API Documentation
 A detailed description of `nrpcalc` `Maker Mode`, `Finder Mode`, and `Background` API, along with example use cases can be found in [DOCS.md](https://github.com/ayaanhossain/nrpcalc/blob/master/docs/DOCS.md). You may also check the API documentation from within the `Python` REPL via
-* `print nrpcalc.background.__doc__`,
-* `print nrpcalc.finder.__doc__`, and
-* `print nrpcalc.maker.__doc__`.
+* `print(nrpcalc.background.__doc__)`,
+* `print(nrpcalc.finder.__doc__)`, and
+* `print(nrpcalc.maker.__doc__)`.
 
 If you enconter any problem using the API, please feel free to [open an issue](https://github.com/ayaanhossain/nrpcalc/issues) describing your use case, along with minimal code snippets reproducing the problem and any console output that shows the problem or error.
 
