@@ -35,9 +35,9 @@ Non-repetitiveness is a global property of the entire genetic part toolbox, and 
 
 The best way to install `NRP Calculator` is via `conda`. If you have either `anaconda` or `miniconda` installed on your system, you are good to proceed. Otherwise, you may first need to install [miniconda](https://docs.conda.io/en/latest/miniconda.html).
 
-Assuming you have `conda` available on your system, you may first create a new environment (here we are naming it `nrpenv` but you can name it as you like)
+Assuming you have `conda` available on your system, you may first create a new environment. Here we are naming it `nrpenv` but you can name it as you like. Also, we are setting `nrpenv` up with `Python3.6` but feel free to install `Python3.7`, or one of the newer ones.
 ```bash
-$ conda create -n nrpenv python=2.7
+$ conda create -n nrpenv python=3.6
 ```
 Once your new environment is ready, deactivate your current environment
 ```bash
