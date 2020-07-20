@@ -1,11 +1,11 @@
 import sys
 
-import utils
+from . import utils
 
 import networkx as nx
 
 from time             import time
-from itertools        import islice, izip
+from itertools        import islice
 from collections      import deque, defaultdict
 
 def uniquify_seq_list(seq_list):
@@ -45,7 +45,7 @@ def get_repeat_dict(
 
         seq_id, seq = seq_deque.popleft()
         kmers = list(utils.stream_kmers(seq, k=homology))
-        rmers = map(utils.get_revcomp, kmers)
+        rmers = list(map(utils.get_revcomp, kmers))
 
         # Resolve internal repeats
         if not internal_repeats:
@@ -71,7 +71,7 @@ def get_repeat_dict(
                 continue
 
         # Populate repeat_dict for sequences sharing repeats
-        for i in xrange(len(kmers)):
+        for i in range(len(kmers)):
             hmer = kmers[i]
             rmer = rmers[i]
             mmer = min(hmer, rmer)
@@ -81,7 +81,7 @@ def get_repeat_dict(
                 repeat_dict[mmer] = [seq_id]
 
     if verbose:
-        print
+        print()
 
     return repeat_dict
 
@@ -150,15 +150,15 @@ def build_homology_graph(cliques, verbose):
     homology_graph = nx.Graph()
 
     if verbose:
-        print
+        print()
         clear_length = 0
 
     i = 0
     while True:
         # Stream Clique
         try:
-            repeat_clique = cliques.next()
-        except:
+            repeat_clique = next(cliques)
+        except Exception as E:
             break
 
         # Insert Clique
@@ -187,7 +187,7 @@ def build_homology_graph(cliques, verbose):
         i += 1
 
     if verbose:
-        print
+        print()
 
     return homology_graph
 
@@ -203,8 +203,8 @@ def get_homology_graph(
     seq_list = uniquify_seq_list(seq_list)
     unq_seqs = len(seq_list)
     if verbose:
-        print 'Extracted {} unique sequences out of {} sequences in {:2.4} seconds'.format(
-            unq_seqs, num_seqs, time()-t0)
+        print('Extracted {} unique sequences out of {} sequences in {:2.4} seconds'.format(
+            unq_seqs, num_seqs, time()-t0))
 
     t0 = time()
     with open(seq_file, 'w') as outfile:
@@ -214,8 +214,8 @@ def get_homology_graph(
             seq_deque.append((seq_id, seq))
             outfile.write('{},{}\n'.format(seq_id, seq))
     if verbose:
-        print '\nWritten {} unique sequences out to {} in {:2.4} seconds'.format(
-            unq_seqs, seq_file, time()-t0)
+        print('\nWritten {} unique sequences out to {} in {:2.4} seconds'.format(
+            unq_seqs, seq_file, time()-t0))
 
     t0 = time()
     repeat_cliques = get_repeat_cliques(
@@ -230,12 +230,12 @@ def get_homology_graph(
         verbose)
 
     if verbose:
-        print '\nBuilt homology graph in {:2.4} seconds. [Edges = {}] [Nodes = {}]'.format(
+        print('\nBuilt homology graph in {:2.4} seconds. [Edges = {}] [Nodes = {}]'.format(
             time()-t0,
             homology_graph.number_of_edges(),
-            homology_graph.number_of_nodes())
-        print ' [Intital Nodes = {}] - [Repetitive Nodes = {}] = [Final Nodes = {}]'.format(
+            homology_graph.number_of_nodes()))
+        print(' [Intital Nodes = {}] - [Repetitive Nodes = {}] = [Final Nodes = {}]'.format(
             unq_seqs,
             unq_seqs - homology_graph.number_of_nodes(),
-            homology_graph.number_of_nodes())
+            homology_graph.number_of_nodes()))
     return homology_graph

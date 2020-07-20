@@ -8,6 +8,7 @@
 * ~~Write up README sketch~~
 * ~~Integrate output_file for Finder~~
 * ~~Add jupyter and scikit-learn dependencies~~
+* ~~Remove Plyvel switch to LevelDB~~
 * Finish docs
 * [+] Concurrently finish examples
 * [+] Write up tests

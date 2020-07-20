@@ -1,11 +1,10 @@
-from string       import maketrans
 from Bio.SeqUtils import MeltingTemp
 from time         import time
 
 class Synthesis(object):
 
     # Setup synthesis assessment variables
-    comp_table = maketrans('ATGC', 'TACG')
+    comp_table = str.maketrans('ATGC', 'TACG')
     runs_tuple = (('CCCCCCCCC',            'GGGGGGGGG'),
                   ('AAAAAAAAAAAAA',        'TTTTTTTTTTTTT'),
                   ('TCTTCTTCTTCTTCTTCT',   'TCGTCGTCGTCGTCGTCG',   'TCCTCCTCCTCCTCCTCC',   'GGAGGAGGAGGAGGAGGA',   'GGTGGTGGTGGTGGTGGT',
@@ -189,7 +188,7 @@ class Synthesis(object):
     def _rule_hairpin(self, seq):
         # Type 1: Stem = 11bp, Loop = 3bp to 48bp, Mismatches = 2, Stem must have GC-content >= 0.80
         stem, max_mismatch, gc_high = 11, 2, 0.80
-        for loop in xrange(3, 48+1):
+        for loop in range(3, 48+1):
             if len(seq) >= (stem+loop+stem):
                 if not self._is_hairpin_pass(seq, stem, loop, max_mismatch, gc_high):
                     return False
@@ -198,7 +197,7 @@ class Synthesis(object):
 
         # Type 2: Stem = 17bp, Loop = 3bp to 100bp, Mismatches = 3
         stem, max_mismatch, gc_high = 17, 3, 0.0
-        for loop in xrange(3, 100+1):
+        for loop in range(3, 100+1):
             if len(seq) >= (stem+loop+stem):
                 if not self._is_hairpin_pass(seq, stem, loop, max_mismatch, gc_high):
                     return False
@@ -208,7 +207,7 @@ class Synthesis(object):
         if len(seq) > 500:
             # Type 3: Stem = 22bp, Loop = 100bp to 500bp, Mismatches = 5
             stem, max_mismatch, gc_high = 22, 5, 0.0
-            for loop in xrange(100, 500+1):
+            for loop in range(100, 500+1):
                 if len(seq) >= (stem+loop+stem):
                     if not self._is_hairpin_pass(seq, stem, loop, max_mismatch, gc_high):
                         return False

@@ -1,11 +1,11 @@
 import os
 
-from Bio    import SeqIO
-from string import maketrans
+from Bio import SeqIO
 
 import RNA
 
-complement_table = maketrans('ATGCU', 'TACGA')
+complement_table = str.maketrans('ATGCU', 'TACGA')
+basepairing = {'A': 'T', 'T':'A', 'C':'G', 'G':'C', 'U':'A'}
 
 def stream_fasta_seq_list(fasta_filename):
     with open(fasta_filename, "rU") as handle:
@@ -35,7 +35,7 @@ def uniquify_background_list(background_list):
 def stream_kmers(seq, k):
     if k >= len(seq):
         return [seq]
-    return (seq[i:i+k] for i in xrange(len(seq)-k+1))
+    return (seq[i:i+k] for i in range(len(seq)-k+1))
 
 def get_comp(seq):
     return seq.translate(complement_table)
@@ -45,8 +45,10 @@ def get_revcomp(seq):
 
 def stream_min_kmers(seq, k):
     for kmer in stream_kmers(seq, k):
-        rmer = get_revcomp(kmer)
-        yield min(rmer, kmer)
+        if kmer[0] < basepairing[kmer[-1]]:
+            yield kmer
+        else:
+            yield get_revcomp(kmer)
 
 class Fold(object):
 

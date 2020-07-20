@@ -1,4 +1,3 @@
-
 class kmerSetArray(object):
     '''
     Custom set-array structure for
@@ -81,7 +80,8 @@ def test():
     # required test imports
     import random
     import time
-    import utils
+    
+    from . import utils
 
     # returns a random DNA string of length
     def get_DNA(length):
@@ -89,7 +89,7 @@ def test():
 
     # create seq
     seq = get_DNA(length=100)
-    print 'Testing Operations on {}...'.format(seq[:25], seq[-25:])
+    print('Testing Operations on {}...'.format(seq[:25], seq[-25:]))
 
     # object test
     mySet = kmerSetArray(size=len(seq)-16+1)
@@ -98,29 +98,29 @@ def test():
     t0 = time.time()
     for i,kmer in enumerate(utils.stream_kmers(seq, k=16)):
         mySet[i] = kmer
-    print '__setitem__  time = {} sec'.format(time.time()-t0)
+    print('__setitem__  time = {} sec'.format(time.time()-t0))
 
     # __contains__ test
     t0 = time.time()
     for i,kmer in enumerate(utils.stream_kmers(seq, k=16)):
         assert kmer in mySet
-    print '__contains__ time = {} sec'.format(time.time()-t0)
+    print('__contains__ time = {} sec'.format(time.time()-t0))
 
     # index test
     t0 = time.time()
     for i,kmer in enumerate(utils.stream_kmers(seq, k=16)):
         assert mySet.index(kmer) == i
-    print 'index        time = {} sec'.format(time.time()-t0)
+    print('index        time = {} sec'.format(time.time()-t0))
 
     # __len__ test
     t0 = time.time()
     assert len(mySet) == len(seq)-16+1
-    print '__len__      time = {} sec'.format(time.time()-t0)
+    print('__len__      time = {} sec'.format(time.time()-t0))
 
     # __del__ test
     t0 = time.time()
     del mySet
-    print '__del__      time = {} sec'.format(time.time()-t0)
+    print('__del__      time = {} sec'.format(time.time()-t0))
 
 
 if __name__ == '__main__':

@@ -50,8 +50,8 @@ def eliminate_pendants(homology_graph, pendant_deque, vercov_nodes, verbose):
         if candidate_node in homology_graph:
             if len(homology_graph[candidate_node]) == 1:
                 if verbose:
-                    print '  [x] Pendant node {} eliminated'.format(candidate_node)
-                adj_node = homology_graph[candidate_node].iterkeys().next()
+                    print('  [x] Pendant node {} eliminated'.format(candidate_node))
+                adj_node = next(iter(homology_graph[candidate_node]))
                 homology_graph.remove_edge(adj_node, candidate_node)
                 vercov_nodes.add(adj_node)
                 new_candidates = [node for node in homology_graph[adj_node] if len(homology_graph[node]) <= 2]
@@ -61,11 +61,11 @@ def eliminate_pendants(homology_graph, pendant_deque, vercov_nodes, verbose):
                 homology_graph.remove_nodes_from([candidate_node, adj_node])
             elif len(homology_graph[candidate_node]) == 0:
                 if verbose:
-                    print '  [x] Isolated node {} eliminated'.format(candidate_node)
+                    print('  [x] Isolated node {} eliminated'.format(candidate_node))
                     homology_graph.remove_node(candidate_node)
         else:
             if verbose:
-                print '  [+] Node {} covered'.format(candidate_node)
+                print('  [+] Node {} covered'.format(candidate_node))
 
 def get_pendant_deque(homology_graph):
     return deque(sorted([node for node in homology_graph if len(homology_graph[node]) <= 1], key=lambda x: len(homology_graph[x])))
@@ -74,19 +74,18 @@ def init_vercov(homology_graph, verbose):
     vercov_nodes = set()
 
     if verbose:
-        print '\n Pendant checking is in progress...'
+        print('\n Pendant checking is in progress...')
     pendant_deque = get_pendant_deque(homology_graph)
 
     if not pendant_deque:
         if verbose:
-            print '  [x] No pendants found'
+            print('  [x] No pendants found')
     else:
         if verbose:
-            print '  [+] {} Pendants found\n\n Pendant elimination initiated...'.format(len(pendant_deque))
+            print('  [+] {} Pendants found\n\n Pendant elimination initiated...'.format(len(pendant_deque)))
         eliminate_pendants(homology_graph, pendant_deque, vercov_nodes, verbose)
         if verbose:
-            print
-    
+            print(    )
     return vercov_nodes
 
 def get_arbitrary_neighbor(homology_graph, candidate_node, verbose):
@@ -104,7 +103,7 @@ def std_vercov_approx(homology_graph, verbose):
 
     while homology_graph.number_of_edges():
         if verbose:
-            print ' [Edges remaining = {}] [Nodes remaining = {}]'.format(homology_graph.number_of_edges(), homology_graph.number_of_nodes())
+            print(' [Edges remaining = {}] [Nodes remaining = {}]'.format(homology_graph.number_of_edges(), homology_graph.number_of_nodes()))
 
         node_i = sorted_nodes.pop()
         if node_i in homology_graph:
@@ -122,7 +121,7 @@ def nrp_vercov_approx(homology_graph, verbose):
 
     while homology_graph.number_of_edges():
         if verbose:
-            print ' [Edges remaining = {}] [Nodes remaining = {}]'.format(homology_graph.number_of_edges(), homology_graph.number_of_nodes())
+            print(' [Edges remaining = {}] [Nodes remaining = {}]'.format(homology_graph.number_of_edges(), homology_graph.number_of_nodes()))
 
         max_degree_nodes = get_max_degree_nodes(homology_graph)
 
@@ -143,7 +142,7 @@ def nrp_vercov_greedy(homology_graph, verbose):
 
     while homology_graph.number_of_edges():
         if verbose:
-            print ' [Edges remaining = {}] [Nodes remaining = {}]'.format(homology_graph.number_of_edges(), homology_graph.number_of_nodes())
+            print(' [Edges remaining = {}] [Nodes remaining = {}]'.format(homology_graph.number_of_edges(), homology_graph.number_of_nodes()))
 
         max_degree_nodes = get_max_degree_nodes(homology_graph)
 
@@ -155,16 +154,16 @@ def nrp_vercov_greedy(homology_graph, verbose):
     return vercov_nodes
 
 def test():
-    print 'Linear Chain'
+    print('Linear Chain')
     G = nx.Graph()
     for i in xrange(1, 10):
         G.add_edge(i, i+1)
-    print 'Nodes:', G.nodes()
-    print 'Edges:', G.edges()
+    print('Nodes:', G.nodes())
+    print('Edges:', G.edges())
     for i in xrange(1, 11):
-        print '  {} -> {}'.format(i, list(G[i]))
+        print('  {} -> {}'.format(i, list(G[i])))
     mvc = nrp_vercov_approx(G, verbose=True)
-    print 'Vertex Cover:', sorted(mvc)
+    print('Vertex Cover:', sorted(mvc))
 
 
 if __name__ == '__main__':

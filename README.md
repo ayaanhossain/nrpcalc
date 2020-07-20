@@ -29,9 +29,9 @@ Non-repetitiveness is a global property of the entire genetic part toolbox, and 
 
 ## Installation
 
-`Non-Repetitive Parts Calculator` is a `Linux/MacOS`-tested software, and built with `Python 2.7`. The software is not `Python 3.x` compatible at the moment, but will be pretty soon.
+`Non-Repetitive Parts Calculator` is a `Linux`/`MacOS`-tested software, and built with `Python 2.7`. The software is not `Python 3.x` compatible at the moment, but will be pretty soon.
 
-### Setting up the Environment
+**Setting up the Environment**
 
 The best way to install `NRP Calculator` is via `conda`. If you have either `anaconda` or `miniconda` installed on your system, you are good to proceed. Otherwise, you may first need to install [miniconda](https://docs.conda.io/en/latest/miniconda.html).
 
@@ -50,7 +50,7 @@ $ conda activate nrpenv
 
 > **Note** You don't necessarily need to make a new environment, as long as you know which environment you want `NRP Calculator` installed in, and have it activated during installation. For example, you might have a different project environment inside which you want to install `NRP Calculator`.
 
-### Installing External Dependencies
+**Installing External Dependencies**
 
 The first thing we will need to install in a new environment is `ViennaRNA` which is an external dependency for `NRP Calculator` and not available in [PyPI](https://pypi.org). `ViennaRNA` is easily installed with
 ```bash
@@ -64,14 +64,19 @@ $ conda install -c anaconda leveldb
 
 If you are following the instructions as is, this will install the latest copy of `ViennaRNA` and `LevelDB` inside the new `nrpenv` environment.
 
-If you do not want to install `conda` on your system, you will need to install both [ViennaRNA](https://www.tbi.univie.ac.at/RNA/ViennaRNA/doc/html/install.html), and [LevelDB](https://github.com/google/leveldb) manually.
+If you do not want to install `conda` on your system, you will need to install both [ViennaRNA](https://www.tbi.univie.ac.at/RNA/ViennaRNA/doc/html/install.html), [LevelDB](https://github.com/rjpower/py-leveldb) and their `Python` bindings manually.
 
 > **Note** If you are on `MacOS` you can install `LevelDB` through [homebrew](https://brew.sh/) via
 > ```bash
 > $ brew install leveldb
 > ```
+> On `Debian`/`Ubuntu` derivatives, you may use
+> ```bash
+$ sudo apt-get install libleveldb1v5 libleveldb-dev
+> ```
 
-### Approach 1: Install from PyPI
+
+**Approach 1: Install from PyPI**
 
 Once `ViennaRNA` and `LevelDB` is installed, you can easily install `NRP Calculator` from PyPI, where it is published as the `nrpcalc` package. This is as easy as
 ```bash
@@ -79,7 +84,7 @@ $ pip install --upgrade nrpcalc --no-cache-dir
 ```
 which will additionally install all remaining dependencies from PyPI.
 
-### Approach 2: Install from GitHub
+**Approach 2: Install from GitHub**
 
 Alternatively, you can install `NRP Calculator` from GitHub. To do so, first clone the repository with
 ```bash
@@ -94,7 +99,7 @@ and install `NRP Calculator` using the included `setup.py` via
 $ python setup.py install
 ```
 
-### Verifying Installation
+**Verifying Installation**
 
 If everything went well, `NRP Calculator` is now available in your environment under the `nrpcalc` package. You may verify it like so:
 ```python
@@ -112,7 +117,7 @@ Non-Repetitive Parts Calculator
 Automated design and discovery of non-repetitive genetic
 parts for engineering stable systems.
 
-Version: 1.1.22
+Version: 1.2.0
 
 Authors: Ayaan Hossain <auh57@psu.edu>
          Howard Salis  <salis@psu.edu>
@@ -140,7 +145,7 @@ You can learn more about the two modes and background via
 
 > **Note** Remember to activate the specific environment in which `NRP Calculator` is installed in order to use it. For example, if you followed the instructions above exactly, then the environment you created and installed `NRP Calculator` in is named `nrpenv`.
 
-### Uninstalling `NRP Calculator`
+**Uninstalling `NRP Calculator`**
 
 You can easily remove `Non-Repetitive Parts Calculator` with
 ```bash
@@ -149,7 +154,7 @@ $ pip uninstall nrpcalc
 
 ### Reporting Installation Issues
 
-If you encounter any problems during installation, please feel free to [open an issue](https://github.com/ayaanhossain/nrpcalc/issues) describing your problem along with any console output that shows the error.
+If you encounter any problems during installation, please feel free to [open an issue](https://github.com/ayaanhossain/nrpcalc/issues) describing your problem along with your OS details, and any console output that shows the error.
 
 ## License
 

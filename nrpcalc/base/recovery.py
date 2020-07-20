@@ -1,6 +1,6 @@
 import sys
 
-import vercov
+from . import vercov
 
 import networkx as nx
 
@@ -38,17 +38,17 @@ def get_recovered_non_homologs(homology_graph, graph_file, vercov_func=None, ver
     possible_nodes  = set(homology_graph.nodes())   
     
     if verbose:
-        print '\n [+] Initial independent set = {}, computing vertex cover on remaining {} nodes.'.format(len(indiset_nodes), len(completex_nodes), len(possible_nodes))
+        print('\n [+] Initial independent set = {}, computing vertex cover on remaining {} nodes.'.format(len(indiset_nodes), len(completex_nodes), len(possible_nodes)))
     
     if is_graph_empty(homology_graph):
         if verbose:
-            print ' [X] Graph is empty, further independent set expansion not possible, terminating.'
+            print(' [X] Graph is empty, further independent set expansion not possible, terminating.')
     else:
         vercov_func, vercov_func_name = get_vercov_func(vercov_func, homology_graph)
         iteration = -1
 
         if verbose:
-            print ' [+] Vertex Cover Function: {}'.format(vercov_func_name)
+            print(' [+] Vertex Cover Function: {}'.format(vercov_func_name))
             sys.stdout.write(' [+] Dumping graph into: {}'.format(graph_file))
 
         t0 = time()
@@ -60,9 +60,9 @@ def get_recovered_non_homologs(homology_graph, graph_file, vercov_func=None, ver
             iteration += 1
 
             if verbose:
-                print '\n----------------------'
-                print 'Now running iteration: {}'.format(iteration)
-                print '----------------------'
+                print('\n----------------------')
+                print('Now running iteration: {}'.format(iteration))
+                print('----------------------')
 
             t0 = time()
 
@@ -72,8 +72,8 @@ def get_recovered_non_homologs(homology_graph, graph_file, vercov_func=None, ver
             vercov_nodes = vercov_func(homology_graph, verbose)
             
             if verbose:
-                print '\n [+] Computed vertex cover of size: {} (in {:.4} seconds)'.format(len(vercov_nodes), time()-t0)
-                print ' [+] Loading graph from: {}'.format(graph_file)
+                print('\n [+] Computed vertex cover of size: {} (in {:.4} seconds)'.format(len(vercov_nodes), time()-t0))
+                print(' [+] Loading graph from: {}'.format(graph_file))
 
             homology_graph = load_homology_graph(graph_file)
 
@@ -87,11 +87,11 @@ def get_recovered_non_homologs(homology_graph, graph_file, vercov_func=None, ver
             curr_possibility_count = len(possible_nodes)
 
             if verbose:
-                print ' [+] Current independent set size:  {}'.format(len(indiset_nodes))
-                print ' [+] Potential nodes for expansion: {} (projected independent set size: {})'.format(len(possible_nodes), len(indiset_nodes)+len(possible_nodes))
+                print(' [+] Current independent set size:  {}'.format(len(indiset_nodes)))
+                print(' [+] Potential nodes for expansion: {} (projected independent set size: {})'.format(len(possible_nodes), len(indiset_nodes)+len(possible_nodes)))
             if len(possible_nodes) == 0 or prev_possibility_count == curr_possibility_count:
                 if verbose:
-                    print ' [X] Cannot expand independent set, terminating.'
+                    print(' [X] Cannot expand independent set, terminating.')
                 break
 
     return indiset_nodes

@@ -50,7 +50,7 @@ def compress_locs(locs, homology):
         compressed = []
         x = locs[0]
         y = x+homology
-        for pos in xrange(1, len(locs)):
+        for pos in range(1, len(locs)):
             if locs[pos]-locs[pos-1] == 1:
                 y = locs[pos]+homology
             else:
@@ -68,7 +68,7 @@ def is_seq_constr_sufficient(seq, homology, toolbox_size):
     seq_list = list(seq)
     sufficiency_status = True
     insufficiency_locs = []
-    for i in xrange(len(seq)-homology+1):
+    for i in range(len(seq)-homology+1):
         if get_k_mer_count(sub_seq_list=seq_list[i:i+homology]) < toolbox_size:
             sufficiency_status = False
             insufficiency_locs.append(i)
@@ -82,7 +82,7 @@ def get_computable_form(struct):
     closed  = []
     pairs   = []
     invalid = []
-    for pos in xrange(len(struct)):
+    for pos in range(len(struct)):
         pairing = struct[pos]
         if pairing == '(':
             opened.append(pos)
@@ -118,7 +118,7 @@ def hamming(a, b):
     Get hamming distance between two strings.
     '''
     hdist = 0
-    for i in xrange(len(a)):
+    for i in range(len(a)):
         if a[i] != b[i]:
             hdist += 1
     return hdist
@@ -167,24 +167,24 @@ def is_structure_not_conflict(struct, homology):
     
 
 def main():
-    print 'Testing Sequence Constraint Validation Checkers ... ',
+    print('Testing Sequence Constraint Validation Checkers ... ',)
     legal_alphabet  = set('ACGTRYSWKMBDHVN')
-    seq_legal = ''.join(random.sample(legal_alphabet, 1)[0] for _ in xrange(100))
+    seq_legal = ''.join(random.sample(legal_alphabet, 1)[0] for _ in range(100))
     assert is_seq_constr_legal(seq=seq_legal)[0] == True
 
     illegal_alphabet = set('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
-    seq_illegal = ''.join(random.sample(illegal_alphabet, 1)[0] for _ in xrange(100))
+    seq_illegal = ''.join(random.sample(illegal_alphabet, 1)[0] for _ in range(100))
     assert is_seq_constr_legal(seq=seq_illegal)[0] == False
-    print 'OK'
+    print('OK')
 
-    print 'Testing Sequence Constraint Sufficiency Checkers ... ',
+    print('Testing Sequence Constraint Sufficiency Checkers ... ',)
     seq      = 'N'*20 + 'TTGACA' + 'N'*17 + 'TATAAT' + 'N'*6 + 'CCN' + 'N'*20
     homology = 11
     assert is_seq_constr_sufficient(seq, homology, toolbox_size=1000)[0] == True
     assert is_seq_constr_sufficient(seq, homology, toolbox_size=2000)[0] == False
-    print 'OK'
+    print('OK')
 
-    print 'Testing Struture Constraint Validation Checkers ...',
+    print('Testing Struture Constraint Validation Checkers ...',)
     struct = '....(((.xx.)))...()...(())...'
     assert is_structure_valid(struct)[0] == True
     struct = '....(((.xx.))).).()...(())...'
@@ -195,9 +195,9 @@ def main():
     assert is_structure_valid(struct)[0] == False
     struct = '.B..(((.xx.))).).().(.(())...'
     assert is_structure_valid(struct)[0] == False
-    print 'OK'
+    print('OK')
 
-    print 'Testing Struture Constraint Homology Conflict Checkers ...',
+    print('Testing Struture Constraint Homology Conflict Checkers ...',)
     struct = '(((((((((((......)))))))))))...(((((((((((......)))))))))))'
     homology = 10
     assert is_structure_not_conflict(struct, homology)[0] == False
@@ -207,7 +207,7 @@ def main():
     struct = '(((((((((((......)))).)))))))...(((((.((((((......)))))))))))'
     homology = 10
     assert is_structure_not_conflict(struct, homology)[0] == True
-    print 'OK'
+    print('OK')
 
 if __name__ == '__main__':
     main()

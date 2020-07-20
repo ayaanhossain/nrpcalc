@@ -39,15 +39,15 @@ def main():
             total_trials += 1
             if test_func():
                 total_success += 1.
-                print '[{}] Current Prob = {}'.format(attempt, get_prob(total_trials, total_success))
+                print('[{}] Current Prob = {}'.format(attempt, get_prob(total_trials, total_success)))
                 attempt += 1
                 break
         else:
-            print
-            print '  Est Prob = {}'.format(get_prob(total_trials, total_success))
+            print()
+            print('  Est Prob = {}'.format(get_prob(total_trials, total_success)))
             x1, x2 = get_CI(total_trials, total_success, conf_interval)
-            print '-99.99% CI = {}'.format(x1)
-            print '+99.99% CI = {}'.format(x2)
+            print('-99.99% CI = {}'.format(x1))
+            print('+99.99% CI = {}'.format(x2))
             return None
 
         curr_prob = get_prob(total_trials, total_success)
