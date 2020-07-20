@@ -287,7 +287,11 @@ class NRPMaker(object):
             raise e
 
         # No conflict found!
-        return None
+        if state:
+            return None
+        # Conflict Found!
+        else:
+            return index
 
     def _get_non_coding_candidate(
         self,

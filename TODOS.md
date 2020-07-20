@@ -9,8 +9,9 @@
 * ~~Integrate output_file for Finder~~
 * ~~Add jupyter and scikit-learn dependencies~~
 * ~~Remove Plyvel switch to LevelDB~~
-* Finish docs
-* [+] Concurrently finish examples
+* ~~Fix Local Traceback after refactoring~~
+* ~~Finish docs~~
+* Concurrently finish examples
 * [+] Write up tests
 * ~~Finish setup.py~~
 * ~~Publish to PyPI~~
