@@ -15,7 +15,7 @@ setup(
     name='nrpcalc',
     
     # Link: https://www.python.org/dev/peps/pep-0440/#version-scheme
-    version='1.2.0',
+    version='1.2.1',
     
     description='Non-Repetitive Parts Calculator - Automated design and discovery of non-repetitive genetic parts for engineering stable genetic systems',
     
@@ -80,9 +80,9 @@ setup(
         '!=3.2.*',
         '!=3.3.*',
         '!=3.4.*',
-        '!=3.5.*'
+        '!=3.5.*',
         '>=3.6',
-        '<4.0.*'],
+        '<4.0.*']),
 
     install_requires=[
         'numpy>=1.19.0',

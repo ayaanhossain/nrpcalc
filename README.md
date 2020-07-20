@@ -68,7 +68,7 @@ Python 3.6.10 | packaged by conda-forge | (default, Apr 24 2020, 16:44:11)
 [GCC 7.3.0] on linux
 Type "help", "copyright", "credits" or "license" for more information.
 >>> import RNA
->>> 
+>>> quit()
 ```
 
 **Approach 1: Install from PyPI**
@@ -112,7 +112,7 @@ Non-Repetitive Parts Calculator
 Automated design and discovery of non-repetitive genetic
 parts for engineering stable systems.
 
-Version: 1.2.0
+Version: 1.2.1
 
 Authors: Ayaan Hossain <auh57@psu.edu>
          Howard Salis  <salis@psu.edu>
