@@ -1,11 +1,12 @@
 import os
 
+import pkg_resources
+
 from Bio import SeqIO
 
 import RNA
 
 complement_table = str.maketrans('ATGCU', 'TACGA')
-basepairing = {'A': 'T', 'T':'A', 'C':'G', 'G':'C', 'U':'A'}
 
 def stream_fasta_seq_list(fasta_filename):
     with open(fasta_filename, "rU") as handle:
@@ -45,10 +46,7 @@ def get_revcomp(seq):
 
 def stream_min_kmers(seq, k):
     for kmer in stream_kmers(seq, k):
-        if kmer[0] < basepairing[kmer[-1]]:
-            yield kmer
-        else:
-            yield get_revcomp(kmer)
+        yield min(kmer, get_revcomp(kmer))
 
 class Fold(object):
 
@@ -71,9 +69,9 @@ class Fold(object):
         if not part_type in ['RNA', 'DNA']:
             part_type = 'RNA'
         
-        RNA.read_parameter_file(
-            self.parameter_directory+'/{}.par'.format(
-                part_type))
+        parameter_file = pkg_resources.resource_filename(
+            'nrpcalc', 'base/{}.par'.format(part_type))
+        RNA.read_parameter_file(parameter_file)
 
     def evaluate_mfe(self, seq):
         # MFE Only

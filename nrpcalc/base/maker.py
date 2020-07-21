@@ -986,7 +986,6 @@ class NRPMaker(object):
                 if verbose:
                     print('\n[Checking Background]\n Background: {}'.format(background))
                 if isinstance(background, kmerSetDB):
-                    self.background = background
                     if background.K != homology:
                         build_parts = False
                         print('\n [ERROR]    Background Lmax is {}, but Constraint Lmax is {}'.format(
@@ -1041,9 +1040,10 @@ class NRPMaker(object):
             raise RuntimeError('Invalid Constraints, Background or Arguments')
         print()
 
-        # kmerSetDB Setup
+        # kmer_db and background Setup
         projector.setup_proj_dir(self.proj_id)
         self.kmer_db = set()
+        self.background = background
         # self.kmer_db = kmerSetDB(
         #     path='./{}/kmerDB'.format(self.proj_id),
         #     homology=homology,
