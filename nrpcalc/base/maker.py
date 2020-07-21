@@ -272,6 +272,8 @@ class NRPMaker(object):
         try:
             assert state in [True, False]
         except Exception as e:
+            print('\n Local Model fn. failed to evaluate partial path: {}'.format(
+                candidate_str))
             print('\n Local Model fn. returned a non-boolean evaluation: {}\n'.format(
                 state))
             raise e
@@ -280,9 +282,11 @@ class NRPMaker(object):
         try:
             if state == False:
                 index = int(index)
-                assert index <= i
+                assert 0 <= index <= i
         except Exception as e:
-            print('\n Local Model fn. returned a non-integer traceback index: {}\n'.format(
+            print('\n Local Model fn. failed to evaluate partial path: {}'.format(
+                candidate_str))
+            print('\n Local Model fn. returned a non-integer or invalid traceback index: {}\n'.format(
                 index))
             raise e
 
