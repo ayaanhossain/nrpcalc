@@ -3,7 +3,7 @@ from .base import finder    as nrpfinder
 from .base import kmerSetDB
 
 
-__version__ = '1.2.5'
+__version__ = '1.2.6'
 
 __authors__ = '''
 Ayaan Hossain <auh57@psu.edu>
@@ -716,11 +716,13 @@ def maker(
       Lmax=Lmax,
       verbose=False)) == 1000
     '''
+    # Initialize object
     _maker = nrpmaker.NRPMaker(
         part_type=part_type,
         seed=seed)
     
-    return _maker.nrp_maker(
+    # Compute parts
+    parts = _maker.nrp_maker(
         seq_constr=seq_constr,
         part_type=part_type,
         struct_constr=struct_constr,
@@ -737,3 +739,7 @@ def maker(
         output_file=output_file,
         verbose=verbose,
         abortion=True)
+
+    # Cleanups and return
+    del _maker
+    return parts
