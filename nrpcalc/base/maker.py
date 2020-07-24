@@ -92,8 +92,7 @@ class NRPMaker(object):
             'struct_spec', 'struct paired_dict rev_paired_dict unpaired_set folding inversefolding')
         pairing_stack = []
         meta_struct   = struct_spec(
-            struct=struct.replace(
-                'x', '.'),
+            struct=struct.replace('x', '.'),
             paired_dict={},
             rev_paired_dict={},
             unpaired_set=set(),
@@ -161,7 +160,7 @@ class NRPMaker(object):
         candidate[i] = '-'
         kmer_set[i]  = ' '
 
-    def _freeze_point(
+    def _clear_path(
         self,
         candidate,
         tried_set,
@@ -227,8 +226,13 @@ class NRPMaker(object):
         rbi=None):
         # Default Case: Explicit roll back
         if not rbi is None:
+
+            # traceback to ( if corresponding ) given
+            if rbi in meta_struct.rev_paired_dict:
+                rbi = meta_struct.rev_paired_dict[rbi]
+
             roll_back_index = rbi
-            self._freeze_point(
+            self._clear_path(
                 candidate, tried_set, kmer_set, i, k=roll_back_index)
             return rbi
 
@@ -241,7 +245,7 @@ class NRPMaker(object):
         else:
             roll_back_index = self._get_rollback_index(
                 meta_seq, meta_struct, i, homology)
-            i = self._freeze_point(
+            i = self._clear_path(
                 candidate, tried_set, kmer_set, i, k=roll_back_index)
         
         return i
@@ -253,7 +257,8 @@ class NRPMaker(object):
         local_model_fn,
         verbose):
         # Prep candidate
-        candidate_str = ''.join(candidate[:i+1])
+        candidate_str = ''.join(candidate)
+        candidate_str = candidate_str[:i+1]
         
         # Try to evaluate the local_model_fn on candidate_str
         outcome = True
@@ -264,7 +269,7 @@ class NRPMaker(object):
             else:
                 state, index = outcome
         except Exception as e:
-            print('\n Local Model fn. failed to evaluate partial path: {}\n'.format(
+            print(' Local Model fn. failed to evaluate partial path: {}\n'.format(
                 candidate_str))
             raise e # No intelligence, halt everything!
 
@@ -272,9 +277,9 @@ class NRPMaker(object):
         try:
             assert state in [True, False]
         except Exception as e:
-            print('\n Local Model fn. failed to evaluate partial path: {}'.format(
+            print(' Local Model fn. failed to evaluate partial path: {}'.format(
                 candidate_str))
-            print('\n Local Model fn. returned a non-boolean evaluation: {}\n'.format(
+            print(' Local Model fn. returned a non-boolean evaluation: {}\n'.format(
                 state))
             raise e
 
@@ -284,9 +289,9 @@ class NRPMaker(object):
                 index = int(index)
                 assert 0 <= index <= i
         except Exception as e:
-            print('\n Local Model fn. failed to evaluate partial path: {}'.format(
+            print(' Local Model fn. failed to evaluate partial path: {}'.format(
                 candidate_str))
-            print('\n Local Model fn. returned a non-integer or invalid traceback index: {}\n'.format(
+            print(' Local Model fn. returned a non-integer or invalid traceback index: {}\n'.format(
                 index))
             raise e
 
@@ -418,7 +423,8 @@ class NRPMaker(object):
             # Handle internal and shared repeats
             if i >= homology-1:
                 # Get the kmer/rmer
-                kmer = ''.join(candidate[i-homology+1:i+1])
+                tmpseq = ''.join(candidate)
+                kmer = tmpseq[i-homology+1:i+1]
                 rmer = utils.get_revcomp(kmer)
                 mmer = min(kmer, rmer)
 
@@ -465,6 +471,7 @@ class NRPMaker(object):
             i += 1
 
         # Prepare to return candidate
+        del kmer_set
         if candidate is None or '-' in candidate:
             return None
         else:
@@ -633,7 +640,7 @@ class NRPMaker(object):
                     try:
                         outcome = global_model_fn(candidate)
                     except Exception as e:
-                        print('\n Global Model fn. failed to evaluate complete path: {}\n'.format(
+                        print(' Global Model fn. failed to evaluate complete path: {}\n'.format(
                             candidate))
                         raise e
 
@@ -641,7 +648,7 @@ class NRPMaker(object):
                     try:
                         assert outcome in [True, False]
                     except Execution as e:
-                        print('\n Global Model fn. returned a non-boolean state: {}\n'.format(
+                        print(' Global Model fn. returned a non-boolean state: {}\n'.format(
                             outcome))
                         raise e
 
@@ -781,11 +788,10 @@ class NRPMaker(object):
                 iter_count += 1
 
                 if verbose:
-                    print(' [part] {}, [{}-mers] {}, [iter {}] {:.2f}s, [avg] {:.2f}s, [total time] {:.2f}h'.format(
+                    print(' [part] {}, [{}-mers] {}, [iter time] {:.2f}s, [avg time] {:.2f}s, [total time] {:.2f}h'.format(
                         seq_count,
                         homology,
                         len(self.kmer_db),
-                        iter_count,
                         time()-t0, time_sum / iter_count,
                         (time() - begin_time) / 3600.0))
                 
@@ -998,6 +1004,12 @@ class NRPMaker(object):
                         print(' [SOLUTION] Try correcting Lmax\n')
                         if verbose:
                             print(' Check Status: FAIL\n')
+                    elif not background.ALIVE:
+                        build_parts = False
+                        print('\n [ERROR]    Background is closed or dropped')
+                        print(' [SOLUTION] Try using an open Background\n')
+                        if verbose:
+                            print(' Check Status: FAIL\n')
                     else:
                         if verbose:
                             print('\n Check Status: PASS')
@@ -1039,7 +1051,6 @@ class NRPMaker(object):
         if not build_parts:
             # Cleanups
             self.background = None
-            self.kmer_db.drop()
             self.kmer_db = None
             raise RuntimeError('Invalid Constraints, Background or Arguments')
         print()
