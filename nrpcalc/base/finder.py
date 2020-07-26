@@ -106,7 +106,7 @@ def nrp_finder(
                     print('\n [ERROR]    Background Lmax is {}, but Constraint Lmax is {}'.format(
                         background.K-1,
                         homology-1))
-                    print(' [SOLUTION] Try correcting Lmax\n')
+                    print(' [SOLUTION] Try lowering or correcting Lmax\n')
                     if verbose:
                         print(' Check Status: FAIL\n')
                 else:

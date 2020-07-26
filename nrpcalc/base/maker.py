@@ -429,27 +429,27 @@ class NRPMaker(object):
                 # Are either of these mers seen previously?
                 mmer_seen = False
 
+                # Case: kmer/rkmer is an internal
+                #       repeat to current part                
+                if not allow_internal_repeat:
+                    # Direct repeat
+                    if kmer in kmer_set:
+                        mmer_seen = True
+                    # Inverted repeat
+                    elif rmer in kmer_set:
+                        mmer_seen = True
+
                 # Case: mmer is a shared repeat with
                 #       a previous part
-                if mmer in self.kmer_db:
-                    mmer_seen = True
+                if not mmer_seen:
+                    if mmer in self.kmer_db:
+                        mmer_seen = True
 
                 # Case: mmer is a shared repeat with
                 #       background
                 if not mmer_seen:
                     if not self.background is None:
                         if mmer in self.background:
-                            mmer_seen = True
-
-                # Case: kmer/rkmer is an internal
-                #       repeat to current part
-                if not mmer_seen:
-                    if not allow_internal_repeat:
-                        # Direct repeat
-                        if kmer in kmer_set:
-                            mmer_seen = True
-                        # Inverted repeat
-                        if rmer in kmer_set:
                             mmer_seen = True
 
                 # Traceback to eliminate repeat
@@ -996,12 +996,12 @@ class NRPMaker(object):
                 if verbose:
                     print('\n[Checking Background]\n Background: {}'.format(background))
                 if isinstance(background, kmerSetDB):
-                    if background.K != homology:
+                    if background.K > homology:
                         build_parts = False
                         print('\n [ERROR]    Background Lmax is {}, but Constraint Lmax is {}'.format(
                             background.K-1,
                             homology-1))
-                        print(' [SOLUTION] Try correcting Lmax\n')
+                        print(' [SOLUTION] Try lowering or correcting Lmax\n')
                         if verbose:
                             print(' Check Status: FAIL\n')
                     elif not background.ALIVE:
