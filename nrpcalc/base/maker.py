@@ -9,7 +9,7 @@ from .kmerSetDB    import kmerSetDB
 from .kmerSetArray import kmerSetArray
 
 import sys
-import random
+import numpy
 import uuid
 import math
 import textwrap
@@ -73,10 +73,9 @@ class NRPMaker(object):
         self.background = None
         
         if not seed is None and isinstance(seed, int):
-            self.seed = seed
+            self.rng = numpy.random.default_rng(seed=seed)
         else:
-            self.seed = random.random()
-        random.seed(self.seed)
+            self.rng = numpy.random.default_rng()
 
     def _get_adjusted_struct(self, struct, seq):
         if struct is None:
@@ -340,8 +339,8 @@ class NRPMaker(object):
 
                     # Case ( and .
                     if not i in meta_struct.rev_paired_dict:
-                        candidate[i] = random.choice(
-                            list(meta_seq[i]-tried_set[i]))
+                        candidate[i] = self.rng.choice(
+                            sorted(meta_seq[i]-tried_set[i]))
                         tried_set[i].add(candidate[i])
                         # Case (
                         if i in meta_struct.paired_dict:
@@ -395,7 +394,7 @@ class NRPMaker(object):
             elif i in meta_struct.rev_paired_dict:
                 j = meta_struct.rev_paired_dict[i]
                 # Paired bases are not complementary
-                if utils.get_comp(candidate[i]) != candidate[j]:
+                if not candidate[j] in self.compl_dict[candidate[i]]:
                     candidate[i] = '-'
                     kmer_set[i]  = ' '
                     tried_set[i] = set()
@@ -423,8 +422,7 @@ class NRPMaker(object):
             # Handle internal and shared repeats
             if i >= homology-1:
                 # Get the kmer/rmer
-                tmpseq = ''.join(candidate)
-                kmer = tmpseq[i-homology+1:i+1]
+                kmer = ''.join(candidate[i-homology+1:i+1])
                 rmer = utils.get_revcomp(kmer)
                 mmer = min(kmer, rmer)
 
@@ -438,19 +436,21 @@ class NRPMaker(object):
 
                 # Case: mmer is a shared repeat with
                 #       background
-                if not self.background is None:
-                    if mmer in self.background:
-                        mmer_seen = True
+                if not mmer_seen:
+                    if not self.background is None:
+                        if mmer in self.background:
+                            mmer_seen = True
 
                 # Case: kmer/rkmer is an internal
                 #       repeat to current part
-                elif not allow_internal_repeat:
-                    # Direct repeat
-                    if kmer in kmer_set:
-                        mmer_seen =True
-                    # Inverted repeat
-                    if rmer in kmer_set:
-                        mmer_seen=True
+                if not mmer_seen:
+                    if not allow_internal_repeat:
+                        # Direct repeat
+                        if kmer in kmer_set:
+                            mmer_seen = True
+                        # Inverted repeat
+                        if rmer in kmer_set:
+                            mmer_seen = True
 
                 # Traceback to eliminate repeat
                 if mmer_seen:
@@ -464,8 +464,8 @@ class NRPMaker(object):
                         kmer_set)
                     continue
                 
-                else:
-                    kmer_set[i] = kmer
+                # Everything OK .. insert kmer
+                kmer_set[i] = kmer
 
             # Roll forward
             i += 1
@@ -721,7 +721,7 @@ class NRPMaker(object):
         meta_struct = self._get_meta_struct(
             struct=self._get_adjusted_struct(struct, seq))
         meta_seq = self._get_meta_seq(
-            seq=seq.upper().replace('U', 'T'),
+            seq=seq,
             meta_struct=meta_struct)
 
         seq_count  = 0
@@ -1101,6 +1101,8 @@ class NRPMaker(object):
                     out_file.write(
                         '>non-repetitive part {}\n'.format(
                             current_nrp_count+1))
+                    if part_type == 'RNA':
+                        non_coding_nrp = non_coding_nrp.replace('T', 'U')
                     non_coding_nrp = '\n'.join(
                         textwrap.wrap(
                             non_coding_nrp, 80))

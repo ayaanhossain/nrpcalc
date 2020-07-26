@@ -724,13 +724,13 @@ def maker(
     # Compute parts
     parts = _maker.nrp_maker(
         seq_constr=seq_constr,
-        part_type=part_type,
         struct_constr=struct_constr,
         struct_type=struct_type,
         target_size=target_size,
         homology=Lmax+1,
         allow_internal_repeat=internal_repeats,
-        background=background,        
+        background=background,
+        part_type=part_type,
         synth_opt=synth_opt,
         local_model_fn=local_model_fn,
         global_model_fn=global_model_fn,

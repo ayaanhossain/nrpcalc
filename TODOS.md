@@ -11,6 +11,7 @@
 * ~~Remove Plyvel switch to LevelDB~~
 * ~~Fix Local Traceback after refactoring~~
 * ~~Finish docs~~
+* ~~Cleanup unnecessary formatting~~
 * Concurrently finish examples
 * [+] Write up tests
 * ~~Finish setup.py~~

@@ -101,7 +101,7 @@ def nrp_finder(
             if verbose:
                 print('\n[Checking Background]\n Background: {}'.format(background))
             if isinstance(background, kmerSetDB.kmerSetDB):
-                if background.K != homology:
+                if background.K > homology:
                     find_parts = False
                     print('\n [ERROR]    Background Lmax is {}, but Constraint Lmax is {}'.format(
                         background.K-1,

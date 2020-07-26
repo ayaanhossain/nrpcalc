@@ -134,17 +134,18 @@ class kmerSetDB(object):
         '''
         User function to add seq k-mers to kmerSetDB.
         '''
-        if not seq in ['K', 'LEN']:
-            try:
+        try:
+            if not seq in ['K', 'LEN']:
+                seq = seq.replace('U', 'T')
                 for kmer in utils.stream_min_kmers(
                     seq=seq, k=self.K):
                     kmer = kmer.encode()
                     if self._get(kmer) is None:
                         self.DB.Put(kmer, b'1')
                         self.LEN += 1
-                self.DB.Put(b'LEN', str(self.LEN).encode())
-            except Exception as E:
-                raise E
+            self.DB.Put(b'LEN', str(self.LEN).encode())
+        except Exception as E:
+            raise E
 
     @alivemethod
     def multiadd(self, seq_list):
@@ -166,6 +167,7 @@ class kmerSetDB(object):
                         index=index,
                         seq=seq)
                     index += 1
+                    seq = seq.replace('U', 'T')
                     for kmer in utils.stream_min_kmers(
                         seq=seq, k=self.K):
                         kmer = kmer.encode()
@@ -179,12 +181,14 @@ class kmerSetDB(object):
             raise E
 
     @alivemethod
-    def __contains__(self, seq):
+    def __contains__(self, seq, rna=True):
         '''
         Python dunder function to check existence of
         any k-mer from seq in kmerSetDB.
         '''
         try:
+            if rna:
+                seq = seq.replace('U', 'T')
             for kmer in utils.stream_min_kmers(
                 seq=seq, k=self.K):
                 kmer = kmer.encode()
@@ -202,7 +206,10 @@ class kmerSetDB(object):
         '''
         try:
             for seq in seq_list:
-                yield seq in self
+                seq = seq.replace('U', 'T')
+                yield self.__contains__(
+                    seq=seq,
+                    rna=False)
         except Exception as E:
             raise E
 
@@ -231,6 +238,7 @@ class kmerSetDB(object):
         '''
         try:
             if not seq in ['K', 'LEN']:
+                seq = seq.replace('U', 'T')
                 for kmer in utils.stream_min_kmers(
                     seq=seq, k=self.K):
                     kmer = kmer.encode()
@@ -262,6 +270,7 @@ class kmerSetDB(object):
                         index=index,
                         seq=seq)
                     index += 1
+                    seq = seq.replace('U', 'T')
                     for kmer in utils.stream_min_kmers(
                         seq=seq, k=self.K):
                         kmer = kmer.encode()

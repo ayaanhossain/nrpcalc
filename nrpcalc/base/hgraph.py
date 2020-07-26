@@ -12,8 +12,7 @@ def uniquify_seq_list(seq_list):
     unique_seq_index = {}
     index = len(seq_list)-1
     while index > -1:
-        seq = seq_list.pop()
-        seq.upper().replace('U', 'T')
+        seq = seq_list.pop().upper().replace('U', 'T')
         unique_seq_index[seq] = index
         index -= 1
     unique_seq_list = []
@@ -82,7 +81,7 @@ def get_repeat_dict(
 
     if verbose:
         print()
-
+    
     return repeat_dict
 
 def get_maximal_cliques(repeat_cliques_list):
