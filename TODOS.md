@@ -13,7 +13,7 @@
 * ~~Finish docs~~
 * ~~Cleanup unnecessary formatting~~
 * ~~Introduce missing states~~
-* Concurrently finish examples
+* ~~Finish notebook of examples~~
 * [+] Write up tests
 * ~~Finish setup.py~~
 * ~~Publish to PyPI~~

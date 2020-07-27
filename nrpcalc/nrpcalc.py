@@ -368,6 +368,7 @@ def finder(
     {1: 'GCAGATAGGGGGTAGTA', 0: 'AGAGCTATGACTGACGT'}
     >>>
     >>> genomic_kmers.drop() # we're done with this background
+    True
     '''
     return nrpfinder.nrp_finder(
         seq_list=seq_list,
@@ -556,8 +557,8 @@ def maker(
     >>>
     >>> # initialize background
     >>> bkg = nrpcalc.background(
-      path='./my_toolbox_kmers',
-      Lmax=Lmax)
+        path='./my_toolbox_kmers',
+        Lmax=Lmax)
     >>> bkg
     kmerSetDB stored at ./my_toolbox_kmers/ with 0 16-mers
     >>>
@@ -712,9 +713,9 @@ def maker(
     >>>
     >>> # verify all promoters are non-repetitive
     >>> assert len(nrpcalc.finder(
-      seq_list=final_toolbox,
-      Lmax=Lmax,
-      verbose=False)) == 1000
+        seq_list=final_toolbox,
+        Lmax=Lmax,
+        verbose=False)) == 1000
     '''
     # Initialize object
     _maker = nrpmaker.NRPMaker(

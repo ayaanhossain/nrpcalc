@@ -221,7 +221,7 @@ class kmerSetDB(object):
         for key, _ in self.DB.RangeIter(
             key_from=None, key_to=None):
             if not key in [b'K', b'LEN']:
-                yield str(key)
+                yield str(key.decode('ascii'))
 
     def __len__(self):
         '''

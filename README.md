@@ -10,7 +10,7 @@
   <a href="#License">License</a> •
   <a href="#Citation">Citation</a> •
   <a href="https://github.com/ayaanhossain/nrpcalc/blob/master/docs/DOCS.md">DOCS</a> •
-  <a href="#NRP-Calculator-in-Action">EXAMPLES</a> 
+  <a href="#NRP-Calculator-in-Action">`NRP Calculator` in Action</a> 
 </p>
 
 ## Overview
@@ -182,6 +182,7 @@ You can read the complete article online at [Nature Biotechnology](https://www.n
 - Howard Salis | [github.com/hsalis](https://github.com/hsalis) | [@hsalis](https://twitter.com/hsalis)
 
 ## API Documentation
+
 A detailed description of `nrpcalc` `Maker Mode`, `Finder Mode`, and `Background` API, along with example use cases can be found in [DOCS.md](https://github.com/ayaanhossain/nrpcalc/blob/master/docs/DOCS.md). You may also check the API documentation from within the `Python` REPL via
 * `print(nrpcalc.background.__doc__)`,
 * `print(nrpcalc.finder.__doc__)`, and
@@ -190,4 +191,28 @@ A detailed description of `nrpcalc` `Maker Mode`, `Finder Mode`, and `Background
 If you enconter any problem using the API, please feel free to [open an issue](https://github.com/ayaanhossain/nrpcalc/issues) describing your use case, along with minimal code snippets reproducing the problem and any console output that shows the problem or error.
 
 ## `NRP Calculator` in Action
-A write-up showing the use of `NRP Calculator` in designing promoters and hammerhead ribozymes for _E. coli_ systems engineering is in the works, and will be released by Sunday, June 19, 2020.
+
+A `jupyter` [notebook](https://github.com/ayaanhossain/nrpcalc/blob/master/examples/NRPCalcInAction.ipynb) describing the use of `NRP Calculator` in designing thousands of commonly used genetic parts from constitutive promoters to intrinsic terminators for _E. coli_ systems engineering is available inside `/examples/` directory.
+
+If you have [installed] `nrpcalc` then you have everything you need to open and execute the notebook.
+
+Simply clone this repository
+```bash
+$ git clone https://github.com/ayaanhossain/nrpcalc.git 
+```
+
+and navigate to `nrpcalc/examples/` directory
+```bash
+$ cd nrpcalc/examples/
+```
+
+and fire up `jupyter`.
+```bash
+$ jupyter notebook
+```
+
+This should now open a browser tab showing a single `jupyter` notebook named `NRPCalcInAction.ipynb`. Click on the notebook to open it, and follow the content of the notebook.
+
+If any part of the notebook is unclear or confusing to you, please feel free to reach any of the authors via Email or Twitter, who would be more than happy to clarify anything in the notebook.
+
+We hope you enjoy the paper and the notebook!

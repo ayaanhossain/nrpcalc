@@ -11,9 +11,10 @@
   <a href="#Background">Background</a> •
   <a href="#Finder-Mode">Finder Mode</a> •
   <a href="#Maker-Mode">Maker Mode</a> •
-  <a href="https://github.com/ayaanhossain/nrpcalc/blob/master/README.md">README</a> •
-  <a href="https://github.com/ayaanhossain/nrpcalc/blob/master/README.md">EXAMPLES</a>
+  <a href="https://github.com/ayaanhossain/nrpcalc/blob/master/README.md">README</a>
 </p>
+
+> **Note** If you encounter any error or bug in using `nrpcalc`, please feel free to [open an issue](https://github.com/ayaanhossain/nrpcalc/issues).
 
 ## Background
 
@@ -43,8 +44,8 @@
     'CCAGTACGAAAAGGCCC',
     'TTAGCTTGATAGTTTTA']
 >>> bkg = nrpcalc.background(
-        path='./prj_bkg/',
-        Lmax=15)
+    path='./prj_bkg/',
+    Lmax=15)
 >>> bkg
 kmerSetDB stored at ./prj_bkg/ with 0 16-mers
 >>>
@@ -180,7 +181,7 @@ RuntimeError: kmerSetDB was closed or dropped
 | `output_file` | `string`/`None` | filename to store discovered non-repetitive parts indexed by their position in `seq_list`; sequences are written in FASTA format | `None` |
 | `verbose` | `boolean` | if `True` displays progress | `True` |
 
-**_Returns_**: A `dictionary` of DNA strings with integer keys.
+**_Returns_**: A `dictionary` of DNA or RNA strings with integer keys.
 
 ### `Finder Mode` **API Example**
 
@@ -276,6 +277,7 @@ Non-Repetitive Toolbox Size: 2
 {1: 'GCAGATAGGGGGTAGTA', 0: 'AGAGCTATGACTGACGT'}
 >>>
 >>> genomic_kmers.drop() # we're done with this background
+True
 ```
 
 ## Maker Mode
@@ -311,7 +313,7 @@ Non-Repetitive Toolbox Size: 2
 | `output_file` | `string`/`None` | filename to store designed non-repetitive parts as they are generated consecutively; sequences are written in `FASTA` format | `None` |
 | `verbose` | `boolean` | if `True` displays progress | `True` |
 
-**_Returns_**: A dictionary of DNA strings with integer keys.
+**_Returns_**: A dictionary of DNA or RNA strings with integer keys.
 
 ### `Maker Mode` **API Example**
 
@@ -322,8 +324,8 @@ Non-Repetitive Toolbox Size: 2
 >>>
 >>> # initialize background
 >>> bkg = nrpcalc.background(
-  path='./my_toolbox_kmers',
-  Lmax=Lmax)
+    path='./my_toolbox_kmers',
+    Lmax=Lmax)
 >>> bkg
 kmerSetDB stored at ./my_toolbox_kmers/ with 0 16-mers
 >>>
@@ -478,7 +480,7 @@ True
 >>>
 >>> # verify all promoters are non-repetitive
 >>> assert len(nrpcalc.finder(
-  seq_list=final_toolbox,
-  Lmax=Lmax,
-  verbose=False)) == 1000
+    seq_list=final_toolbox,
+    Lmax=Lmax,
+    verbose=False)) == 1000
 ```
