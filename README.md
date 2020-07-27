@@ -10,7 +10,7 @@
   <a href="#License">License</a> •
   <a href="#Citation">Citation</a> •
   <a href="https://github.com/ayaanhossain/nrpcalc/blob/master/docs/DOCS.md">DOCS</a> •
-  <a href="#NRP-Calculator-in-Action">NRP Calculator in Action</a> 
+  <a href="#NRP-Calculator-in-Action">NRP Calculator in Action!</a> 
 </p>
 
 ## Overview
@@ -190,7 +190,7 @@ A detailed description of `nrpcalc` `Maker Mode`, `Finder Mode`, and `Background
 
 If you enconter any problem using the API, please feel free to [open an issue](https://github.com/ayaanhossain/nrpcalc/issues) describing your use case, along with minimal code snippets reproducing the problem and any console output that shows the problem or error.
 
-## `NRP Calculator` in Action
+## `NRP Calculator` in Action!
 
 A `jupyter` [notebook](https://github.com/ayaanhossain/nrpcalc/blob/master/examples/NRPCalcInAction.ipynb) describing the use of `NRP Calculator` in designing thousands of commonly used genetic parts from constitutive promoters to intrinsic terminators for _E. coli_ systems engineering is available inside `/examples/` directory.
 
