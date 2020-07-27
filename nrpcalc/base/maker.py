@@ -385,18 +385,24 @@ class NRPMaker(object):
             # Case ( and .
             elif not i in meta_struct.rev_paired_dict:
                 # Wrong nucleotide selected
-                if candidate[i] not in meta_seq[i]:
-                    candidate[i] = '-'
-                    kmer_set[i]  = ' '
+                if not candidate[i] in meta_seq[i]:
+                    self._reset_candidate_kmer_set(
+                        candidate=candidate,
+                        kmer_set=kmer_set,
+                        i=i)
                     tried_set[i] = set()
                     continue
             # Case )
             elif i in meta_struct.rev_paired_dict:
                 j = meta_struct.rev_paired_dict[i]
                 # Paired bases are not complementary
-                if not candidate[j] in self.compl_dict[candidate[i]]:
-                    candidate[i] = '-'
-                    kmer_set[i]  = ' '
+                # or, Wrong nucleotide selected
+                if not candidate[j] in self.compl_dict[candidate[i]] or \
+                   not candidate[i] in meta_seq[i]:
+                    self._reset_candidate_kmer_set(
+                        candidate=candidate,
+                        kmer_set=kmer_set,
+                        i=i)
                     tried_set[i] = set()
                     continue
 
@@ -492,13 +498,13 @@ class NRPMaker(object):
         i = 0
         while i < len(candidate):
             if not candidate[i] in meta_seq[i]:
-                return False
+                return False,1,i
             if i in meta_struct.paired_dict:
                 j = meta_struct.paired_dict[i]
                 if not candidate[j] in self.compl_dict[candidate[i]]:
-                    return False
+                    return False,2,i
             i += 1
-        return True
+        return True,0,0
 
     def _is_synthesis_verified(self, candidate):
         return self.synthesis.evaluate(candidate)
@@ -615,13 +621,18 @@ class NRPMaker(object):
                 opt_count += 1
 
                 # Diagnostic block -- Shouldn't trigger on experimental changes
-                if not self._is_non_coding_construction_verified(
+                construction = self._is_non_coding_construction_verified(
                     meta_seq,
                     meta_struct,
-                    candidate):
+                    candidate)
+                construction_state = construction[0]
+                error_digest = construction[1:]
+                if not construction_state:
                     current_fail_count += 1
                     raise Exception(
-                        'Part construction incorrect due to code/logic changes! Report issue.')
+                        'Maker built a rogue candidate: {}.\nError Digest: {}.\nPlease report issue to authors.'.format(
+                            candidate,
+                            error_digest))
                 else:
                     pass
 
@@ -828,6 +839,11 @@ class NRPMaker(object):
             print(' [SOLUTION] Try correcting Sequence Constraint\n')
             return False
         # Sequence Legality 2
+        if len(seq) < 5:
+            print('\n [ERROR]    Sequence Constraint must be longer than 4 bases, not {}'.format(len(seq)))
+            print(' [SOLUTION] Try using a longer Sequence Constraint\n')
+            return False
+        # Sequence Legality 3
         seq_legal, seq_illegal_chars = makerchecks.is_seq_constr_legal(seq)
         if not seq_legal:
             print('\n [ERROR]    Sequence Constraint is not legal due to chars: {}'.format(seq_illegal_chars))
@@ -837,6 +853,11 @@ class NRPMaker(object):
         if not isinstance(struct, str):
             print('\n [ERROR]    Structure Constraint must be a string, not \'{}\''.format(struct))
             print(' [SOLUTION] Try correcting Structure Constraint\n')
+            return False
+        # Structure Legality 2
+        if len(struct) < 5:
+            print('\n [ERROR]    Structure Constraint must be longer than 4 bases, not {}'.format(len(struct)))
+            print(' [SOLUTION] Try using a longer Structure Constraint\n')
             return False
         # Lmax Legality 1
         if not isinstance(homology, int):
@@ -864,7 +885,7 @@ class NRPMaker(object):
             print('\n [WARNING]  Target size of {} is unreachable from given Sequence Constraint and Lmax of {}'.format(target, homology-1))
             print(' [WARNING]  >> Overly constrained motifs at locations: {}'.format(constrained_motif_locs))
             print(' [WARNING]  Fewer parts will be generated')
-        # Structure Legality 2
+        # Structure Legality 3
         struct_legal, unclosed, unopened, invalid = makerchecks.is_structure_valid(struct)
         if not struct_legal:
             print('\n [ERROR]    Structure Constraint is illegal or unbalanced')

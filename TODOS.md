@@ -12,6 +12,7 @@
 * ~~Fix Local Traceback after refactoring~~
 * ~~Finish docs~~
 * ~~Cleanup unnecessary formatting~~
+* ~~Introduce missing states~~
 * Concurrently finish examples
 * [+] Write up tests
 * ~~Finish setup.py~~
