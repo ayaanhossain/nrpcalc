@@ -194,7 +194,7 @@ If you enconter any problem using the API, please feel free to [open an issue](h
 
 A `jupyter` [notebook](https://github.com/ayaanhossain/nrpcalc/blob/master/examples/NRPCalcInAction.ipynb) describing the use of `NRP Calculator` in designing thousands of commonly used genetic parts from constitutive promoters to intrinsic terminators for _E. coli_ systems engineering is available inside `/examples/` directory.
 
-If you have [installed] `nrpcalc` then you have everything you need to open and execute the notebook.
+If you have [installed](#Installation) `nrpcalc` then you have everything you need to open and execute the notebook.
 
 Simply clone this repository
 ```bash
