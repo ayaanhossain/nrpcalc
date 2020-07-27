@@ -10,7 +10,7 @@
   <a href="#License">License</a> •
   <a href="#Citation">Citation</a> •
   <a href="https://github.com/ayaanhossain/nrpcalc/blob/master/docs/DOCS.md">DOCS</a> •
-  <a href="#NRP-Calculator-in-Action">NRP Calculator in Action!</a> 
+  <a href="#NRP-Calculator-in-Action!">NRP Calculator in Action!</a> 
 </p>
 
 ## Overview
