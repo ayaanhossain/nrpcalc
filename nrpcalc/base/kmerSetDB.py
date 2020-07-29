@@ -97,13 +97,6 @@ class kmerSetDB(object):
                 raise RuntimeError('kmerSetDB was closed or dropped')
         return wrapper
 
-    def __len__(self):
-        '''
-        User function to return the number of keys stored
-        in kmerSetDB.
-        '''
-        return self.LEN
-
     def _verb_action(self, action, index, seq):
         '''
         Internal helper function to print sequence
@@ -198,6 +191,7 @@ class kmerSetDB(object):
         except Exception as E:
             raise E
 
+    @alivemethod
     def multicheck(self, seq_list):
         '''
         User function to check existence of any k-mer for
@@ -213,6 +207,7 @@ class kmerSetDB(object):
         except Exception as E:
             raise E
 
+    @alivemethod
     def __iter__(self):
         '''
         User fuction to iterate over k-mers stored in
@@ -223,9 +218,10 @@ class kmerSetDB(object):
             if not key in [b'K', b'LEN']:
                 yield str(key.decode('ascii'))
 
+    @alivemethod
     def __len__(self):
         '''
-        User function to check the number of k-mers stored
+        User function to return the number of keys stored
         in kmerSetDB.
         '''
         return self.LEN

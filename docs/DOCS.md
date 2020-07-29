@@ -378,14 +378,14 @@ WARNING: stacking enthalpies not symmetric
 [Checking Constraints]
   Sequence Constraint: NNNNNNNNNNNNNNNNNNNNTTGACANNNNNNNNNNNNNNNNNTATAATNNNNNN
  Structure Constraint: .......................................................
-    Target Size      : 500 parts
+      Part Type      : DNA
            Lmax      : 15 bp
+    Target Size      : 500 parts
   Internal Repeats   : False
 
  Check Status: PASS
 
 [Checking Arguments]
-   Part Type : DNA
  Struct Type : mfe
   Synth Opt  : False
    Jump Count: 10
@@ -426,7 +426,6 @@ Non-Repetitive Toolbox Size: 500
     target_size=500,
     internal_repeats=False,
     background=bkg,
-    part_type='DNA',
     local_model_fn=prevent_cutsites,
     global_model_fn=optimal_gc_content)
 WARNING: stacking enthalpies not symmetric
@@ -439,8 +438,9 @@ WARNING: stacking enthalpies not symmetric
 [Checking Constraints]
   Sequence Constraint: NNNNNNNNNNNNNNNNNNNNTTGACANNNNNNNNNNNNNNNNWWWWWWWNNNNN
  Structure Constraint: .......................................................
-    Target Size      : 500 parts
+      Part Type      : DNA
            Lmax      : 15 bp
+    Target Size      : 500 parts
   Internal Repeats   : False
 
  Check Status: PASS
@@ -449,6 +449,16 @@ WARNING: stacking enthalpies not symmetric
  Background: kmerSetDB stored at ./my_toolbox_kmers/ with 20000 16-mers
 
  Check Status: PASS
+
+[Checking Arguments]
+ Struct Type : mfe
+  Synth Opt  : False
+   Jump Count: 10
+   Fail Count: 1000
+ Output File : None
+
+ Check Status: PASS
+
 
 [Checking Arguments]
    Part Type : DNA

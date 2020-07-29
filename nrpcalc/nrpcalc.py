@@ -611,14 +611,14 @@ def maker(
     [Checking Constraints]
       Sequence Constraint: NNNNNNNNNNNNNNNNNNNNTTGACANNNNNNNNNNNNNNNNNTATAATNNNNNN
      Structure Constraint: .......................................................
-        Target Size      : 500 parts
+          Part Type      : DNA
                Lmax      : 15 bp
+        Target Size      : 500 parts
       Internal Repeats   : False
 
      Check Status: PASS
 
     [Checking Arguments]
-       Part Type : DNA
      Struct Type : mfe
       Synth Opt  : False
        Jump Count: 10
