@@ -26,56 +26,104 @@ from Bio.SeqUtils import MeltingTemp
 class NRPMaker(object):
 
     def __init__(self, part_type='RNA', seed=None):
-        self.iupac_table = {
-            'A': {'A'},
-            'C': {'C'},
-            'G': {'G'},
-            'T': {'T'},
-            'R': {'A', 'G'},
-            'Y': {'C', 'T'},
-            'S': {'G', 'C'},
-            'W': {'A', 'T'},
-            'K': {'G', 'T'},
-            'M': {'A', 'C'},
-            'B': {'C', 'G', 'T'},
-            'V': {'A', 'C', 'G'},
-            'D': {'A', 'G', 'T'},
-            'H': {'A', 'C', 'T'},
-            'N': {'A', 'T', 'G', 'C'}
-        }
-        self.compl_iupac_map = {
-            'A': 'T',
-            'C': 'G',
-            'G': 'C',
-            'T': 'A',
-            'R': 'Y',
-            'Y': 'R',
-            'S': 'W',
-            'W': 'S',
-            'K': 'M',
-            'M': 'K',
-            'B': 'V',
-            'V': 'B',
-            'D': 'H',
-            'H': 'D',
-            'N': 'N'
-        }
-        self.compl_dict = {
-            'A': set(['T']),
-            'G': set(['C', 'T']),
-            'C': set(['G']),
-            'T': set(['A', 'G'])
-        }
+
+        # Instance variables
+        self.part_type  = part_type
         self.synthesis  = Synthesis()
         self.fold       = Fold(part_type=part_type)        
         self.proj_id    = str(uuid.uuid4())
         self.kmer_db    = None
         self.background = None
         
+        # Seed the RNG
         if not seed is None and isinstance(seed, int):
             self.rng = numpy.random.default_rng(seed=seed)
         else:
             self.rng = numpy.random.default_rng()
+
+        # Lookup tables
+        if self.part_type == 'RNA':
+            self.iupac_space = {
+                'A': {'A'},
+                'C': {'C'},
+                'G': {'G'},
+                'U': {'U'},
+                'R': {'A', 'G'},
+                'Y': {'C', 'U'},
+                'S': {'G', 'C'},
+                'W': {'A', 'U'},
+                'K': {'G', 'U'},
+                'M': {'A', 'C'},
+                'B': {'C', 'G', 'U'},
+                'V': {'A', 'C', 'G'},
+                'D': {'A', 'G', 'U'},
+                'H': {'A', 'C', 'U'},
+                'N': {'A', 'U', 'G', 'C'}
+            }
+            self.iupac_compl = {
+                'A': 'U', # A - U
+                'C': 'G', # C - G
+                'G': 'Y', # G - C U - Y
+                'U': 'R', # U - A G - R
+                'R': 'Y', # R - A G - U C - Y
+                'Y': 'R', # Y - C U - G A G - R
+                'S': 'B', # S - G C - C G U - B
+                'W': 'D', # W - A U - U A G - D
+                'K': 'N', # K - G U - C U G A
+                'M': 'K', # M - A C - U G - K
+                'B': 'N', # B - C G U - G C U A - N
+                'V': 'D', # V - A C G - U G A - D
+                'D': 'N', # D - A G U - U C A G - N
+                'H': 'N', # H - A C U - U G A G - N
+                'N': 'N'
+            }
+            self.base_compl = {
+                'A': {'U'},
+                'G': {'C', 'U'},
+                'C': {'G'},
+                'U': {'A', 'G'}
+            }
+        else:
+            self.iupac_space = {
+                'A': {'A'},
+                'C': {'C'},
+                'G': {'G'},
+                'T': {'T'},
+                'R': {'A', 'G'},
+                'Y': {'C', 'T'},
+                'S': {'G', 'C'},
+                'W': {'A', 'T'},
+                'K': {'G', 'T'},
+                'M': {'A', 'C'},
+                'B': {'C', 'G', 'T'},
+                'V': {'A', 'C', 'G'},
+                'D': {'A', 'G', 'T'},
+                'H': {'A', 'C', 'T'},
+                'N': {'A', 'T', 'G', 'C'}
+            }
+            self.iupac_compl = {
+                'A': 'T', # A - T
+                'C': 'G', # C - G
+                'G': 'C', # G - C
+                'T': 'A', # T - A
+                'R': 'Y', # R - A G - T C - Y
+                'Y': 'R', # Y - C T - G A - R
+                'S': 'S', # S - G C - C G - S
+                'W': 'W', # W - A T - T A - W
+                'K': 'M', # K - G T - C A - M
+                'M': 'K', # M - A C - T G - K
+                'B': 'V', # B - C G T - G C A - V
+                'V': 'B', # V - A C G - T G C - B
+                'D': 'H', # D - A G T - T C A - H
+                'H': 'D', # H - A C T - T G A - D
+                'N': 'N'
+            }
+            self.base_compl = {
+                'A': {'T'},
+                'G': {'C'},
+                'C': {'G'},
+                'T': {'A'}
+            }
 
     def _get_adjusted_struct(self, struct, seq):
         if struct is None:
@@ -142,13 +190,15 @@ class NRPMaker(object):
             try:
                 if i in meta_struct.paired_dict:
                     j = meta_struct.paired_dict[i]
-                    if len(self.iupac_table[seq[j]]) < len(self.iupac_table[seq[i]]):
-                        seq[i] = self.compl_iupac_map[seq[j]]
-                meta_seq[i] = set(self.iupac_table[seq[i]])
+                    if len(self.iupac_space[seq[j]]) < len(self.iupac_space[seq[i]]):
+                        seq[i] = self.iupac_compl[seq[j]]
+                    elif len(self.iupac_space[seq[i]]) < len(self.iupac_space[seq[j]]):
+                        seq[j] = self.iupac_compl[seq[i]]
+                meta_seq[i] = set(self.iupac_space[seq[i]])
             except:
                 raise ValueError(
                     ' [X] Invalid IUPAC code at index {} in sequence constraint'.format(i))
-
+        
         return tuple(meta_seq)
 
     def _reset_candidate_kmer_set(
@@ -344,14 +394,15 @@ class NRPMaker(object):
                         tried_set[i].add(candidate[i])
                         # Case (
                         if i in meta_struct.paired_dict:
-                            candidate[meta_struct.paired_dict[i]] = utils.get_revcomp(
-                                candidate[i])
-                            tried_set[meta_struct.paired_dict[i]] = set(
-                                candidate[meta_struct.paired_dict[i]])
+                            j = meta_struct.paired_dict[i]
+                            candidate[j] = self.rng.choice(sorted(
+                                self.base_compl[candidate[i]] & meta_seq[j]))
+                            tried_set[j] = set(candidate[j])
                     # Case )
                     else:
-                        candidate[i] = utils.get_comp(
-                            candidate[meta_struct.rev_paired_dict[i]])
+                        j = meta_struct.rev_paired_dict[i]
+                        candidate[i] = self.rng.choice(sorted(
+                            self.base_compl[candidate[j]] & meta_seq[i]))
                         tried_set[i] = set(candidate[i])
 
                 # Backward phase - Nucleotide choices exhausted, so traceback
@@ -397,8 +448,8 @@ class NRPMaker(object):
                 j = meta_struct.rev_paired_dict[i]
                 # Paired bases are not complementary
                 # or, Wrong nucleotide selected
-                if not candidate[j] in self.compl_dict[candidate[i]] or \
-                   not candidate[i] in meta_seq[i]:
+                if (not candidate[j] in self.base_compl[candidate[i]]) or \
+                   (not candidate[i] in meta_seq[i]):
                     self._reset_candidate_kmer_set(
                         candidate=candidate,
                         kmer_set=kmer_set,
@@ -501,7 +552,7 @@ class NRPMaker(object):
                 return False,1,i
             if i in meta_struct.paired_dict:
                 j = meta_struct.paired_dict[i]
-                if not candidate[j] in self.compl_dict[candidate[i]]:
+                if not candidate[j] in self.base_compl[candidate[i]]:
                     return False,2,i
             i += 1
         return True,0,0
@@ -630,7 +681,7 @@ class NRPMaker(object):
                 if not construction_state:
                     current_fail_count += 1
                     raise Exception(
-                        'Maker built a rogue candidate: {}.\nError Digest: {}.\nPlease report issue to authors.'.format(
+                        'Maker built a rogue candidate: {}\nError Digest: {}\nPlease report issue to authors.'.format(
                             candidate,
                             error_digest))
                 else:
@@ -728,7 +779,7 @@ class NRPMaker(object):
         allow_internal_repeat=False):
 
         # Setup structures
-        seq = seq.upper().replace('U', 'T')
+        seq = seq.upper()
         meta_struct = self._get_meta_struct(
             struct=self._get_adjusted_struct(struct, seq))
         meta_seq = self._get_meta_seq(
@@ -830,6 +881,7 @@ class NRPMaker(object):
         self,
         seq,
         struct,
+        part_type,
         allow_internal_repeat,
         target,
         homology):
@@ -843,12 +895,6 @@ class NRPMaker(object):
             print('\n [ERROR]    Sequence Constraint must be longer than 4 bases, not {}'.format(len(seq)))
             print(' [SOLUTION] Try using a longer Sequence Constraint\n')
             return False
-        # Sequence Legality 3
-        seq_legal, seq_illegal_chars = makerchecks.is_seq_constr_legal(seq)
-        if not seq_legal:
-            print('\n [ERROR]    Sequence Constraint is not legal due to chars: {}'.format(seq_illegal_chars))
-            print(' [SOLUTION] Try correcting Sequence Constraint\n')
-            return False
         # Structure Legality 1
         if not isinstance(struct, str):
             print('\n [ERROR]    Structure Constraint must be a string, not \'{}\''.format(struct))
@@ -859,32 +905,58 @@ class NRPMaker(object):
             print('\n [ERROR]    Structure Constraint must be longer than 4 bases, not {}'.format(len(struct)))
             print(' [SOLUTION] Try using a longer Structure Constraint\n')
             return False
+        # Part Type Legality
+        if not part_type in ['DNA', 'RNA']:
+            print('\n [ERROR]    Part Type must be \'RNA\' or \'DNA\', not \'{}\''.format(part_type))
+            print(' [SOLUTION] Try correcting Part Type\n')
+            return False
+        # Sequence Legality 3
+        seq_legal, seq_illegal_chars = makerchecks.is_seq_constr_legal(seq, part_type)
+        if not seq_legal:
+            print('\n [ERROR]    {} Sequence Constraint is not legal due to chars: {}'.format(part_type, seq_illegal_chars))
+            print(' [SOLUTION] Try correcting Sequence Constraint or Part Type\n')
+            return False
+        # Sequence + Structure + Part Type Base Pairing Combination Legality
+        combo_state, incompat_locs, reduced_locs = makerchecks.is_pairing_compatible(seq, struct, part_type)
+        if not combo_state:
+            if incompat_locs:
+                print('\n [ERROR]    Incompatible Base Pairing for {} Parts at locations: {}'.format(part_type, incompat_locs))
+                print(' [SOLUTION] Try correcting Sequence Constraint or Part Type\n')
+                return False
+            if reduced_locs: # -- soft check
+                print('\n [WARNING]  Reducible Paired Bases at locations: {}'.format(reduced_locs))
+                print(' [WARNING]  Fewer Parts may be Generated')
         # Lmax Legality 1
         if not isinstance(homology, int):
-            print('\n [ERROR]    Lmax must be an integer, not \'{}\''.format(homology-1))
+            print('\n [ERROR]    Lmax must be an integer, not {}'.format(homology-1))
             print(' [SOLUTION] Try correcting Lmax\n')
             return False
         # Lmax Legality 2
         if homology-1 < 5:
-            print('\n [ERROR]    Lmax must be greater than 4, not \'{}\''.format(homology-1))
+            print('\n [ERROR]    Lmax must be greater than 4, not {}'.format(homology-1))
+            print(' [SOLUTION] Try correcting Lmax\n')
+            return False
+        # Lmax Legality 3
+        if homology-1 >= len(seq):
+            print('\n [ERROR]    Lmax must be less than length of Sequence Constraint ({}), not {}'.format(len(seq), homology-1))
             print(' [SOLUTION] Try correcting Lmax\n')
             return False
         # Target Size Legality 1
         if not isinstance(target, int):
-            print('\n [ERROR]    Target Size must be an integer, not \'{}\''.format(target))
+            print('\n [ERROR]    Target Size must be an integer, not {}'.format(target))
             print(' [SOLUTION] Try correcting Target Size\n')
             return False
         # Target Size Legality 2
         if target < 1:
-            print('\n [ERROR]    Target Size must be greater than 0, not \'{}\''.format(target))
+            print('\n [ERROR]    Target Size must be greater than 0, not {}'.format(target))
             print(' [SOLUTION] Try correcting Target Size\n')
             return False
-        # Sequence Sufficiency 1 -- soft check
+        # Sequence Sufficiency -- soft check
         seq_sufficient, constrained_motif_locs = makerchecks.is_seq_constr_sufficient(seq, homology, target)
         if not seq_sufficient:
-            print('\n [WARNING]  Target size of {} is unreachable from given Sequence Constraint and Lmax of {}'.format(target, homology-1))
-            print(' [WARNING]  >> Overly constrained motifs at locations: {}'.format(constrained_motif_locs))
-            print(' [WARNING]  Fewer parts will be generated')
+            print('\n [WARNING]  Target Size of {} may be unreachable from given Sequence Constraint and Lmax of {}'.format(target, homology-1))
+            print(' [WARNING]  >> Lmax limiting windows between locations: {}'.format(constrained_motif_locs))
+            print(' [WARNING]  Fewer Parts may be Generated')
         # Structure Legality 3
         struct_legal, unclosed, unopened, invalid = makerchecks.is_structure_valid(struct)
         if not struct_legal:
@@ -902,31 +974,25 @@ class NRPMaker(object):
             print('\n [ERROR]    Internal Repeat must be boolean, not \'{}\''.format(allow_internal_repeat))
             print(' [SOLUTION] Try correcting Internal Repeat\n')
             return False
-        # Structure Sufficiency 2
+        # Structure Sufficiency
         if not allow_internal_repeat:
             struct_sufficient, long_hairpins = makerchecks.is_structure_not_conflict(struct, homology)
             if not struct_sufficient:
                 print('\n [ERROR] Structure Constraint is insufficient based on given Lmax')
                 for long_hairpin in long_hairpins:
                     print(' [ERROR] >> Long hairpin between: {}'.format(long_hairpin))
-                    print(' [SOLUTION] Try relaxing Structure Constraint or setting allow_internal_repeat=True\n')
+                    print(' [SOLUTION] Try relaxing Structure Constraint or setting internal_repeats=True\n')
                 return False
         return True
 
     def _check_maker_inputs(
         self,
-        part_type,
         struct_type,
         synth_opt,
         jump_count,
         fail_count,
         output_file,
         verbose):
-        # Part Type Legality
-        if not part_type in ['DNA', 'RNA']:
-            print('\n [ERROR]    Part Type must be \'RNA\' or \'DNA\', not \'{}\''.format(part_type))
-            print(' [SOLUTION] Try correcting Part Type\n')
-            return False
         # Struct Type Legality
         if not struct_type in ['mfe', 'centroid', 'both']:
             print('\n [ERROR]    Struct Type must be \'mfe\', \'centroid\' or \'both\', not \'{}\''.format(struct_type))
@@ -993,12 +1059,14 @@ class NRPMaker(object):
             print('\n[Checking Constraints]')
             print('  Sequence Constraint: {}'.format(seq_constr))
             print(' Structure Constraint: {}'.format(struct_constr))
-            print('    Target Size      : {} parts'.format(target_size))
+            print('      Part Type      : {}'.format(part_type))
             print('           Lmax      : {} bp'.format(homology-1))
+            print('    Target Size      : {} parts'.format(target_size))
             print('  Internal Repeats   : {}'.format(allow_internal_repeat))
         check_status = self._check_maker_constraints(
             seq_constr,
             struct_constr,
+            part_type,
             allow_internal_repeat,
             target_size,
             homology)
@@ -1046,14 +1114,12 @@ class NRPMaker(object):
         if build_parts:
             if verbose:
                 print('\n[Checking Arguments]')
-                print('   Part Type : {}'.format(part_type))
                 print(' Struct Type : {}'.format(struct_type))
                 print('  Synth Opt  : {}'.format(synth_opt))
                 print('   Jump Count: {}'.format(jump_count))
                 print('   Fail Count: {}'.format(fail_count))
                 print(' Output File : {}'.format(output_file))
             check_status = self._check_maker_inputs(
-                part_type,
                 struct_type,
                 synth_opt,
                 jump_count,
@@ -1092,7 +1158,7 @@ class NRPMaker(object):
 
         # Execute Maker
         with open(output_file, 'w') as out_file:
-            seq_constr    = seq_constr.upper().replace('U', 'T')
+            seq_constr    = seq_constr.upper()
             struct_constr = self._get_adjusted_struct(
                 struct_constr,
                 seq_constr)
@@ -1122,8 +1188,8 @@ class NRPMaker(object):
                     out_file.write(
                         '>non-repetitive part {}\n'.format(
                             current_nrp_count+1))
-                    if part_type == 'RNA':
-                        non_coding_nrp = non_coding_nrp.replace('T', 'U')
+                    # if part_type == 'RNA':
+                    #     non_coding_nrp = non_coding_nrp.replace('T', 'U')
                     non_coding_nrp = '\n'.join(
                         textwrap.wrap(
                             non_coding_nrp, 80))

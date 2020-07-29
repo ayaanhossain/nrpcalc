@@ -2,11 +2,45 @@ import random
 import functools
 import collections
 
-iupac_count_table = {
+iupac_count = {
     'A': 1, 'C': 1, 'G': 1, 'T': 1,
     'R': 2, 'Y': 2, 'S': 2, 'W': 2,
     'K': 2, 'M': 2, 'B': 3, 'D': 3,
     'H': 3, 'V': 3, 'N': 4, 'U': 1
+}
+
+iupac_space_rna = {
+    'A': {'A'}, 'C': {'C'}, 'G': {'G'}, 'U': {'U'},
+    'R': {'A', 'G'}, 'Y': {'C', 'U'},
+    'S': {'G', 'C'}, 'W': {'A', 'U'},
+    'K': {'G', 'U'}, 'M': {'A', 'C'},
+    'B': {'C', 'G', 'U'}, 'V': {'A', 'C', 'G'},
+    'D': {'A', 'G', 'U'}, 'H': {'A', 'C', 'U'},
+    'N': {'A', 'U', 'G', 'C'}
+}
+
+iupac_compl_rna = {
+    'A': 'U', 'C': 'G', 'G': 'Y', 'U': 'R',
+    'R': 'Y', 'Y': 'R', 'S': 'B', 'W': 'D',
+    'K': 'N', 'M': 'K', 'B': 'N', 'V': 'D',
+    'D': 'N', 'H': 'N', 'N': 'N'
+}
+
+iupac_space_dna = {
+    'A': {'A'}, 'C': {'C'}, 'G': {'G'}, 'T': {'T'},
+    'R': {'A', 'G'}, 'Y': {'C', 'T'},
+    'S': {'G', 'C'}, 'W': {'A', 'T'},
+    'K': {'G', 'T'}, 'M': {'A', 'C'},
+    'B': {'C', 'G', 'T'}, 'V': {'A', 'C', 'G'},
+    'D': {'A', 'G', 'T'}, 'H': {'A', 'C', 'T'},
+    'N': {'A', 'T', 'G', 'C'}
+}
+
+iupac_compl_dna = {
+    'A': 'T', 'C': 'G', 'G': 'C', 'T': 'A',
+    'R': 'Y', 'Y': 'R', 'S': 'S', 'W': 'W',
+    'K': 'M', 'M': 'K', 'B': 'V', 'V': 'B',
+    'D': 'H', 'H': 'D', 'N': 'N'
 }
 
 def is_homolog_legal(seq, homology):
@@ -17,14 +51,19 @@ def is_homolog_legal(seq, homology):
         return False
     return True
 
-def is_seq_constr_legal(seq):
+def is_seq_constr_legal(seq, part_type):
     '''
     Check if all characters used is standard IUPAC code.
     On failure returns (False, a list of illegal chars used).
     '''
-    global iupac_count_table
+    global iupac_space_dna
+    global iupac_space_rna
+    if part_type == 'DNA':
+        iupac_space = iupac_space_dna
+    else:
+        iupac_space = iupac_space_rna
     chars    = set(seq)
-    alphabet = set(iupac_count_table.keys())
+    alphabet = set(iupac_space.keys())
     if chars <= alphabet:
         return (True, None)
     else:
@@ -34,10 +73,10 @@ def get_k_mer_count(sub_seq_list):
     '''
     Get the possible number of candidate sequences.
     '''
-    global iupac_count_table
+    global iupac_count
     product = 1
     for nt in sub_seq_list:
-        product *= iupac_count_table[nt]
+        product *= iupac_count[nt]
     return product
 
 def compress_locs(locs, homology):
@@ -164,7 +203,38 @@ def is_structure_not_conflict(struct, homology):
         if bad_contigs:
             return (False, bad_contigs)
     return (True, None)
-    
+
+def is_pairing_compatible(seq, struct, part_type):
+    global iupac_space_dna
+    global iupac_compl_dna
+    global iupac_space_rna
+    global iupac_compl_rna
+    pairs, opened, closed, invalid = get_computable_form(struct)
+    if pairs:
+        if part_type == 'DNA':
+            iupac_space = iupac_space_dna
+            iupac_compl = iupac_compl_dna
+        else:
+            iupac_space = iupac_space_rna
+            iupac_compl = iupac_compl_rna
+        incompat_locs = []
+        reduced_locs = []
+        while pairs:
+            i,j = pairs.pop()
+            nti = seq[i]
+            ntj = seq[j]
+            # print(i,j,nti,ntj, iupac_compl[nti], iupac_compl[ntj])
+            if len(iupac_space[nti]) > len(iupac_space[ntj]):
+                nti,ntj = ntj,nti
+            if not iupac_space[nti] <= iupac_space[iupac_compl[ntj]]:
+                incompat_locs.append(tuple(sorted([i,j])))
+            else:
+                if iupac_space[iupac_compl[ntj]] > iupac_space[nti]:
+                    reduced_locs.append(tuple(sorted([i,j])))
+        if len(incompat_locs) > 0 or \
+           len(reduced_locs) > 0:
+            return (False, incompat_locs, reduced_locs)
+    return (True, incompat_locs, reduced_locs)    
 
 def main():
     print('Testing Sequence Constraint Validation Checkers ... ',)
@@ -207,6 +277,36 @@ def main():
     struct = '(((((((((((......)))).)))))))...(((((.((((((......)))))))))))'
     homology = 10
     assert is_structure_not_conflict(struct, homology)[0] == True
+    print('OK')
+
+    print('Testing Sequence Constraint Base Pairing Conflict Checkers ...',)
+    seq    = 'NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN'
+    struct = '.....(((..(((((....)))))..))).....'
+    assert is_pairing_compatible(seq, struct, part_type='DNA') == (True, [], [])
+    seq    = 'NNNNNNNNNNSNNNNNNNNNNNNSNNNNNNNNNN'
+    struct = '.....(((..(((((....)))))..))).....'
+    assert is_pairing_compatible(seq, struct, part_type='DNA') == (True, [], [])
+    seq    = 'NNNNNNNNNNSNNNNNNNNNNNNWNNNNNNNNNN'
+    struct = '.....(((..(((((....)))))..))).....'
+    assert is_pairing_compatible(seq, struct, part_type='DNA') == (False, [(10, 23)], [])
+    seq    = 'NNNNNNNNNNNNNNNNNNNNNNNANNNNNNNNNN'
+    struct = '.....(((..(((((....)))))..))).....'
+    assert is_pairing_compatible(seq, struct, part_type='RNA') == (False, [], [(10, 23)])
+    seq    = 'NNNNNANNNNNNNNNNNNNNNNNNNNNNNNNNNN'
+    struct = '.....(((..(((((....)))))..))).....'
+    assert is_pairing_compatible(seq, struct, part_type='RNA') == (False, [], [(5, 28)])
+    seq    = 'NNNNNMNNNNNNNNNNNNNNNNNNNNNNVNNNNN'
+    struct = '.....(((..(((((....)))))..))).....'
+    assert is_pairing_compatible(seq, struct, part_type='RNA') == (False, [(5, 28)], [])
+    seq    = 'NNNNNHNNNNNNNNNNNNNNNNNNNNNNCNNNNN'
+    struct = '.....(((..(((((....)))))..))).....'
+    assert is_pairing_compatible(seq, struct, part_type='RNA') == (False, [], [(5, 28)])
+    seq    = 'NNNNNGNNNNNNNNNNNNNNNNNNNNNNTNNNNN'
+    struct = '.....(((..(((((....)))))..))).....'
+    assert is_pairing_compatible(seq, struct, part_type='DNA') == (False, [(5, 28)], [])
+    seq    = 'NNNNNGNNNNNNNNNNNNNNNNNNNNNNUNNNNN'
+    struct = '.....(((..(((((....)))))..))).....'
+    assert is_pairing_compatible(seq, struct, part_type='RNA') == (False, [], [(5, 28)])
     print('OK')
 
 if __name__ == '__main__':

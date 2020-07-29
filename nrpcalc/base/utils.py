@@ -68,9 +68,12 @@ class Fold(object):
 
         if not part_type in ['RNA', 'DNA']:
             part_type = 'RNA'
+
+        self.part_type = part_type
         
         parameter_file = pkg_resources.resource_filename(
-            'nrpcalc', 'base/{}.par'.format(part_type))
+            'nrpcalc', 'base/{}.par'.format(
+                self.part_type))
         RNA.read_parameter_file(parameter_file)
 
     def evaluate_mfe(self, seq):
@@ -86,7 +89,10 @@ class Fold(object):
         return struct
 
     def design(self, seq, struct):
-        return RNA.inverse_fold(seq, struct)[0].replace('U', 'T').replace('u', 't')
+        inv = RNA.inverse_fold(seq, struct)[0]
+        if self.part_type == 'DNA':
+            inv = inv.replace('U', 'T').replace('u', 't')
+        return inv
 
 if __name__ == '__main__':
     pass

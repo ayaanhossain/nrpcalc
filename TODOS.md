@@ -10,10 +10,13 @@
 * ~~Add jupyter and scikit-learn dependencies~~
 * ~~Remove Plyvel switch to LevelDB~~
 * ~~Fix Local Traceback after refactoring~~
-* ~~Finish docs~~
+* Update docs
 * ~~Cleanup unnecessary formatting~~
 * ~~Introduce missing states~~
 * ~~Finish notebook of examples~~
+* ~~Base pairing spec check~~
+* ~~part_type must be constraint~~
+* ~~Select ) nucleotides carefully~~
 * [+] Write up tests
 * ~~Finish setup.py~~
 * ~~Publish to PyPI~~

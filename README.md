@@ -112,12 +112,12 @@ Non-Repetitive Parts Calculator
 Automated design and discovery of non-repetitive genetic
 parts for engineering stable systems.
 
-Version: 1.2.7
+Version: 1.3.0
 
 Authors: Ayaan Hossain <auh57@psu.edu>
          Howard Salis  <salis@psu.edu>
 
-NRP Calculator offers two modes of operation:
+The Non-Repetitive Parts Calculator offers two modes of operation:
 
 - Finder Mode: Discover toolboxes of non-repetitive parts
                from a list of candidate parts
@@ -126,9 +126,10 @@ NRP Calculator offers two modes of operation:
                based on sequence, structure and model
                constraints
 
-Additionally, a 'background' object is available which can
-be used to store background sequences against which parts
-discovered or designed are ensured to be non-repetitive.
+Additionally, a 'background' object is available that stores
+background sequences. When the 'background' object is used, 
+designed genetic parts will also be non-repetitive with respect
+to these sequences.
 
 You can learn more about the two modes and background via
   print(nrpcalc.background.__doc__)

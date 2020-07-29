@@ -3,7 +3,7 @@ from .base import finder    as nrpfinder
 from .base import kmerSetDB
 
 
-__version__ = '1.2.7'
+__version__ = '1.3.0'
 
 __authors__ = '''
 Ayaan Hossain <auh57@psu.edu>
@@ -21,7 +21,7 @@ Version: {}
 Authors: {}
          {}
 
-NRP Calculator offers two modes of operation:
+The Non-Repetitive Parts Calculator offers two modes of operation:
 
 - Finder Mode: Discover toolboxes of non-repetitive parts
                from a list of candidate parts
@@ -30,9 +30,10 @@ NRP Calculator offers two modes of operation:
                based on sequence, structure and model
                constraints
 
-Additionally, a 'background' object is available which can
-be used to store background sequences against which parts
-discovered or designed are ensured to be non-repetitive.
+Additionally, a 'background' object is available that stores
+background sequences. When the 'background' object is used, 
+designed genetic parts will also be non-repetitive with respect
+to these sequences.
 
 You can learn more about the two modes and background via
   print(nrpcalc.background.__doc__)
@@ -382,12 +383,12 @@ def finder(
 def maker(
     seq_constr,
     struct_constr,
-    target_size,
+    part_type,
     Lmax,
+    target_size,
+    struct_type='mfe',
     internal_repeats=False,
     background=None,
-    part_type='RNA',
-    struct_type='mfe',
     seed=None,
     synth_opt=False,
     local_model_fn=None,
@@ -430,6 +431,16 @@ def maker(
                    seventh bases respectively (parenthesis),
                    while the fifth and the sixth base must
                    not take part in any base pairing (x) at all
+    :: part_type
+       type - string
+       desc - must be either 'RNA' or 'DNA' depending on the
+              type of genetic part being designed; ensures
+              that correct folding free-energy parameters are
+              used during structure evaluation
+    :: Lmax
+       type - integer
+       desc - maximum allowed shared repeat length between
+              all sequences in designed toolbox
     :: target_size
        type - integer
        desc - maximum number of genetic parts to be designed
@@ -437,10 +448,13 @@ def maker(
               be reached if the constraints are too strict,
               for example, due to low degeneracy in the given
               sequence constraint, or a low Lmax
-    :: Lmax
-       type - integer
-       desc - maximum allowed shared repeat length between
-              all sequences in designed toolbox
+    :: struct_type
+       type - string
+       desc - must be either 'mfe', 'centroid', or 'both'
+              'mfe' - use minimum free energy structure evaluation
+              'centroid' - use centroid structure evaluation
+              'both' - use both 'mfe' and 'centroid' evaluation
+              (default='mfe')
     :: internal_repeats
        type - boolean
        desc - if True then internal repeats in designed parts
@@ -454,20 +468,6 @@ def maker(
        desc - a background object containing k-mers (k=Lmax+1)
               which must be absent in the designed toolbox
               (default=None)
-    :: part_type
-       type - string
-       desc - must be either 'RNA' or 'DNA' depending on the
-              type of genetic part being designed; ensures
-              that correct folding free-energy parameters are
-              used during structure evaluation
-              (default='RNA')
-    :: struct_type
-       type - string
-       desc - must be either 'mfe', 'centroid', or 'both'
-              'mfe' - use minimum free energy structure evaluation
-              'centroid' - use centroid structure evaluation
-              'both' - use both 'mfe' and 'centroid' evaluation
-              (default='mfe')
     :: seed
        type - integer / None
        desc - integer used to seed random number generations;
@@ -594,11 +594,11 @@ def maker(
     >>> promoters_strong = nrpcalc.maker(
         seq_constr='N'*20+'TTGACA'+'N'*17+'TATAAT'+'NNNNNN',
         struct_constr='.'*55,
-        target_size=500,
+        part_type='DNA',
         Lmax=Lmax,
+        target_size=500,
         internal_repeats=False,
         background=None,
-        part_type='DNA',
         local_model_fn=prevent_cutsites,
         global_model_fn=optimal_gc_content)
     WARNING: stacking enthalpies not symmetric
@@ -654,11 +654,11 @@ def maker(
     >>> promoters_variable = nrpcalc.maker(
         seq_constr='N'*20+'TTGACA'+'N'*16+'WWWWWWW'+'NNNNN',
         struct_constr='.'*55,
-        target_size=500,
+        part_type='DNA',
         Lmax=Lmax,
+        target_size=500,
         internal_repeats=False,
         background=bkg,
-        part_type='DNA',
         local_model_fn=prevent_cutsites,
         global_model_fn=optimal_gc_content)
     WARNING: stacking enthalpies not symmetric
