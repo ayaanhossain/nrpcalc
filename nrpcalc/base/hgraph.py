@@ -12,7 +12,7 @@ def uniquify_seq_list(seq_list):
     unique_seq_index = {}
     index = len(seq_list)-1
     while index > -1:
-        seq = seq_list.pop().upper().replace('U', 'T')
+        seq = seq_list.pop().upper()
         unique_seq_index[seq] = index
         index -= 1
     unique_seq_list = []

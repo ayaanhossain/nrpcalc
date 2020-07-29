@@ -210,6 +210,8 @@ def is_pairing_compatible(seq, struct, part_type):
     global iupac_space_rna
     global iupac_compl_rna
     pairs, opened, closed, invalid = get_computable_form(struct)
+    incompat_locs = []
+    reduced_locs = []
     if pairs:
         if part_type == 'DNA':
             iupac_space = iupac_space_dna
@@ -217,8 +219,6 @@ def is_pairing_compatible(seq, struct, part_type):
         else:
             iupac_space = iupac_space_rna
             iupac_compl = iupac_compl_rna
-        incompat_locs = []
-        reduced_locs = []
         while pairs:
             i,j = pairs.pop()
             nti = seq[i]

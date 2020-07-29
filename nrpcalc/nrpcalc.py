@@ -274,7 +274,7 @@ def finder(
        desc - if True displays progress
               (default=True)
 
-    Returns: A dictionary of DNA strings with integer keys.
+    Returns: A dictionary of DNA or RNA strings with integer keys.
 
     Finder Mode API Example
 
@@ -386,9 +386,9 @@ def maker(
     part_type,
     Lmax,
     target_size,
-    struct_type='mfe',
     internal_repeats=False,
     background=None,
+    struct_type='mfe',
     seed=None,
     synth_opt=False,
     local_model_fn=None,
@@ -448,13 +448,6 @@ def maker(
               be reached if the constraints are too strict,
               for example, due to low degeneracy in the given
               sequence constraint, or a low Lmax
-    :: struct_type
-       type - string
-       desc - must be either 'mfe', 'centroid', or 'both'
-              'mfe' - use minimum free energy structure evaluation
-              'centroid' - use centroid structure evaluation
-              'both' - use both 'mfe' and 'centroid' evaluation
-              (default='mfe')
     :: internal_repeats
        type - boolean
        desc - if True then internal repeats in designed parts
@@ -468,6 +461,13 @@ def maker(
        desc - a background object containing k-mers (k=Lmax+1)
               which must be absent in the designed toolbox
               (default=None)
+    :: struct_type
+       type - string
+       desc - must be either 'mfe', 'centroid', or 'both'
+              'mfe' - use minimum free energy structure evaluation
+              'centroid' - use centroid structure evaluation
+              'both' - use both 'mfe' and 'centroid' evaluation
+              (default='mfe')
     :: seed
        type - integer / None
        desc - integer used to seed random number generations;
@@ -547,7 +547,7 @@ def maker(
        desc - if True displays progress
               (default=True)
 
-    Returns: A dictionary of DNA strings with integer keys.
+    Returns: A dictionary of DNA or RNA strings with integer keys.
     
     Maker Mode API Example
     

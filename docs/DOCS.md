@@ -298,11 +298,11 @@ True
 |--|--|--|--|
 | `seq_constr` | `string` | a string in IUPAC degenerate code describing all valid nucleotide choices at each position <br> **e.g.** `'NNNNWWWWSSSSTTTT'` implies that the first four bases can be either `'A'`/`'T'`/`'G'`/`'C'`, the next four bases can be either `'A'`/`'T'`, followed by either `'G'`/`'C'` for the next four basses, and finally ending with `'T'`s | -- |
 | `struct_constr` | `string` | a string in `dot-parenthesis-x` notation that describe the secondary base pairing across all nucleotide positions <br> **e.g.** `'..((xx))..'` implies that the first, second, and the last two bases are free to either base pair or not (`dot`), the third and fourth bases are paired with the eighth and the seventh bases respectively (`parenthesis`), while the fifth and the sixth base must not take part in any base pairing (`x`) at all | -- |
-| `target_size` | `integer` | maximum number of genetic parts to be designed for the generated toolbox; `target_size` may not be reached if the constraints are too strict, for example, due to low degeneracy in the given sequence constraint, or a low `Lmax` | -- |
+| `part_type` | `string` | must be either `'RNA'` or `'DNA'` depending on the type of genetic part being designed; ensures that correct folding free-energy parameters are used during structure evaluation | -- |
 | `Lmax` | `integer` | maximum allowed shared repeat length between all sequences in designed toolbox | -- |
+| `target_size` | `integer` | maximum number of genetic parts to be designed for the generated toolbox; `target_size` may not be reached if the constraints are too strict, for example, due to low degeneracy in the given sequence constraint, or a low `Lmax` | -- |
 | `internal_repeats` | `boolean` | if `True` then internal repeats in designed parts are not eliminated; useful when designing parts such as rho-independent terminators with structure constraints that necessitate internal repeats; shared repeats are always eliminated | `False` |
 | `background` | `kmerSetDB`/`None` | a `background` object containing _k_-mers (_k_=`Lmax`+1) which must be absent in the designed toolbox | `None` |
-| `part_type` | `string` | must be either `'RNA'` or `'DNA'` depending on the type of genetic part being designed; ensures that correct folding free-energy parameters are used during structure evaluation | `'RNA'` |
 | `struct_type` | `string` | must be either `'mfe'`, `'centroid'`, or `'both'` <br> `'mfe'` - use minimum free energy structure evaluation (fast) <br> `'centroid'` - use centroid structure evaluation (slower) <br> `'both'` - use both `'mfe'` and `'centroid'` evaluation (slowest) | `'mfe'` |
 | `seed` | `integer`/`None` | integer used to seed random number generations; two Maker runs with same constraints and seed value will generate the exact same toolbox; if `None` then a random seed value is used | `None` |
 | `synth_opt` | `boolean` | if `True` then designed parts containing features that complicate DNA synthesis are eliminated | `False` |
@@ -313,7 +313,7 @@ True
 | `output_file` | `string`/`None` | filename to store designed non-repetitive parts as they are generated consecutively; sequences are written in `FASTA` format | `None` |
 | `verbose` | `boolean` | if `True` displays progress | `True` |
 
-**_Returns_**: A dictionary of DNA or RNA strings with integer keys.
+**_Returns_**: A `dictionary` of DNA or RNA strings with integer keys.
 
 ### `Maker Mode` **API Example**
 
@@ -361,11 +361,11 @@ kmerSetDB stored at ./my_toolbox_kmers/ with 0 16-mers
 >>> promoters_strong = nrpcalc.maker(
     seq_constr='N'*20+'TTGACA'+'N'*17+'TATAAT'+'NNNNNN',
     struct_constr='.'*55,
-    target_size=500,
+    part_type='DNA',
     Lmax=Lmax,
+    target_size=500,
     internal_repeats=False,
     background=None,
-    part_type='DNA',
     local_model_fn=prevent_cutsites,
     global_model_fn=optimal_gc_content)
 WARNING: stacking enthalpies not symmetric
@@ -421,8 +421,9 @@ Non-Repetitive Toolbox Size: 500
 >>> promoters_variable = nrpcalc.maker(
     seq_constr='N'*20+'TTGACA'+'N'*16+'WWWWWWW'+'NNNNN',
     struct_constr='.'*55,
-    target_size=500,
+    part_type='DNA',
     Lmax=Lmax,
+    target_size=500,
     internal_repeats=False,
     background=bkg,
     part_type='DNA',
