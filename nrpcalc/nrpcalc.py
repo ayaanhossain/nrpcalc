@@ -3,7 +3,7 @@ from .base import finder    as nrpfinder
 from .base import kmerSetDB
 
 
-__version__ = '1.3.0'
+__version__ = '1.3.1'
 
 __authors__ = '''
 Ayaan Hossain <auh57@psu.edu>
@@ -420,17 +420,18 @@ def maker(
                    followed by either 'G'/'C' for the next
                    four basses, and finally ending with 'T's
     :: struct_constr
-       type - string
+       type - string / None
        desc - a string in dot-parenthesis-x notation that
               describe the secondary base pairing across all
-              nucleotide positions
+              nucleotide positions; a string of only dots implies
+              an absence of any structure constraint
               e.g. '..((xx))..' implies that the first, second,
                    and the last two bases are free to either
-                   base pair or not (dot), the third and fourth
+                   base pair or not ('.'), the third and fourth
                    bases are paired with the eighth and the
-                   seventh bases respectively (parenthesis),
+                   seventh bases respectively ('(' and ')'),
                    while the fifth and the sixth base must
-                   not take part in any base pairing (x) at all
+                   not take part in any base pairing ('x') at all
     :: part_type
        type - string
        desc - must be either 'RNA' or 'DNA' depending on the

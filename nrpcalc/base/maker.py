@@ -901,9 +901,11 @@ class NRPMaker(object):
             print(' [SOLUTION] Try correcting Structure Constraint\n')
             return False
         # Structure Legality 2
-        if len(struct) < 5:
-            print('\n [ERROR]    Structure Constraint must be longer than 4 bases, not {}'.format(len(struct)))
-            print(' [SOLUTION] Try using a longer Structure Constraint\n')
+        if len(struct) != len(seq):
+            print('\n [ERROR]    Structure Constraint must be same length as Sequence Constraint ({}), not {}'.format(
+                len(seq),
+                len(struct)))
+            print(' [SOLUTION] Try correcting length of Structure Constraint\n')
             return False
         # Part Type Legality
         if not part_type in ['DNA', 'RNA']:
@@ -915,6 +917,18 @@ class NRPMaker(object):
         if not seq_legal:
             print('\n [ERROR]    {} Sequence Constraint is not legal due to chars: {}'.format(part_type, seq_illegal_chars))
             print(' [SOLUTION] Try correcting Sequence Constraint or Part Type\n')
+            return False
+        # Structure Legality 3
+        struct_legal, unclosed, unopened, invalid = makerchecks.is_structure_valid(struct)
+        if not struct_legal:
+            print('\n [ERROR]    Structure Constraint is illegal or unbalanced')
+            if unclosed:
+                print(' [ERROR]    >> Unclosed bases at locations: {}'.format(unclosed))
+            if unopened:
+                print(' [ERROR]    >> Unopened bases at locations: {}'.format(unopened))
+            if invalid:
+                print(' [ERROR]    >> Invalid characters at locations: {}'.format(invalid))
+            print(' [SOLUTION] Try correcting Structure Constraint\n')
             return False
         # Sequence + Structure + Part Type Base Pairing Combination Legality
         combo_state, incompat_locs, reduced_locs = makerchecks.is_pairing_compatible(seq, struct, part_type)
@@ -957,18 +971,6 @@ class NRPMaker(object):
             print('\n [WARNING]  Target Size of {} may be unreachable from given Sequence Constraint and Lmax of {}'.format(target, homology-1))
             print(' [WARNING]  >> Lmax limiting windows between locations: {}'.format(constrained_motif_locs))
             print(' [WARNING]  Fewer Parts may be Generated')
-        # Structure Legality 3
-        struct_legal, unclosed, unopened, invalid = makerchecks.is_structure_valid(struct)
-        if not struct_legal:
-            print('\n [ERROR]    Structure Constraint is illegal or unbalanced')
-            if unclosed:
-                print(' [ERROR]    >> Unclosed bases at locations: {}'.format(unclosed))
-            if unopened:
-                print(' [ERROR]    >> Unopened bases at locations: {}'.format(unopened))
-            if invalid:
-                print(' [ERROR]    >> Invalid characters at locations: {}'.format(invalid))
-            print(' [SOLUTION] Try correcting Structure Constraint\n')
-            return False
         # Internal Repeats Legality
         if not allow_internal_repeat in [True, False]:
             print('\n [ERROR]    Internal Repeat must be boolean, not \'{}\''.format(allow_internal_repeat))

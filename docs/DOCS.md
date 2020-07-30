@@ -292,12 +292,12 @@ True
     </a>
 </h3>
 
-**nrpcalc.maker(seq_constr, struct_constr, target_size, Lmax, internal_repeats=False, background=None, part_type='RNA', struct_type='mfe', seed=None, synth_opt=False, local_model_fn=None, global_model_fn=None, jump_count=10, fail_count=1000, output_file=None, verbose=True)**
+**nrpcalc.maker(seq_constr, struct_constr, part_type, Lmax, target_size, internal_repeats=False, background=None, struct_type='mfe', seed=None, synth_opt=False, local_model_fn=None, global_model_fn=None, jump_count=10, fail_count=1000, output_file=None, verbose=True)**
 
 | argument | type | description | default |
 |--|--|--|--|
 | `seq_constr` | `string` | a string in IUPAC degenerate code describing all valid nucleotide choices at each position <br> **e.g.** `'NNNNWWWWSSSSTTTT'` implies that the first four bases can be either `'A'`/`'T'`/`'G'`/`'C'`, the next four bases can be either `'A'`/`'T'`, followed by either `'G'`/`'C'` for the next four basses, and finally ending with `'T'`s | -- |
-| `struct_constr` | `string` | a string in `dot-parenthesis-x` notation that describe the secondary base pairing across all nucleotide positions <br> **e.g.** `'..((xx))..'` implies that the first, second, and the last two bases are free to either base pair or not (`dot`), the third and fourth bases are paired with the eighth and the seventh bases respectively (`parenthesis`), while the fifth and the sixth base must not take part in any base pairing (`x`) at all | -- |
+| `struct_constr` | `string` | a string in _dot-parenthesis-x_ notation that describe the secondary base pairing across all nucleotide positions; a string of only dots implies an absence of any structure constraint <br> **e.g.** `'..((xx))..'` implies that the first, second, and the last two bases are free to either base pair or not (`'.'`), the third and fourth bases are paired with the eighth and the seventh bases respectively (`'('` and `')'`), while the fifth and the sixth base must not take part in any base pairing (`'x'`) at all | -- |
 | `part_type` | `string` | must be either `'RNA'` or `'DNA'` depending on the type of genetic part being designed; ensures that correct folding free-energy parameters are used during structure evaluation | -- |
 | `Lmax` | `integer` | maximum allowed shared repeat length between all sequences in designed toolbox | -- |
 | `target_size` | `integer` | maximum number of genetic parts to be designed for the generated toolbox; `target_size` may not be reached if the constraints are too strict, for example, due to low degeneracy in the given sequence constraint, or a low `Lmax` | -- |
