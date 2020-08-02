@@ -69,13 +69,40 @@ def is_seq_constr_legal(seq, part_type):
     else:
         return (False, sorted(chars-alphabet))
 
-def get_k_mer_count(sub_seq_list):
+def get_computable_form(struct):
+    '''
+    Get computable components from an RNA secondary structure.
+    '''
+    opened  = []
+    closed  = []
+    pairs   = []
+    invalid = []
+    for pos in range(len(struct)):
+        pairing = struct[pos]
+        if pairing == '(':
+            opened.append(pos)
+        elif pairing == ')':
+            closed.append(pos)
+            try:
+                pairs.append((opened.pop(), closed.pop()))
+            except:
+                pass
+        elif pairing not in ['x', '.']:
+            invalid.append(pos)
+    return pairs, opened, closed, invalid
+
+def get_k_mer_count(seq_list, start, end, rev_dict):
     '''
     Get the possible number of candidate sequences.
     '''
     global iupac_count
     product = 1
-    for nt in sub_seq_list:
+    for j in range(start, end):
+        nt = seq_list[j]
+        if j in rev_dict:
+            i = rev_dict[j]
+            if i >= start:
+                continue
         product *= iupac_count[nt]
     return product
 
@@ -99,7 +126,7 @@ def compress_locs(locs, homology):
         compressed.append((x, y))
     return compressed
 
-def is_seq_constr_sufficient(seq, homology, toolbox_size):
+def is_seq_constr_sufficient(seq, struct, homology, toolbox_size):
     '''
     Check if a desired size toolbox can be generated.
     On failure returns (False, a list of start:end tuples with constricted motifs).
@@ -107,38 +134,25 @@ def is_seq_constr_sufficient(seq, homology, toolbox_size):
     seq_list = list(seq)
     sufficiency_status = True
     insufficiency_locs = []
+    rev_dict = {j:i for i,j in get_computable_form(struct)[0]}
     for i in range(len(seq)-homology+1):
-        if get_k_mer_count(sub_seq_list=seq_list[i:i+homology]) < toolbox_size:
+        start = i
+        end = start + homology
+        kmer_count = get_k_mer_count(
+            seq_list=seq_list,
+            start=start,
+            end=end,
+            rev_dict=rev_dict)
+        if kmer_count < toolbox_size:
             sufficiency_status = False
             insufficiency_locs.append(i)
     return (sufficiency_status, compress_locs(locs=insufficiency_locs, homology=homology))
 
-def get_computable_form(struct):
-    '''
-    Get computable components from an RNA secondary structure.
-    '''
-    opened  = []
-    closed  = []
-    pairs   = []
-    invalid = []
-    for pos in range(len(struct)):
-        pairing = struct[pos]
-        if pairing == '(':
-            opened.append(pos)
-        elif pairing == ')':
-            closed.append(pos)
-            try:
-                pairs.append((opened.pop(), closed.pop()))
-            except:
-                pass
-        elif pairing not in ['x', '.']:
-            invalid.append(pos)
-    return pairs, opened, closed, invalid
-
 def is_structure_valid(struct):
     '''
     Check if the given RNA structure is legal and balanced.
-    On failure returns (False, three lists of indices: unclosed, unopened and invalid charas/parens)
+    On failure returns (False, three lists of indices:
+    unclosed, unopened and invalid charas/parens)
     '''
     pairs, opened, closed, invalid = get_computable_form(struct)
     if not opened:
@@ -240,18 +254,23 @@ def main():
     print('Testing Sequence Constraint Validation Checkers ... ',)
     legal_alphabet  = set('ACGTRYSWKMBDHVN')
     seq_legal = ''.join(random.sample(legal_alphabet, 1)[0] for _ in range(100))
-    assert is_seq_constr_legal(seq=seq_legal)[0] == True
+    assert is_seq_constr_legal(seq=seq_legal, part_type='DNA')[0] == True
 
     illegal_alphabet = set('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
     seq_illegal = ''.join(random.sample(illegal_alphabet, 1)[0] for _ in range(100))
-    assert is_seq_constr_legal(seq=seq_illegal)[0] == False
+    assert is_seq_constr_legal(seq=seq_illegal, part_type='DNA')[0] == False
     print('OK')
 
     print('Testing Sequence Constraint Sufficiency Checkers ... ',)
     seq      = 'N'*20 + 'TTGACA' + 'N'*17 + 'TATAAT' + 'N'*6 + 'CCN' + 'N'*20
+    struct   = '.'*len(seq)
     homology = 11
-    assert is_seq_constr_sufficient(seq, homology, toolbox_size=1000)[0] == True
-    assert is_seq_constr_sufficient(seq, homology, toolbox_size=2000)[0] == False
+    assert is_seq_constr_sufficient(seq, struct, homology, toolbox_size=1000)[0] == True
+    assert is_seq_constr_sufficient(seq, struct, homology, toolbox_size=2000)[0] == False
+    struct = '......((((((((((xxxxxxxx))))))))))......'
+    seq    = 'NNNNNNNNNNNNNNNNAAAAAAAANNNNNNNNNNNNNNNN'
+    assert is_seq_constr_sufficient(seq, struct, homology, toolbox_size=1000)[0] == False
+    assert is_seq_constr_sufficient(seq, struct, 17, toolbox_size=1000)[0] == True
     print('OK')
 
     print('Testing Struture Constraint Validation Checkers ...',)

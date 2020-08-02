@@ -966,9 +966,9 @@ class NRPMaker(object):
             print(' [SOLUTION] Try correcting Target Size\n')
             return False
         # Sequence Sufficiency -- soft check
-        seq_sufficient, constrained_motif_locs = makerchecks.is_seq_constr_sufficient(seq, homology, target)
+        seq_sufficient, constrained_motif_locs = makerchecks.is_seq_constr_sufficient(seq, struct, homology, target)
         if not seq_sufficient:
-            print('\n [WARNING]  Target Size of {} may be unreachable from given Sequence Constraint and Lmax of {}'.format(target, homology-1))
+            print('\n [WARNING]  Target Size of {} may be unreachable from given Sequence/Structure Constraint and Lmax of {}'.format(target, homology-1))
             print(' [WARNING]  >> Lmax limiting windows between locations: {}'.format(constrained_motif_locs))
             print(' [WARNING]  Fewer Parts may be Generated')
         # Internal Repeats Legality

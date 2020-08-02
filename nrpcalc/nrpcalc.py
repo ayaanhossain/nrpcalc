@@ -3,7 +3,7 @@ from .base import finder    as nrpfinder
 from .base import kmerSetDB
 
 
-__version__ = '1.3.1'
+__version__ = '1.3.2'
 
 __authors__ = '''
 Ayaan Hossain <auh57@psu.edu>
@@ -305,7 +305,7 @@ def finder(
         'TAAAAAAAAAAAAAAAA', # Repeats with last chromosome
         'GAGCTATGACTGACGTC'] # Repeats with first part
     >>> 
-    >>> # fine non-repetitive subset
+    >>> # find non-repetitive subset
     >>> # with respect to background
     >>> nrpcalc.finder(
         seq_list=my_toolbox,

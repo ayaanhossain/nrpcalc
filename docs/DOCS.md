@@ -213,7 +213,7 @@ RuntimeError: kmerSetDB was closed or dropped
     'TAAAAAAAAAAAAAAAA', # Repeats with last chromosome
     'GAGCTATGACTGACGTC'] # Repeats with first part
 >>> 
->>> # fine non-repetitive subset
+>>> # find non-repetitive subset
 >>> # with respect to background
 >>> nrpcalc.finder(
     seq_list=my_toolbox,

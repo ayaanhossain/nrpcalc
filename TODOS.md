@@ -17,6 +17,7 @@
 * ~~Base pairing spec check~~
 * ~~part_type must be constraint~~
 * ~~Select ) nucleotides carefully~~
+* Catch dynamically inserted constant
 * Finish unit testing
 * ~~Finish setup.py~~
 * ~~Publish to PyPI~~
