@@ -78,10 +78,10 @@ class NRPMaker(object):
                 'N': 'N'
             }
             self.base_compl = {
-                'A': {'U'},
-                'G': {'C', 'U'},
-                'C': {'G'},
-                'U': {'A', 'G'}
+                'A': ['U'],
+                'G': ['C', 'U'],
+                'C': ['G'],
+                'U': ['A', 'G']
             }
         else:
             self.iupac_space = {
@@ -119,10 +119,10 @@ class NRPMaker(object):
                 'N': 'N'
             }
             self.base_compl = {
-                'A': {'T'},
-                'G': {'C'},
-                'C': {'G'},
-                'T': {'A'}
+                'A': ['T'],
+                'G': ['C'],
+                'C': ['G'],
+                'T': ['A']
             }
 
     def _get_adjusted_struct(self, struct, seq):
@@ -198,7 +198,7 @@ class NRPMaker(object):
             except:
                 raise ValueError(
                     ' [X] Invalid IUPAC code at index {} in sequence constraint'.format(i))
-        
+
         return tuple(meta_seq)
 
     def _reset_candidate_kmer_set(
@@ -233,23 +233,32 @@ class NRPMaker(object):
         i = j
         return i
 
-    # FUNCTION TO TRACEBACK TO OPTIMAL LOCATION UPON CONFLICT
-    # Note: Compute these values for all position at the beginning 
-    # for the given sequence and structure constraints.
     def _get_rollback_index(
         self,
         meta_seq,
         meta_struct,
         i,
-        homology):
+        homology,
+        candidate,
+        tried_set):
         roll_back_index = None
         # See if any position in last homology places has potential for change
-        j = i-1
-        while j > i - homology and j > -1:
-            # Case ( or . without fixed base in sequence constraint
-            if not (j in meta_struct.rev_paired_dict) and (len(meta_seq[j]) != 1):
-                roll_back_index = j
-                break
+        j = i
+        while (j >= i - homology + 1) and (j >= 0):
+            # Case ( or . with potential for change
+            if not (j in meta_struct.rev_paired_dict):
+                if len(meta_seq[j]) > len(tried_set[j]):
+                    roll_back_index = j
+                    break
+            # Case ) for RNA Parts with potential for change
+            else:
+                l = meta_struct.rev_paired_dict[j]
+                pnt = meta_seq[j]
+                pnt = pnt.intersection(
+                    self.base_compl[candidate[l]])
+                if len(tried_set[j]) < len(pnt):
+                    roll_back_index = j
+                    break
             j -= 1
         # Else go to the ( for the first ) in the last homology places
         if not roll_back_index:
@@ -278,11 +287,16 @@ class NRPMaker(object):
 
             # traceback to ( if corresponding ) given
             if rbi in meta_struct.rev_paired_dict:
-                rbi = meta_struct.rev_paired_dict[rbi]
-
-            roll_back_index = rbi
+                j = meta_struct.rev_paired_dict[rbi]
+                pnt = meta_seq[rbi]
+                pnt = pnt.intersection(
+                    self.base_compl[candidate[j]])
+                # No potential for change
+                if len(pnt) == len(tried_set[i]):
+                    rbi = j
+            
             self._clear_path(
-                candidate, tried_set, kmer_set, i, k=roll_back_index)
+                candidate, tried_set, kmer_set, i, k=rbi)
             return rbi
 
         # Case 1: i is not paired upstream
@@ -293,7 +307,7 @@ class NRPMaker(object):
         # Case 2: i is paired upstream
         else:
             roll_back_index = self._get_rollback_index(
-                meta_seq, meta_struct, i, homology)
+                meta_seq, meta_struct, i, homology, candidate, tried_set)
             i = self._clear_path(
                 candidate, tried_set, kmer_set, i, k=roll_back_index)
         
@@ -382,11 +396,26 @@ class NRPMaker(object):
             # Try to build a candidate
             if candidate[i] == '-':
 
+                # Phase determination
+                forward = False
+                # Case )
+                if i in meta_struct.rev_paired_dict:
+                    j = meta_struct.rev_paired_dict[i]
+                    pnt = meta_seq[i]
+                    pnt = pnt.intersection(
+                        self.base_compl[candidate[j]])
+                    if len(pnt) > len(tried_set[i]):
+                        forward = True
+                # Case ( and .
+                else:
+                    if len(tried_set[i]) < len(meta_seq[i]):
+                        forward = True
+
                 # Forward phase - A nucleotide may be chosen
-                if len(tried_set[i]) < len(meta_seq[i]):
+                if forward:
                     # Reset roll_back_count
                     roll_back_count = 0
-
+                    
                     # Case ( and .
                     if not i in meta_struct.rev_paired_dict:
                         candidate[i] = self.rng.choice(
@@ -395,15 +424,29 @@ class NRPMaker(object):
                         # Case (
                         if i in meta_struct.paired_dict:
                             j = meta_struct.paired_dict[i]
-                            candidate[j] = self.rng.choice(sorted(
-                                self.base_compl[candidate[i]] & meta_seq[j]))
+                            # DNA Parts
+                            if self.part_type == 'DNA':
+                                pnt = self.base_compl[candidate[i]][0]
+                                candidate[j] = pnt
+                            # RNA Parts
+                            else:
+                                pnt = meta_seq[j]
+                                pnt = pnt.intersection(
+                                    self.base_compl[candidate[i]])
+                                candidate[j] = self.rng.choice(sorted(pnt))
                             tried_set[j] = set(candidate[j])
                     # Case )
                     else:
                         j = meta_struct.rev_paired_dict[i]
-                        candidate[i] = self.rng.choice(sorted(
-                            self.base_compl[candidate[j]] & meta_seq[i]))
-                        tried_set[i] = set(candidate[i])
+                        # DNA Parts
+                        if self.part_type == 'DNA':
+                            pnt = self.base_compl[candidate[j]][0]
+                            candidate[i] = pnt
+                        # RNA Parts
+                        else:
+                            pnt = pnt - tried_set[i]
+                            candidate[i] = self.rng.choice(sorted(pnt))
+                        tried_set[i].add(candidate[i])
 
                 # Backward phase - Nucleotide choices exhausted, so traceback
                 else:
@@ -494,6 +537,9 @@ class NRPMaker(object):
                         mmer_seen = True
                     # Inverted repeat
                     elif rmer in kmer_set:
+                        mmer_seen = True
+                    # Palindrome repeat
+                    elif kmer == rmer:
                         mmer_seen = True
 
                 # Case: mmer is a shared repeat with
@@ -663,7 +709,6 @@ class NRPMaker(object):
                         start_seq=inverse_fold_seq,
                         allow_internal_repeat=allow_internal_repeat)
 
-            # print candidate
             opt_count = 0
 
             # If valid candidate then process
@@ -982,8 +1027,9 @@ class NRPMaker(object):
             if not struct_sufficient:
                 print('\n [ERROR] Structure Constraint is insufficient based on given Lmax')
                 for long_hairpin in long_hairpins:
-                    print(' [ERROR] >> Long hairpin between: {}'.format(long_hairpin))
-                    print(' [SOLUTION] Try relaxing Structure Constraint or setting internal_repeats=True\n')
+                    print(' [ERROR] >> Long hairpin at locations: {}'.format(long_hairpin))
+                    print(' [SOLUTION] Try relaxing Structure Constraint or setting internal_repeats=True')
+                print()
                 return False
         return True
 

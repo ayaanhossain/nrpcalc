@@ -52,6 +52,8 @@ def get_repeat_dict(
 
             # Resolve direct internal repeat
             if len(kmer_set) < len(kmers):
+                print('----->>>>')
+                print(seq, 'direct')
                 continue
 
             inverted_repeats_found = False
@@ -62,6 +64,8 @@ def get_repeat_dict(
 
             # Resolve inverted internal repeat
             if inverted_repeats_found:
+                print('----->>>>')
+                print(seq, 'inverted')
                 continue
 
         # Resolve background repeats

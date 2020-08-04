@@ -15,7 +15,7 @@ setup(
     name='nrpcalc',
     
     # Link: https://www.python.org/dev/peps/pep-0440/#version-scheme
-    version='1.3.2',
+    version='1.4.0',
     
     description='Non-Repetitive Parts Calculator - Automated design and discovery of non-repetitive genetic parts for engineering stable genetic systems',
     
@@ -49,7 +49,10 @@ setup(
         # that you indicate whether you support Python 2, Python 3 or both.
         # These classifiers are *not* checked by 'pip install'. See instead
         # 'python_requires' below.
-        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
     ],
     keywords=' '.join([
         'synthetic',

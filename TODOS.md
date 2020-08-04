@@ -17,7 +17,10 @@
 * ~~Base pairing spec check~~
 * ~~part_type must be constraint~~
 * ~~Select ) nucleotides carefully~~
-* Catch dynamically inserted constant
+* ~~Saner GU support for RNA types~~
+* ~~Catch dynamically inserted constant~~
+* ~~Fix ) traceback~~
+* ~~Handle Lmax panlindromes~~
 * Finish unit testing
 * ~~Finish setup.py~~
 * ~~Publish to PyPI~~

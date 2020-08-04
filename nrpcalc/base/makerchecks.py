@@ -237,7 +237,6 @@ def is_pairing_compatible(seq, struct, part_type):
             i,j = pairs.pop()
             nti = seq[i]
             ntj = seq[j]
-            # print(i,j,nti,ntj, iupac_compl[nti], iupac_compl[ntj])
             if len(iupac_space[nti]) > len(iupac_space[ntj]):
                 nti,ntj = ntj,nti
             if not iupac_space[nti] <= iupac_space[iupac_compl[ntj]]:
