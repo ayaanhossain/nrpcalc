@@ -21,6 +21,8 @@
 * ~~Catch dynamically inserted constant~~
 * ~~Fix ) traceback~~
 * ~~Handle Lmax panlindromes~~
+* ~~Fix type checking typos~~
+* ~~Introduce enhanced clear~~
 * Finish unit testing
 * ~~Finish setup.py~~
 * ~~Publish to PyPI~~

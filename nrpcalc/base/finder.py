@@ -20,23 +20,23 @@ def _check_finder_constraints(
     # Sequence List Legality
     for seq in seq_list:
         if not isinstance(seq, str):
-            print(' [ERROR]    Parts in Sequence List must be string, not \'{}\''.format(seq))
+            print(' [ERROR]    Parts in Sequence List must be string, not {}'.format(type(seq)))
             print(' [SOLUTION] Try correcting Lmax\n')
-            return False 
+            return False
     # Lmax Legality 1
     if not isinstance(homology, int):
-        print('\n [ERROR]    Lmax must be an integer, not \'{}\''.format(homology-1))
+        print('\n [ERROR]    Lmax must be an integer, not {}'.format(type(homology)))
         print(' [SOLUTION] Try correcting Lmax\n')
         return False
     # Lmax Legality 2
     if homology-1 < 5:
-        print('\n [ERROR]    Lmax must be greater than 4, not \'{}\''.format(homology-1))
+        print('\n [ERROR]    Lmax must be greater than 4, not {}'.format(homology-1))
         print(' [SOLUTION] Try correcting Lmax\n')
         return False
     # Internal Repeats Legality
     if not allow_internal_repeat in [True, False]:
-        print('\n [ERROR]    Internal Repeat must be boolean, not \'{}\''.format(
-            allow_internal_repeat))
+        print('\n [ERROR]    Internal Repeat must be boolean, not {}'.format(
+            type(allow_internal_repeat)))
         print(' [SOLUTION] Try correcting Internal Repeat\n')
         return False
     # Everything OK
@@ -45,16 +45,21 @@ def _check_finder_constraints(
 def _check_finder_arguments(
     vercov_func,
     output_file):
-    # Vertex Cover Legality
+    # Vertex Cover Legality 1
+    if not isinstance(vercov_func, str):
+        print(' [ERROR]    Vertex Cover Routine Name must be string, not {}'.format(type(vercov_func)))
+        print(' [SOLUTION] Try correcting Vertex Cover Routine Name\n')
+        return False
+    # Vertex Cover Legality 2
     if not vercov_func in ['2apx', 'nrpG', 'nrp2']:
-        print('\n [ERROR]    Vertex Cover Elimination must be \'2apx\', \'nrpG\', or \'nrp2\' not \'{}\''.format(
+        print('\n [ERROR]    Vertex Cover Routine Name must be \'2apx\', \'nrpG\', or \'nrp2\', not \'{}\''.format(
             vercov_func))
-        print(' [SOLUTION] Try correcting Vertex Cover Elimination\n')
+        print(' [SOLUTION] Try correcting Vertex Cover Routine Name\n')
         return False
     # Output File Legality
     if not output_file is None:
         if not isinstance(output_file, str):
-            print('\n [ERROR]    Output File must be a string or None, not \'{}\''.format(struct_type))
+            print('\n [ERROR]    Output File must be a string or None, not {}'.format(type(output_file)))
             print(' [SOLUTION] Try correcting Output File\n')
             return False
     # Everything OK

@@ -28,7 +28,7 @@ class kmerSetDB(object):
             # Assert homology is positive integer
             if not isinstance(homology, int):
                 print('\n[Non-Repetitive Parts Calculator - Background]')
-                print('\n [ERROR]    Lmax must be an integer, not \'{}\''.format(homology-1))
+                print('\n [ERROR]    Lmax must be an integer, not {}'.format(type(homology)))
                 print(' [SOLUTION] Try correcting Lmax\n')
                 raise ValueError
             if homology-1 < 5:
@@ -283,7 +283,7 @@ class kmerSetDB(object):
         except Exception as E:
             raise E
 
-    def clear(self):
+    def clear(self, Lmax=None):
         '''
         User function to clear all k-mers stored in
         kmerSetDB.
@@ -295,7 +295,22 @@ class kmerSetDB(object):
             error_if_exists=False)
         self.LEN = 0
         self.DB.Put(b'LEN', b'0')
-        self.DB.Put(b'K', str(self.K).encode())
+        if Lmax is None:
+            self.DB.Put(b'K', str(self.K).encode())
+        else:
+            if not Lmax is None:
+                if not isinstance(Lmax, int):
+                    print('\n [ERROR]    Lmax must be an integer, not {}'.format(
+                        type(Lmax)))
+                    print(' [SOLUTION] Try correcting Lmax\n')
+                    raise ValueError
+                self.K = int(Lmax) + 1
+                if Lmax < 5:
+                    print('\n [ERROR]    Lmax must be greater than 4, not {}'.format(
+                        Lmax))
+                    print(' [SOLUTION] Try correcting Lmax\n')
+                    raise ValueError
+            self.DB.Put(b'K', str(self.K).encode())
         self.ALIVE = True
 
     def close(self):

@@ -932,7 +932,7 @@ class NRPMaker(object):
         homology):
         # Sequence Legality 1
         if not isinstance(seq, str):
-            print('\n [ERROR]    Sequence Constraint must be a string, not \'{}\''.format(seq))
+            print('\n [ERROR]    Sequence Constraint must be a string, not {}'.format(type(seq)))
             print(' [SOLUTION] Try correcting Sequence Constraint\n')
             return False
         # Sequence Legality 2
@@ -942,7 +942,7 @@ class NRPMaker(object):
             return False
         # Structure Legality 1
         if not isinstance(struct, str):
-            print('\n [ERROR]    Structure Constraint must be a string, not \'{}\''.format(struct))
+            print('\n [ERROR]    Structure Constraint must be a string, not {}'.format(type(struct)))
             print(' [SOLUTION] Try correcting Structure Constraint\n')
             return False
         # Structure Legality 2
@@ -952,7 +952,12 @@ class NRPMaker(object):
                 len(struct)))
             print(' [SOLUTION] Try correcting length of Structure Constraint\n')
             return False
-        # Part Type Legality
+        # Part Type Legality 1
+        if not isinstance(part_type, str):
+            print('\n [ERROR]    Part Type must be a string, not \'{}\''.format(type(part_type)))
+            print(' [SOLUTION] Try correcting Part Type\n')
+            return False
+        # Part Type Legality 2
         if not part_type in ['DNA', 'RNA']:
             print('\n [ERROR]    Part Type must be \'RNA\' or \'DNA\', not \'{}\''.format(part_type))
             print(' [SOLUTION] Try correcting Part Type\n')
@@ -987,7 +992,7 @@ class NRPMaker(object):
                 print(' [WARNING]  Fewer Parts may be Generated')
         # Lmax Legality 1
         if not isinstance(homology, int):
-            print('\n [ERROR]    Lmax must be an integer, not {}'.format(homology-1))
+            print('\n [ERROR]    Lmax must be an integer, not {}'.format(type(homology)))
             print(' [SOLUTION] Try correcting Lmax\n')
             return False
         # Lmax Legality 2
@@ -1002,7 +1007,7 @@ class NRPMaker(object):
             return False
         # Target Size Legality 1
         if not isinstance(target, int):
-            print('\n [ERROR]    Target Size must be an integer, not {}'.format(target))
+            print('\n [ERROR]    Target Size must be an integer, not {}'.format(type(target)))
             print(' [SOLUTION] Try correcting Target Size\n')
             return False
         # Target Size Legality 2
@@ -1018,7 +1023,7 @@ class NRPMaker(object):
             print(' [WARNING]  Fewer Parts may be Generated')
         # Internal Repeats Legality
         if not allow_internal_repeat in [True, False]:
-            print('\n [ERROR]    Internal Repeat must be boolean, not \'{}\''.format(allow_internal_repeat))
+            print('\n [ERROR]    Internal Repeat must be boolean, not {}'.format(type(allow_internal_repeat)))
             print(' [SOLUTION] Try correcting Internal Repeat\n')
             return False
         # Structure Sufficiency
@@ -1048,33 +1053,33 @@ class NRPMaker(object):
             return False
         # Synth Optimization Legality
         if not synth_opt in [True, False]:
-            print('\n [ERROR]    Synth Opt must be True or False, not \'{}\''.format(struct_type))
+            print('\n [ERROR]    Synth Opt must be True or False, not {}'.format(synth_opt))
             print(' [SOLUTION] Try correcting Synth Opt\n')
             return False
         # Jump Count Legality 1
         if not isinstance(jump_count, int):
-            print('\n [ERROR]    Jump Count must be an integer, not \'{}\''.format(struct_type))
+            print('\n [ERROR]    Jump Count must be an integer, not {}'.format(type(jump_count)))
             print(' [SOLUTION] Try correcting Jump Count\n')
             return False
         # Jump Count Legality 2
         if jump_count < 0:
-            print('\n [ERROR]    Jump Count must be an positive, not \'{}\''.format(struct_type))
+            print('\n [ERROR]    Jump Count must be greater than 0, not {}'.format(jump_count))
             print(' [SOLUTION] Try correcting Jump Count\n')
             return False
         # Fail Count Legality 1
         if not isinstance(fail_count, int):
-            print('\n [ERROR]    Fail Count must be an integer, not \'{}\''.format(struct_type))
+            print('\n [ERROR]    Fail Count must be an integer, not {}'.format(type(fail_count)))
             print(' [SOLUTION] Try correcting Fail Count\n')
             return False
         # Fail Count Legality 2
         if fail_count < 0:
-            print('\n [ERROR]    Fail Count must be an positive, not \'{}\''.format(struct_type))
+            print('\n [ERROR]    Fail Count must be greater than 0, not {}'.format(fail_count))
             print(' [SOLUTION] Try correcting Fail Count\n')
             return False
         # Output File Legality
         if not output_file is None:
             if not isinstance(output_file, str):
-                print('\n [ERROR]    Output File must be a string or None, not \'{}\''.format(struct_type))
+                print('\n [ERROR]    Output File must be a string or None, not {}'.format(type(output_file)))
                 print(' [SOLUTION] Try correcting Output File\n')
                 return False
         # Everything OK

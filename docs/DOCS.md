@@ -36,7 +36,9 @@
 
 ```python
 >>> from pprint import pprint
+>>>
 >>> import nrpcalc
+>>> 
 >>> my_background_list = [
     'ATGAGATCGTAGCAACC',
     'GACGATTACGTCAGGTA',
@@ -113,17 +115,22 @@ False
 >>> len(bkg)
 0
 ```
-(9) **clear()** - removes all _k_-mers stored in `background`
+(9) **clear(Lmax=None)** - removes all _k_-mers stored in `background`, and optionally resets `background` Lmax
 ```python
 >>> bkg.add('ATGCTTAGTGCCATACC')
 >>> len(bkg)
 2
 >>> bkg.clear()
-
-[Background Processing]
-  Removing Seq 1: GGTATGGCAC...
 >>> len(bkg)
 0
+>>> bkg
+kmerSetDB stored at ./prj_bkg/ with 0 16-mers
+>>> bkg.clear(Lmax=17)
+>>> bkg
+kmerSetDB stored at ./prj_bkg/ with 0 18-mers
+>>> bkg.clear(Lmax=15)
+>>> bkg
+kmerSetDB stored at ./prj_bkg/ with 0 16-mers
 ```
 (10) **close()** - closes `background` instance; once closed operations on the instance raises error
 ```python
@@ -134,7 +141,7 @@ False
 >>> bkg.add('ATGCTTAGTGCCATACC')
 Traceback (most recent call last):
   File "<stdin>", line 1, in <module>
-  File "nrpcalc/base/kmerSetDB.py", line 96, in wrapper
+  File "nrpcalc/base/kmerSetDB.py", line 97, in wrapper
     raise RuntimeError('kmerSetDB was dropped')
 RuntimeError: kmerSetDB was closed or dropped
 ```
@@ -152,7 +159,7 @@ True
 >>> bkg.add('ATGCTTAGTGCCATACC')
 Traceback (most recent call last):
   File "<stdin>", line 1, in <module>
-  File "nrpcalc/base/kmerSetDB.py", line 96, in wrapper
+  File "nrpcalc/base/kmerSetDB.py", line 97, in wrapper
     raise RuntimeError('kmerSetDB was closed or dropped')
 RuntimeError: kmerSetDB was closed or dropped
 ```
