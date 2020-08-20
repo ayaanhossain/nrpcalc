@@ -754,7 +754,7 @@ class NRPMaker(object):
                     # Outcome satisfactory?
                     try:
                         assert outcome in [True, False]
-                    except Execution as e:
+                    except Exception as e:
                         print(' Global Model fn. returned a non-boolean state: {}\n'.format(
                             outcome))
                         raise e
