@@ -106,18 +106,15 @@ def nrp_finder(
             if verbose:
                 print('\n[Checking Background]\n Background: {}'.format(background))
             if isinstance(background, kmerSetDB.kmerSetDB):
-                if background.K > homology:
-                    find_parts = False
-                    print('\n [ERROR]    Background Lmax is {}, but Constraint Lmax is {}'.format(
-                        background.K-1,
-                        homology-1))
-                    print(' [SOLUTION] Try lowering or correcting Lmax\n')
+                if not background.ALIVE:
+                    build_parts = False
+                    print('\n [ERROR]    Background is closed or dropped')
+                    print(' [SOLUTION] Try using an open Background\n')
                     if verbose:
                         print(' Check Status: FAIL\n')
                 else:
                     if verbose:
                         print('\n Check Status: PASS')
-
             else:
                 find_parts = False
                 print('\n [ERROR]    Background Object is INVALID')

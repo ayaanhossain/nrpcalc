@@ -52,8 +52,8 @@ def get_repeat_dict(
 
             # Resolve direct internal repeat
             if len(kmer_set) < len(kmers):
-                print('----->>>>')
-                print(seq, 'direct')
+                # print('----->>>>')
+                # print(seq, 'direct')
                 continue
 
             inverted_repeats_found = False
@@ -64,14 +64,19 @@ def get_repeat_dict(
 
             # Resolve inverted internal repeat
             if inverted_repeats_found:
-                print('----->>>>')
-                print(seq, 'inverted')
+                # print('----->>>>')
+                # print(seq, 'inverted')
                 continue
 
         # Resolve background repeats
         if not background is None:
-            if any(background.multicheck(kmers)):
-                continue
+            if background.K <= len(seq):
+                if background.K == homology:
+                    if any(background.multicheck(kmers)):
+                        continue
+                else:
+                    if seq in background:
+                        continue
 
         # Populate repeat_dict for sequences sharing repeats
         for i in range(len(kmers)):

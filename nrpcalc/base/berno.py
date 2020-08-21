@@ -3,10 +3,10 @@ from scipy.special import betaincinv as ribf
 
 import random
 
-zero_const = 1. / 10**10
+zero_const = -24 # Lower is Rarer # Originally: 1. / 10**10
 
 def get_trials(prob):
-    return 2 * int(ceil(log(zero_const) / log(1. - prob)))
+    return 2 * int(ceil(-24 / log(1. - prob)))
 
 def get_prob(trials, success):
     # probability for rare event success

@@ -519,15 +519,15 @@ class NRPMaker(object):
                         rbi)
                     continue
 
-            # Handle internal and shared repeats
+            # Are either of these mers seen previously?
+            mmer_seen = False
+
+            # Handle equal internal and shared repeats
             if i >= homology-1:
                 # Get the kmer/rmer
                 kmer = ''.join(candidate[i-homology+1:i+1])
                 rmer = utils.get_revcomp(kmer)
                 mmer = min(kmer, rmer)
-
-                # Are either of these mers seen previously?
-                mmer_seen = False
 
                 # Case: kmer/rkmer is an internal
                 #       repeat to current part                
@@ -552,22 +552,51 @@ class NRPMaker(object):
                 #       background
                 if not mmer_seen:
                     if not self.background is None:
-                        if mmer in self.background:
-                            mmer_seen = True
+                        if self.background.K == homology:
+                            if mmer in self.background:
+                                mmer_seen = True
 
-                # Traceback to eliminate repeat
-                if mmer_seen:
-                    i = self._roll_back(
-                        meta_seq,
-                        meta_struct,
-                        i,
-                        homology,
-                        candidate, 
-                        tried_set,
-                        kmer_set)
-                    continue
-                
-                # Everything OK .. insert kmer
+            # Handle background repeats
+            if not mmer_seen:
+                if not self.background is None:
+                    if homology != self.background.K:
+                        
+                        # Determine background K
+                        K = self.background.K
+                        
+                        # Check is warranted
+                        if i >= K-1:
+                            
+                            # Get the kmer/rmer
+
+                            # K is smaller or equal
+                            if K <= homology:
+                                kmer = kmer[-K:]                                
+                            # K is greater
+                            else:
+                                kmer = ''.join(candidate[i-K+1:i+1])
+                            
+                            rmer = utils.get_revcomp(kmer)
+                            mmer = min(kmer, rmer)
+
+                            # Actual check
+                            if mmer in self.background:
+                                mmer_seen = True
+
+            # Traceback to eliminate repeat
+            if mmer_seen:
+                i = self._roll_back(
+                    meta_seq,
+                    meta_struct,
+                    i,
+                    homology,
+                    candidate, 
+                    tried_set,
+                    kmer_set)
+                continue
+            
+            # Everything OK .. insert kmer
+            if i >= homology-1:
                 kmer_set[i] = kmer
 
             # Roll forward
@@ -754,7 +783,7 @@ class NRPMaker(object):
                     # Outcome satisfactory?
                     try:
                         assert outcome in [True, False]
-                    except Execution as e:
+                    except Exception as e:
                         print(' Global Model fn. returned a non-boolean state: {}\n'.format(
                             outcome))
                         raise e
@@ -1138,21 +1167,21 @@ class NRPMaker(object):
                 if verbose:
                     print('\n[Checking Background]\n Background: {}'.format(background))
                 if isinstance(background, kmerSetDB):
-                    if background.K > homology:
+                    if background.K > len(seq_constr):
                         build_parts = False
-                        print('\n [ERROR]    Background Lmax is {}, but Constraint Lmax is {}'.format(
+                        print('\n [ERROR]    Background Lmax of {} is greater than desired part length ({}-bp)'.format(
                             background.K-1,
-                            homology-1))
-                        print(' [SOLUTION] Try lowering or correcting Lmax\n')
+                            len(seq_constr)))
+                        print(' [SOLUTION] Try using a background with Lmax less than or equal to part length\n')
                         if verbose:
                             print(' Check Status: FAIL\n')
-                    elif not background.ALIVE:
+                    if build_parts and not background.ALIVE:
                         build_parts = False
                         print('\n [ERROR]    Background is closed or dropped')
                         print(' [SOLUTION] Try using an open Background\n')
                         if verbose:
                             print(' Check Status: FAIL\n')
-                    else:
+                    if build_parts:
                         if verbose:
                             print('\n Check Status: PASS')
 
