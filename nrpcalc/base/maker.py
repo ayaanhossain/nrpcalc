@@ -1120,7 +1120,6 @@ class NRPMaker(object):
         struct_constr,
         target_size,
         background=None,
-        part_type='RNA',
         struct_type=None,
         synth_opt=True,
         local_model_fn=None,
@@ -1130,84 +1129,30 @@ class NRPMaker(object):
         output_file=None,
         verbose=True,
         abortion=True,
-        allow_internal_repeat=False):
+        allow_internal_repeat=False,
+        check_constraints=True):
 
         if verbose:
             print('\n[Non-Repetitive Parts Calculator - Maker Mode]')
         build_parts = True
 
         # Check Maker Constraints
-        if verbose:
-            print('\n[Checking Constraints]')
-            print('  Sequence Constraint: {}'.format(seq_constr))
-            print(' Structure Constraint: {}'.format(struct_constr))
-            print('      Part Type      : {}'.format(part_type))
-            print('           Lmax      : {} bp'.format(homology-1))
-            print('    Target Size      : {} parts'.format(target_size))
-            print('  Internal Repeats   : {}'.format(allow_internal_repeat))
-        check_status = self._check_maker_constraints(
-            seq_constr,
-            struct_constr,
-            part_type,
-            allow_internal_repeat,
-            target_size,
-            homology)
-
-        if check_status == False:
+        if check_constraints:
             if verbose:
-                print(' Check Status: FAIL\n')
-            build_parts = False
-        else:
-            if verbose:
-                print('\n Check Status: PASS')
-        
-        # Background Check
-        if build_parts:
-            if not background is None:
-                if verbose:
-                    print('\n[Checking Background]\n Background: {}'.format(background))
-                if isinstance(background, kmerSetDB):
-                    if background.K > len(seq_constr):
-                        build_parts = False
-                        print('\n [ERROR]    Background Lmax of {} is greater than desired part length ({}-bp)'.format(
-                            background.K-1,
-                            len(seq_constr)))
-                        print(' [SOLUTION] Try using a background with Lmax less than or equal to part length\n')
-                        if verbose:
-                            print(' Check Status: FAIL\n')
-                    if build_parts and not background.ALIVE:
-                        build_parts = False
-                        print('\n [ERROR]    Background is closed or dropped')
-                        print(' [SOLUTION] Try using an open Background\n')
-                        if verbose:
-                            print(' Check Status: FAIL\n')
-                    if build_parts:
-                        if verbose:
-                            print('\n Check Status: PASS')
-
-                else:
-                    build_parts = False
-                    print('\n [ERROR]    Background Object is INVALID')
-                    print(' [SOLUTION] Try instantiating background via nrpcalc.background(...)\n')
-                    if verbose:
-                        print(' Check Status : FAIL\n')
-
-        # Arguments Check
-        if build_parts:
-            if verbose:
-                print('\n[Checking Arguments]')
-                print(' Struct Type : {}'.format(struct_type))
-                print('  Synth Opt  : {}'.format(synth_opt))
-                print('   Jump Count: {}'.format(jump_count))
-                print('   Fail Count: {}'.format(fail_count))
-                print(' Output File : {}'.format(output_file))
-            check_status = self._check_maker_inputs(
-                struct_type,
-                synth_opt,
-                jump_count,
-                fail_count,
-                output_file,
-                verbose)
+                print('\n[Checking Constraints]')
+                print('  Sequence Constraint: {}'.format(seq_constr))
+                print(' Structure Constraint: {}'.format(struct_constr))
+                print('      Part Type      : {}'.format(self.part_type))
+                print('           Lmax      : {} bp'.format(homology-1))
+                print('    Target Size      : {} parts'.format(target_size))
+                print('  Internal Repeats   : {}'.format(allow_internal_repeat))
+            check_status = self._check_maker_constraints(
+                seq_constr,
+                struct_constr,
+                self.part_type,
+                allow_internal_repeat,
+                target_size,
+                homology)
 
             if check_status == False:
                 if verbose:
@@ -1216,13 +1161,72 @@ class NRPMaker(object):
             else:
                 if verbose:
                     print('\n Check Status: PASS')
+            
+            # Background Check
+            if build_parts:
+                if not background is None:
+                    if verbose:
+                        print('\n[Checking Background]\n Background: {}'.format(background))
+                    if isinstance(background, kmerSetDB):
+                        if background.K > len(seq_constr):
+                            build_parts = False
+                            print('\n [ERROR]    Background Lmax of {} is greater than desired part length ({}-bp)'.format(
+                                background.K-1,
+                                len(seq_constr)))
+                            print(' [SOLUTION] Try using a background with Lmax less than or equal to part length\n')
+                            if verbose:
+                                print(' Check Status: FAIL\n')
+                        if build_parts and not background.ALIVE:
+                            build_parts = False
+                            print('\n [ERROR]    Background is closed or dropped')
+                            print(' [SOLUTION] Try using an open Background\n')
+                            if verbose:
+                                print(' Check Status: FAIL\n')
+                        if build_parts:
+                            if verbose:
+                                print('\n Check Status: PASS')
 
-        if not build_parts:
-            # Cleanups
-            self.background = None
-            self.kmer_db = None
-            raise RuntimeError('Invalid Constraints, Background or Arguments')
-        print()
+                    else:
+                        build_parts = False
+                        print('\n [ERROR]    Background Object is INVALID')
+                        print(' [SOLUTION] Try instantiating background via nrpcalc.background(...)\n')
+                        if verbose:
+                            print(' Check Status : FAIL\n')
+
+            # Arguments Check
+            if build_parts:
+                if verbose:
+                    print('\n[Checking Arguments]')
+                    print(' Struct Type : {}'.format(struct_type))
+                    print('  Synth Opt  : {}'.format(synth_opt))
+                    print('   Jump Count: {}'.format(jump_count))
+                    print('   Fail Count: {}'.format(fail_count))
+                    print(' Output File : {}'.format(output_file))
+                check_status = self._check_maker_inputs(
+                    struct_type,
+                    synth_opt,
+                    jump_count,
+                    fail_count,
+                    output_file,
+                    verbose)
+
+                if check_status == False:
+                    if verbose:
+                        print(' Check Status: FAIL\n')
+                    build_parts = False
+                else:
+                    if verbose:
+                        print('\n Check Status: PASS')
+
+            if not build_parts:
+                # Cleanups
+                self.background = None
+                self.kmer_db = None
+                raise RuntimeError('Invalid Constraints, Background or Arguments')
+
+        # Separate Checks from Build Logs
+        if verbose:
+            print()
 
         # kmer_db and background Setup
         projector.setup_proj_dir(self.proj_id)
@@ -1270,8 +1274,6 @@ class NRPMaker(object):
                     out_file.write(
                         '>non-repetitive part {}\n'.format(
                             current_nrp_count+1))
-                    # if part_type == 'RNA':
-                    #     non_coding_nrp = non_coding_nrp.replace('T', 'U')
                     non_coding_nrp = '\n'.join(
                         textwrap.wrap(
                             non_coding_nrp, 80))

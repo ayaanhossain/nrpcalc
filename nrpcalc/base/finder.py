@@ -72,7 +72,8 @@ def nrp_finder(
     background=None,
     vercov_func=None,
     output_file=None,
-    verbose=True):
+    verbose=True,
+    check_constraints=True):
 
     # Program Verbage
     if verbose:
@@ -81,56 +82,17 @@ def nrp_finder(
     seq_list = list(seq_list)
 
     # Check Finder Constraints
-    if verbose:
-        print('\n[Checking Constraints]')
-        print(' Sequence List   : {} parts'.format(len(seq_list)))
-        print('          Lmax   : {} bp'.format(homology-1))
-        print(' Internal Repeats: {}'.format(allow_internal_repeat))
-    check_status = _check_finder_constraints(
-        seq_list=seq_list,
-        homology=homology,
-        allow_internal_repeat=allow_internal_repeat,
-        vercov_func=vercov_func)
-
-    if check_status == False:
+    if check_constraints:
         if verbose:
-            print(' Check Status: FAIL\n')
-        find_parts = False
-    else:
-        if verbose:
-            print('\n Check Status: PASS')
-
-    # Background Check
-    if find_parts:
-        if not background is None:
-            if verbose:
-                print('\n[Checking Background]\n Background: {}'.format(background))
-            if isinstance(background, kmerSetDB.kmerSetDB):
-                if not background.ALIVE:
-                    build_parts = False
-                    print('\n [ERROR]    Background is closed or dropped')
-                    print(' [SOLUTION] Try using an open Background\n')
-                    if verbose:
-                        print(' Check Status: FAIL\n')
-                else:
-                    if verbose:
-                        print('\n Check Status: PASS')
-            else:
-                find_parts = False
-                print('\n [ERROR]    Background Object is INVALID')
-                print(' [SOLUTION] Try instantiating background via nrpcalc.background(...)\n')
-                if verbose:
-                    print(' Check Status : FAIL\n')
-
-    # Arguments Check
-    if find_parts:
-        if verbose:
-            print('\n[Checking Arguments]')
-            print('   Vertex Cover: {}'.format(vercov_func))
-            print('   Output  File: {}'.format(output_file))
-        check_status = _check_finder_arguments(
-            vercov_func=vercov_func,
-            output_file=output_file)
+            print('\n[Checking Constraints]')
+            print(' Sequence List   : {} parts'.format(len(seq_list)))
+            print('          Lmax   : {} bp'.format(homology-1))
+            print(' Internal Repeats: {}'.format(allow_internal_repeat))
+        check_status = _check_finder_constraints(
+            seq_list=seq_list,
+            homology=homology,
+            allow_internal_repeat=allow_internal_repeat,
+            vercov_func=vercov_func)
 
         if check_status == False:
             if verbose:
@@ -140,9 +102,53 @@ def nrp_finder(
             if verbose:
                 print('\n Check Status: PASS')
 
-    if not find_parts:
-        raise RuntimeError('Invalid Constraints, or Background')
-    print(    )
+        # Background Check
+        if find_parts:
+            if not background is None:
+                if verbose:
+                    print('\n[Checking Background]\n Background: {}'.format(background))
+                if isinstance(background, kmerSetDB.kmerSetDB):
+                    if not background.ALIVE:
+                        build_parts = False
+                        print('\n [ERROR]    Background is closed or dropped')
+                        print(' [SOLUTION] Try using an open Background\n')
+                        if verbose:
+                            print(' Check Status: FAIL\n')
+                    else:
+                        if verbose:
+                            print('\n Check Status: PASS')
+                else:
+                    find_parts = False
+                    print('\n [ERROR]    Background Object is INVALID')
+                    print(' [SOLUTION] Try instantiating background via nrpcalc.background(...)\n')
+                    if verbose:
+                        print(' Check Status : FAIL\n')
+
+        # Arguments Check
+        if find_parts:
+            if verbose:
+                print('\n[Checking Arguments]')
+                print('   Vertex Cover: {}'.format(vercov_func))
+                print('   Output  File: {}'.format(output_file))
+            check_status = _check_finder_arguments(
+                vercov_func=vercov_func,
+                output_file=output_file)
+
+            if check_status == False:
+                if verbose:
+                    print(' Check Status: FAIL\n')
+                find_parts = False
+            else:
+                if verbose:
+                    print('\n Check Status: PASS')
+
+        if not find_parts:
+            raise RuntimeError('Invalid Constraints, or Background')
+    
+    # Separate Checks from Discovery Logs
+    if verbose:
+        print()
+    
     # Setup Project
     current_uuid = str(uuid.uuid4())
     projector.setup_proj_dir(current_uuid)

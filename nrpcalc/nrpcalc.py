@@ -3,7 +3,7 @@ from .base import finder    as nrpfinder
 from .base import kmerSetDB
 
 
-__version__ = '1.5.0'
+__version__ = '1.5.2'
 
 __authors__ = '''
 Ayaan Hossain <auh57@psu.edu>
@@ -387,7 +387,8 @@ def finder(
         allow_internal_repeat=internal_repeats,
         vercov_func=vercov,
         output_file=output_file,
-        verbose=verbose)
+        verbose=verbose,
+        check_constraints=True)
 
 def maker(
     seq_constr,
@@ -741,7 +742,6 @@ def maker(
         homology=Lmax+1,
         allow_internal_repeat=internal_repeats,
         background=background,
-        part_type=part_type,
         synth_opt=synth_opt,
         local_model_fn=local_model_fn,
         global_model_fn=global_model_fn,
@@ -749,7 +749,8 @@ def maker(
         fail_count=fail_count,
         output_file=output_file,
         verbose=verbose,
-        abortion=True)
+        abortion=True,
+        check_constraints=True)
 
     # Cleanups and return
     del _maker

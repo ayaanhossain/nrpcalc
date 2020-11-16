@@ -1,4 +1,5 @@
 import os
+import sys
 
 import pkg_resources
 
@@ -64,7 +65,7 @@ class Fold(object):
         # see RNAlib documentation;
         # default=2 (int)
         RNA.cvar.dangles = dangles
-        self.settings    = RNA.md("globals")
+        self.settings    = RNA.md()
 
         if not part_type in ['RNA', 'DNA']:
             part_type = 'RNA'
@@ -75,6 +76,19 @@ class Fold(object):
             'nrpcalc', 'base/{}.par'.format(
                 self.part_type))
         RNA.read_parameter_file(parameter_file)
+
+        if part_type == 'DNA':
+            self.clear_warning()
+
+    def clear_warning(self):
+        clrlen = len('WARNING: stacking enthalpies not symmetric')
+        sys.stdout.write('\033[F\033[F\033[F\033[F')
+        sys.stdout.write(' '*clrlen+'\n')
+        sys.stdout.write(' '*clrlen+'\n')
+        sys.stdout.write(' '*clrlen+'\n')
+        sys.stdout.write(' '*clrlen+'\n')
+        sys.stdout.write('\033[F\033[F\033[F\033[F')
+        sys.stdout.flush()
 
     def evaluate_mfe(self, seq):
         # MFE Only
