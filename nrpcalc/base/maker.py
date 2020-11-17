@@ -1282,9 +1282,11 @@ class NRPMaker(object):
                     current_nrp_count += 1
                 else:
                     if non_coding_nrp is None:
-                        print('Failure Limits Exceeded or k-mers Exhausted. Cannot Build More Parts.')
+                        if verbose:
+                            print('Failure Limits Exceeded or k-mers Exhausted. Cannot Build More Parts.')
                     else:
-                        print('Memory Capacity at Full. Cannot Build More Parts.')
+                        if verbose:
+                            print('Memory Capacity at Full. Cannot Build More Parts.')
                         memory_exhausted = True
 
                 # Memory no longer available ... stop
