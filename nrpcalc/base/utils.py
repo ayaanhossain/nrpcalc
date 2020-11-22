@@ -7,6 +7,8 @@ from Bio import SeqIO
 
 import RNA
 
+import numpy as np
+
 complement_table = str.maketrans('ATGCU', 'TACGA')
 
 def stream_fasta_seq_list(fasta_filename):
@@ -99,7 +101,7 @@ class Fold(object):
                 (T+a[3])) /              \
             18.0152
 
-        return -kB * (T + 273.15) * math.log(pH2O)
+        return -kB * (T + 273.15) * np.log(pH2O)
 
     def clear_warning(self):
         clrlen = len('WARNING: stacking enthalpies not symmetric')
