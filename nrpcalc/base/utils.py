@@ -80,6 +80,27 @@ class Fold(object):
         if part_type == 'DNA':
             self.clear_warning()
 
+        self.adjust = self.adjust_dG(temp)
+
+    def adjust_dG(self, temp):
+        # Adjustment according to Dirks et al.
+
+        kB = 0.00198717 # Boltzmann constant in kcal/mol/K
+        T = temp
+        a = [-3.983035, 301.797, 522528.9, 69.34881, 999.974950]
+
+        # Calculate the number of moles of water per liter (molarity) at temperature (T in deg C)
+        # Density of water calculated using data from 
+        # Tanaka M., Girard, G., Davis, R., Peuto A., Bignell, N.
+        # Recommended table for the density of water..., Metrologia, 2001, 38, 301-309
+        pH2O = a[4] * (
+            1 - (T+a[0])**2 * (T+a[1]) / \
+                (a[2]) /                 \
+                (T+a[3])) /              \
+            18.0152
+
+        return -kB * (T + 273.15) * math.log(pH2O)
+
     def clear_warning(self):
         clrlen = len('WARNING: stacking enthalpies not symmetric')
         sys.stdout.write('\033[F\033[F\033[F\033[F')
@@ -91,22 +112,31 @@ class Fold(object):
         sys.stdout.flush()
 
     def evaluate_mfe(self, seq):
-        # MFE Only
-        struct = RNA.fold(seq)[0]
+        # MFE Structure Only
+        fc_obj = RNA.fold_compound(seq, self.settings)
+        struct = fc_obj.mfe()[0]
         return struct
 
     def evaluate_centroid(self, seq):
-        # Centroid Only
+        # Centroid Structure Only
         fc_obj = RNA.fold_compound(seq, self.settings)
         fc_obj.pf()
         struct = fc_obj.centroid()[0]
         return struct
 
     def design(self, seq, struct):
+        # Closest MFE Structure Sequence
         inv = RNA.inverse_fold(seq, struct)[0]
         if self.part_type == 'DNA':
             inv = inv.replace('U', 'T').replace('u', 't')
         return inv
+
+    def evaluate_mfe_dimer(self, seq1, seq2):
+        # MFE Dimer Structure and Energy
+        fc_obj = RNA.fold_compound(seq1+'&'+seq2, self.settings)
+        struct, energy = fc_obj.mfe_dimer()
+        struct1, struct2 = struct.split('&')
+        return (struct1, struct2, energy)
 
 if __name__ == '__main__':
     pass
