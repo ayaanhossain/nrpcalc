@@ -137,7 +137,8 @@ class Fold(object):
         # MFE Dimer Structure and Energy
         fc_obj = RNA.fold_compound(seq1+'&'+seq2, self.settings)
         struct, energy = fc_obj.mfe_dimer()
-        struct1, struct2 = struct.split('&')
+        struct1 = struct[:len(seq1)]
+        struct2 = struct[len(seq1):]
         return (struct1, struct2, energy)
 
 if __name__ == '__main__':
