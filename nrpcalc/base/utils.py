@@ -139,6 +139,7 @@ class Fold(object):
         struct, energy = fc_obj.mfe_dimer()
         struct1 = struct[:len(seq1)]
         struct2 = struct[len(seq1):]
+        energy += self.adjust
         return (struct1, struct2, energy)
 
 if __name__ == '__main__':
