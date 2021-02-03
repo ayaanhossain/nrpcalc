@@ -113,21 +113,21 @@ class Fold(object):
         sys.stdout.write('\033[F\033[F\033[F\033[F')
         sys.stdout.flush()
 
-    def evaluate_mfe(self, seq, energy=False):
+    def evaluate_mfe(self, seq, dg=False):
         # MFE Structure Only
         fc_obj = RNA.fold_compound(seq, self.settings)
         struct,energy = fc_obj.mfe()
-        if not energy:
+        if not dg:
             return struct
         else:
             return struct, energy
 
-    def evaluate_centroid(self, seq, energy=False):
+    def evaluate_centroid(self, seq, dg=False):
         # Centroid Structure Only
         fc_obj = RNA.fold_compound(seq, self.settings)
         fc_obj.pf()
         struct,energy = fc_obj.centroid()
-        if not energy:
+        if not dg:
             return struct
         else:
             return struct, energy
