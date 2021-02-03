@@ -30,7 +30,7 @@ def main():
     total_trials  = get_init_trials(recommended_trials=50)
     curr_prob     = get_prob(total_trials, total_success)
     new_trial     = total_trials
-    
+
     attempt       = 0
 
     while True:

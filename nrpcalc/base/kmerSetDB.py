@@ -11,7 +11,7 @@ class kmerSetDB(object):
     Plyvel based scalable on disk kmerSetDB
     for k-mer storage.
     '''
-    
+
     def __init__(self, path, homology, verbose=False):
         '''
         kmerSetDB constructor.
@@ -36,7 +36,7 @@ class kmerSetDB(object):
                 print('\n [ERROR]    Lmax must be greater than 4, not \'{}\''.format(homology-1))
                 print(' [SOLUTION] Try correcting Lmax\n')
                 raise ValueError
-            
+
             # Path setup
             self.PATH = path.rstrip('/') + '/'
 
@@ -62,7 +62,7 @@ class kmerSetDB(object):
 
             # Verbosity setup
             self.VERB = bool(verbose)
-            
+
             # Object ALIVE status
             self.ALIVE = True
 
@@ -252,7 +252,7 @@ class kmerSetDB(object):
         seq in seq_list from kmerSetDB via single
         transaction.
         '''
-        try:            
+        try:
             pt = False
             WB = leveldb.WriteBatch()
             index = 0
@@ -345,7 +345,7 @@ def test():
     # returns a random DNA string of length
     def get_DNA(length):
         return ''.join(random.choice('ATGC') for _ in range(length))
-    
+
     # create corpus
     total_elements = 10000
     dna_strings = sorted(get_DNA(100) for _ in range(total_elements))

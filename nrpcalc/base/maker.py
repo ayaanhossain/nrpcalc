@@ -30,11 +30,11 @@ class NRPMaker(object):
         # Instance variables
         self.part_type  = part_type
         self.synthesis  = Synthesis()
-        self.fold       = Fold(part_type=part_type)        
+        self.fold       = Fold(part_type=part_type)
         self.proj_id    = str(uuid.uuid4())
         self.kmer_db    = None
         self.background = None
-        
+
         # Seed the RNG
         if not seed is None and isinstance(seed, int):
             self.rng = numpy.random.default_rng(seed=seed)
@@ -186,7 +186,7 @@ class NRPMaker(object):
         meta_seq = [None] * len(seq)
 
         # Normalize Meta Sequence
-        for i in range(len(seq)):            
+        for i in range(len(seq)):
             try:
                 if i in meta_struct.paired_dict:
                     j = meta_struct.paired_dict[i]
@@ -294,7 +294,7 @@ class NRPMaker(object):
                 # No potential for change
                 if len(pnt) == len(tried_set[i]):
                     rbi = j
-            
+
             self._clear_path(
                 candidate, tried_set, kmer_set, i, k=rbi)
             return rbi
@@ -310,7 +310,7 @@ class NRPMaker(object):
                 meta_seq, meta_struct, i, homology, candidate, tried_set)
             i = self._clear_path(
                 candidate, tried_set, kmer_set, i, k=roll_back_index)
-        
+
         return i
 
     def _get_local_roll_back_index(
@@ -322,7 +322,7 @@ class NRPMaker(object):
         # Prep candidate
         candidate_str = ''.join(candidate)
         candidate_str = candidate_str[:i+1]
-        
+
         # Try to evaluate the local_model_fn on candidate_str
         outcome = True
         try:
@@ -415,7 +415,7 @@ class NRPMaker(object):
                 if forward:
                     # Reset roll_back_count
                     roll_back_count = 0
-                    
+
                     # Case ( and .
                     if not i in meta_struct.rev_paired_dict:
                         candidate[i] = self.rng.choice(
@@ -506,7 +506,7 @@ class NRPMaker(object):
                     candidate, i, local_model_fn, verbose)
                 # Model function violated, and
                 # a traceback location was determined
-                if not rbi is None: 
+                if not rbi is None:
                     roll_back_count = 0 if rbi < i else roll_back_count
                     i = self._roll_back(
                         meta_seq,
@@ -530,7 +530,7 @@ class NRPMaker(object):
                 mmer = min(kmer, rmer)
 
                 # Case: kmer/rkmer is an internal
-                #       repeat to current part                
+                #       repeat to current part
                 if not allow_internal_repeat:
                     # Direct repeat
                     if kmer in kmer_set:
@@ -560,22 +560,22 @@ class NRPMaker(object):
             if not mmer_seen:
                 if not self.background is None:
                     if homology != self.background.K:
-                        
+
                         # Determine background K
                         K = self.background.K
-                        
+
                         # Check is warranted
                         if i >= K-1:
-                            
+
                             # Get the kmer/rmer
 
                             # K is smaller or equal
                             if K <= homology:
-                                kmer = kmer[-K:]                                
+                                kmer = kmer[-K:]
                             # K is greater
                             else:
                                 kmer = ''.join(candidate[i-K+1:i+1])
-                            
+
                             rmer = utils.get_revcomp(kmer)
                             mmer = min(kmer, rmer)
 
@@ -590,11 +590,11 @@ class NRPMaker(object):
                     meta_struct,
                     i,
                     homology,
-                    candidate, 
+                    candidate,
                     tried_set,
                     kmer_set)
                 continue
-            
+
             # Everything OK .. insert kmer
             if i >= homology-1:
                 kmer_set[i] = kmer
@@ -679,7 +679,7 @@ class NRPMaker(object):
         return self.fold.design(
             seq=inverse_fold_seq, struct=meta_struct.struct).upper()
 
-    def _get_verified_non_coding_candidate(self, 
+    def _get_verified_non_coding_candidate(self,
         homology,
         meta_seq,
         meta_struct,
@@ -761,13 +761,13 @@ class NRPMaker(object):
                 else:
                     pass
 
-                # Synthesis optimization            
+                # Synthesis optimization
                 if synth_opt:
                     if self._is_synthesis_verified(candidate):
                         opt_count += 1
                     else:
                         synth_fail_count += 1
-                
+
                 # Global model optimization
                 if global_model_fn:
 
@@ -819,7 +819,7 @@ class NRPMaker(object):
                 # No jumps made yet no non-repetitive candidate found
                 if current_jump_count >= jump_count:
                     break
-                # Increase current_jump_count 
+                # Increase current_jump_count
                 else:
                     current_jump_count += 1
                 # Abortion limit reached?
@@ -882,7 +882,7 @@ class NRPMaker(object):
 
         # Stream parts until completion
         while True:
-            
+
             t0 = time()
 
             candidate, curr_jump_trial, curr_fail_trial = self._get_verified_non_coding_candidate(
@@ -930,7 +930,7 @@ class NRPMaker(object):
                         len(self.kmer_db),
                         time()-t0, time_sum / iter_count,
                         (time() - begin_time) / 3600.0))
-                
+
                 yield final_candidate
 
                 # No more parts required
@@ -1161,7 +1161,7 @@ class NRPMaker(object):
             else:
                 if verbose:
                     print('\n Check Status: PASS')
-            
+
             # Background Check
             if build_parts:
                 if not background is None:
@@ -1307,7 +1307,7 @@ class NRPMaker(object):
         for i,line in enumerate(utils.stream_fasta_seq_list(output_file)):
             line = line.strip()
             parts_dict[i] = line
-       
+
         # Cleanups and Return
         projector.remove_proj_dir()
         if verbose:

@@ -73,7 +73,7 @@ class Fold(object):
             part_type = 'RNA'
 
         self.part_type = part_type
-        
+
         parameter_file = pkg_resources.resource_filename(
             'nrpcalc', 'base/{}.par'.format(
                 self.part_type))
@@ -92,7 +92,7 @@ class Fold(object):
         a = [-3.983035, 301.797, 522528.9, 69.34881, 999.974950]
 
         # Calculate the number of moles of water per liter (molarity) at temperature (T in deg C)
-        # Density of water calculated using data from 
+        # Density of water calculated using data from
         # Tanaka M., Girard, G., Davis, R., Peuto A., Bignell, N.
         # Recommended table for the density of water..., Metrologia, 2001, 38, 301-309
         pH2O = a[4] * (
@@ -113,18 +113,24 @@ class Fold(object):
         sys.stdout.write('\033[F\033[F\033[F\033[F')
         sys.stdout.flush()
 
-    def evaluate_mfe(self, seq):
+    def evaluate_mfe(self, seq, energy=False):
         # MFE Structure Only
         fc_obj = RNA.fold_compound(seq, self.settings)
-        struct = fc_obj.mfe()[0]
-        return struct
+        struct,energy = fc_obj.mfe()
+        if not energy:
+            return struct
+        else:
+            return struct, energy
 
-    def evaluate_centroid(self, seq):
+    def evaluate_centroid(self, seq, energy=False):
         # Centroid Structure Only
         fc_obj = RNA.fold_compound(seq, self.settings)
         fc_obj.pf()
-        struct = fc_obj.centroid()[0]
-        return struct
+        struct,energy = fc_obj.centroid()
+        if not energy:
+            return struct
+        else:
+            return struct, energy
 
     def design(self, seq, struct):
         # Closest MFE Structure Sequence
@@ -136,7 +142,7 @@ class Fold(object):
     def evaluate_mfe_dimer(self, seq1, seq2):
         # MFE Dimer Structure and Energy
         fc_obj = RNA.fold_compound(seq1+'&'+seq2, self.settings)
-        struct, energy = fc_obj.mfe_dimer()
+        struct,energy = fc_obj.mfe_dimer()
         struct1 = struct[:len(seq1)]
         struct2 = struct[len(seq1):]
         energy += self.adjust

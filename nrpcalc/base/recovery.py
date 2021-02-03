@@ -34,12 +34,12 @@ def get_recovered_non_homologs(homology_graph, graph_file, vercov_func=None, ver
     # powertex_elimination(homology_graph, verbose)
     completex_nodes = [] #completex_elimination(homology_graph, verbose)
     # indiset_nodes.update(completex_nodes)
-    
-    possible_nodes  = set(homology_graph.nodes())   
-    
+
+    possible_nodes  = set(homology_graph.nodes())
+
     if verbose:
         print('\n [+] Initial independent set = {}, computing vertex cover on remaining {} nodes.'.format(len(indiset_nodes), len(completex_nodes), len(possible_nodes)))
-    
+
     if is_graph_empty(homology_graph):
         if verbose:
             print(' [X] Graph is empty, further independent set expansion not possible, terminating.')
@@ -70,7 +70,7 @@ def get_recovered_non_homologs(homology_graph, graph_file, vercov_func=None, ver
                 homology_graph = nx.Graph(homology_graph.subgraph(possible_nodes))
 
             vercov_nodes = vercov_func(homology_graph, verbose)
-            
+
             if verbose:
                 print('\n [+] Computed vertex cover of size: {} (in {:.4} seconds)'.format(len(vercov_nodes), time()-t0))
                 print(' [+] Loading graph from: {}'.format(graph_file))

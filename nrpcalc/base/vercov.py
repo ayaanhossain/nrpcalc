@@ -150,7 +150,7 @@ def nrp_vercov_greedy(homology_graph, verbose):
             if max_node in homology_graph:
                 vercov_nodes.add(max_node)
                 remove_node_and_pendants(homology_graph, candidate_node=max_node, vercov_nodes=vercov_nodes, verbose=verbose)
-    
+
     return vercov_nodes
 
 def test():

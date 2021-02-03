@@ -33,7 +33,7 @@ def get_repeat_dict(
         clear_length = 0
 
     while seq_deque:
-        
+
         if verbose:
             printed = ' [Sequence processing remaining] = {}\r'.format(
                 len(seq_deque))
@@ -90,7 +90,7 @@ def get_repeat_dict(
 
     if verbose:
         print()
-    
+
     return repeat_dict
 
 def get_maximal_cliques(repeat_cliques_list):
@@ -133,7 +133,7 @@ def get_repeat_cliques(
         hmer, repeat_clique = repeat_dict.popitem()
         # Note: each repeat_clique is sorted by construction
         repeat_cliques_set.add(tuple(repeat_clique))
-    
+
     # Transform clique tuples into sets
     repeat_cliques_list = list()
     while repeat_cliques_set:

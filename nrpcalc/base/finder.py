@@ -144,11 +144,11 @@ def nrp_finder(
 
         if not find_parts:
             raise RuntimeError('Invalid Constraints, or Background')
-    
+
     # Separate Checks from Discovery Logs
     if verbose:
         print()
-    
+
     # Setup Project
     current_uuid = str(uuid.uuid4())
     projector.setup_proj_dir(current_uuid)

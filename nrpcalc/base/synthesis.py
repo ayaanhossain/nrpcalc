@@ -45,7 +45,7 @@ class Synthesis(object):
         return True
 
     def _rule_GC_content(self, seq):
-        """        
+        """
         >>> synth_obj._rule_GC_content(seq='GGGGGGGGGGGGGGAAAAAA')
         False
         >>> synth_obj._rule_GC_content(seq='GGGGGGAAAAAAAAAAAAAA')
@@ -87,7 +87,7 @@ class Synthesis(object):
         >>> synth_obj._is_melting_temp_pass(seq='GCGCGCGCGCGCATATATAT', tm_low=36.0, tm_high=73.0)
         True
         """
-        
+
         if tm_low <= MeltingTemp.Tm_NN(seq, dnac1=250.0, dnac2=0.0, saltcorr=7) <= tm_high:
             return True
         return False
@@ -130,7 +130,7 @@ class Synthesis(object):
             if len(seq) <= term_len:
                 start_max, end = len(seq)-rep_len, len(seq)
             # Initiate 5' terminal check
-            else:                
+            else:
                 start_max, end = term_len-rep_len, term_len
             while start < start_max:
                 if not self._is_slippage_pass(seq, start, end, rep_len, win):

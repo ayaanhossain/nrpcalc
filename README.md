@@ -10,7 +10,7 @@
   <a href="#License">License</a> •
   <a href="#Citation">Citation</a> •
   <a href="https://github.com/ayaanhossain/nrpcalc/blob/master/docs/DOCS.md">DOCS</a> •
-  <a href="#NRP-Calculator-in-Action">NRP Calculator in Action!</a> 
+  <a href="#NRP-Calculator-in-Action">NRP Calculator in Action!</a>
 </p>
 
 ## Overview
@@ -64,7 +64,7 @@ If you do not want to install `conda` on your system, you will need to install [
 Once completed, you can verify your installation of `ViennaRNA` via:
 ```python
 $ python
-Python 3.6.10 | packaged by conda-forge | (default, Apr 24 2020, 16:44:11) 
+Python 3.6.10 | packaged by conda-forge | (default, Apr 24 2020, 16:44:11)
 [GCC 7.3.0] on linux
 Type "help", "copyright", "credits" or "license" for more information.
 >>> import RNA
@@ -99,12 +99,12 @@ $ python setup.py install
 If everything went well, `NRP Calculator` is now available in your environment under the `nrpcalc` package. You may verify it like so:
 ```python
 $ python
-Python 3.6.10 | packaged by conda-forge | (default, Apr 24 2020, 16:44:11) 
+Python 3.6.10 | packaged by conda-forge | (default, Apr 24 2020, 16:44:11)
 [GCC 7.3.0] on linux
 Type "help", "copyright", "credits" or "license" for more information.
->>> 
+>>>
 >>> import nrpcalc
->>> 
+>>>
 >>> print(nrpcalc.__doc__)
 
 Non-Repetitive Parts Calculator
@@ -112,7 +112,7 @@ Non-Repetitive Parts Calculator
 Automated design and discovery of non-repetitive genetic
 parts for engineering stable systems.
 
-Version: 1.5.9
+Version: 1.5.10
 
 Authors: Ayaan Hossain <auh57@psu.edu>
          Howard Salis  <salis@psu.edu>
@@ -127,7 +127,7 @@ The Non-Repetitive Parts Calculator offers two modes of operation:
                constraints
 
 Additionally, a 'background' object is available that stores
-background sequences. When the 'background' object is used, 
+background sequences. When the 'background' object is used,
 designed genetic parts will also be non-repetitive with respect
 to these sequences.
 
@@ -136,7 +136,7 @@ You can learn more about the two modes and background via
   print(nrpcalc.finder.__doc__)
   print(nrpcalc.maker.__doc__)
 
->>> 
+>>>
 ```
 
 > **Note** Remember to activate the specific environment in which `NRP Calculator` is installed in order to use it. For example, if you followed the instructions above exactly, then the environment you created and installed `NRP Calculator` in is named `nrpenv`.
@@ -199,7 +199,7 @@ If you have [installed](#Installation) `nrpcalc` then you have everything you ne
 
 Simply clone this repository
 ```bash
-$ git clone https://github.com/ayaanhossain/nrpcalc.git 
+$ git clone https://github.com/ayaanhossain/nrpcalc.git
 ```
 
 and navigate to `nrpcalc/examples/` directory

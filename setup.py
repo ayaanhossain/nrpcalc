@@ -13,22 +13,22 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='nrpcalc',
-    
+
     # Link: https://www.python.org/dev/peps/pep-0440/#version-scheme
-    version='1.5.9',
-    
+    version='1.5.10',
+
     description='Non-Repetitive Parts Calculator - Automated design and discovery of non-repetitive genetic parts for engineering stable genetic systems',
-    
+
     long_description=long_description,
-    
+
     long_description_content_type='text/markdown',
-    
+
     url='https://github.com/ayaanhossain/nrpcalc',
-    
+
     author='Ayaan Hossain and Howard Salis',
-    
+
     author_email='auh57@psu.edu, salis@psu.edu',  # Optional
-    
+
     classifiers=[  # Optional
         # How mature is this project? Common values are
         #   3 - Alpha
@@ -79,7 +79,7 @@ setup(
     package_dir={
         'nrpcalc': './nrpcalc'
     },
-    
+
     package_data={
         'nrpcalc': ['base/*.par']
     },

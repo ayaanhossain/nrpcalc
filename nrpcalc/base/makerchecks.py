@@ -247,7 +247,7 @@ def is_pairing_compatible(seq, struct, part_type):
         if len(incompat_locs) > 0 or \
            len(reduced_locs) > 0:
             return (False, incompat_locs, reduced_locs)
-    return (True, incompat_locs, reduced_locs)    
+    return (True, incompat_locs, reduced_locs)
 
 def main():
     print('Testing Sequence Constraint Validation Checkers ... ',)

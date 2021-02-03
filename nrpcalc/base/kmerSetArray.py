@@ -80,7 +80,7 @@ def test():
     # required test imports
     import random
     import time
-    
+
     from . import utils
 
     # returns a random DNA string of length
