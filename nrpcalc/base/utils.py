@@ -1,5 +1,6 @@
 import os
 import sys
+from typing import Tuple
 
 import pkg_resources
 
@@ -58,6 +59,14 @@ class Fold(object):
         temp=37.0,
         dangles=2,
         part_type='RNA'):
+
+        if not part_type in ['RNA', 'DNA']:
+            part_type = 'RNA'
+
+        if part_type == 'DNA':
+            RNA.cvar.noGU        = True
+            RNA.cvar.noGUclosure = True
+
         self.parameter_directory = os.path.dirname(
             os.path.abspath(__file__))#"/usr/local/share/ViennaRNA/"
         # Temperature in Celsius;
@@ -68,9 +77,6 @@ class Fold(object):
         # default=2 (int)
         RNA.cvar.dangles = dangles
         self.settings    = RNA.md()
-
-        if not part_type in ['RNA', 'DNA']:
-            part_type = 'RNA'
 
         self.part_type = part_type
 
