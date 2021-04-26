@@ -521,6 +521,7 @@ class NRPMaker(object):
 
             # Are either of these mers seen previously?
             mmer_seen = False
+            kmer = None
 
             # Handle equal internal and shared repeats
             if i >= homology-1:
@@ -557,31 +558,24 @@ class NRPMaker(object):
                                 mmer_seen = True
 
             # Handle background repeats
-            if not mmer_seen:
-                if not self.background is None:
-                    if homology != self.background.K:
+            if not mmer_seen and \
+               not self.background is None and \
+               homology != self.background.K:
 
-                        # Determine background K
-                        K = self.background.K
+                # Determine background K
+                K = self.background.K
 
-                        # Check is warranted
-                        if i >= K-1:
+                # Check is warranted
+                if i >= K-1:
 
-                            # Get the kmer/rmer
+                    # Get the kmer/rmer
+                    kmer = ''.join(candidate[i-K+1:i+1])
+                    rmer = utils.get_revcomp(kmer)
+                    mmer = min(kmer, rmer)
 
-                            # K is smaller or equal
-                            if K <= homology:
-                                kmer = kmer[-K:]
-                            # K is greater
-                            else:
-                                kmer = ''.join(candidate[i-K+1:i+1])
-
-                            rmer = utils.get_revcomp(kmer)
-                            mmer = min(kmer, rmer)
-
-                            # Actual check
-                            if mmer in self.background:
-                                mmer_seen = True
+                    # Actual check
+                    if mmer in self.background:
+                        mmer_seen = True
 
             # Traceback to eliminate repeat
             if mmer_seen:
