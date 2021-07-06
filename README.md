@@ -54,7 +54,7 @@ $ conda activate nrpenv
 
 **Approach 1: Install from PyPI**
 
-Once `ViennaRNA` is installed, you can install `NRP Calculator` from PyPI, where it is published as the `nrpcalc` package. This is as easy as
+You can install `NRP Calculator` from PyPI, where it is published as the `nrpcalc` package. This is as easy as
 ```bash
 $ pip install --upgrade nrpcalc --no-cache-dir
 ```
@@ -94,7 +94,7 @@ Non-Repetitive Parts Calculator
 Automated design and discovery of non-repetitive genetic
 parts for engineering stable systems.
 
-Version: 1.6.2
+Version: 1.6.3
 
 Authors: Ayaan Hossain <auh57@psu.edu>
          Howard Salis  <salis@psu.edu>
