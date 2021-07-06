@@ -31,6 +31,7 @@ Non-repetitiveness is a global property of the entire genetic part toolbox, and 
 
 `Non-Repetitive Parts Calculator` is a `Linux`/`MacOS`-tested software, and was originally built with `Python2.7`. The software is now `Python3` exclusive, and compatible only with `Python3.6` and above. `Python2.7` is no longer supported.
 
+
 **Setting up the Environment**
 
 The best way to install `NRP Calculator` is via `conda`. If you have either `anaconda` or `miniconda` installed on your system, you are good to proceed. Otherwise, you may first need to install [miniconda](https://docs.conda.io/en/latest/miniconda.html).
@@ -50,26 +51,6 @@ $ conda activate nrpenv
 
 > **Note** You don't necessarily need to make a new environment, as long as you know which environment you want `NRP Calculator` installed in, and have it activated during installation. For example, you might have a different project environment inside which you want to install `NRP Calculator`.
 
-**Installing External Dependencies**
-
-To use `NRP Calculator` in a new environment, we must first install `ViennaRNA`, which is an external dependency for the software and not available in [PyPI](https://pypi.org). `ViennaRNA` is easily installed with
-```bash
-$ conda install -c bioconda viennarna
-```
-
-If you are following the instructions as is, this will install the latest copy of `ViennaRNA` inside the new `nrpenv` environment.
-
-If you do not want to install `conda` on your system, you will need to install [ViennaRNA](https://www.tbi.univie.ac.at/RNA/ViennaRNA/doc/html/install.html), and its `Python` bindings manually.
-
-Once completed, you can verify your installation of `ViennaRNA` via:
-```python
-$ python
-Python 3.6.10 | packaged by conda-forge | (default, Apr 24 2020, 16:44:11)
-[GCC 7.3.0] on linux
-Type "help", "copyright", "credits" or "license" for more information.
->>> import RNA
->>> quit()
-```
 
 **Approach 1: Install from PyPI**
 
@@ -77,7 +58,8 @@ Once `ViennaRNA` is installed, you can install `NRP Calculator` from PyPI, where
 ```bash
 $ pip install --upgrade nrpcalc --no-cache-dir
 ```
-which will additionally install all remaining dependencies from PyPI.
+which will also install all dependencies from PyPI.
+
 
 **Approach 2: Install from GitHub**
 
@@ -112,7 +94,7 @@ Non-Repetitive Parts Calculator
 Automated design and discovery of non-repetitive genetic
 parts for engineering stable systems.
 
-Version: 1.6.0
+Version: 1.6.2
 
 Authors: Ayaan Hossain <auh57@psu.edu>
          Howard Salis  <salis@psu.edu>
@@ -158,7 +140,7 @@ If you encounter any problems during installation, please feel free to [open an 
 
 `Non-Repetitive Parts Calculator` is an **open-source software** under [MIT](https://opensource.org/licenses/MIT) License.
 
-See [LICENSE](./LICENSE) file for more details.
+See [LICENSE](https://github.com/ayaanhossain/nrpcalc/blob/master/LICENSE) file for more details.
 
 ## Citation
 
