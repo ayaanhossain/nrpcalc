@@ -20,8 +20,6 @@ from . import projector
 from . import berno
 from . import finder
 
-from Bio.SeqUtils import MeltingTemp
-
 
 class NRPMaker(object):
 

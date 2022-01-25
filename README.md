@@ -136,7 +136,7 @@ If you encounter any problems during installation, please feel free to [open an 
 
 ## License
 
-`Non-Repetitive Parts Calculator` (c) 2020 Ayaan Hossain.
+`Non-Repetitive Parts Calculator` (c) 2020-2022 Ayaan Hossain.
 
 `Non-Repetitive Parts Calculator` is an **open-source software** under [MIT](https://opensource.org/licenses/MIT) License.
 
