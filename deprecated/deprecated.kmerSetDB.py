@@ -3,7 +3,7 @@ import shutil
 
 from . import utils
 
-import plyvel
+import leveldb
 
 
 class kmerSetDB(object):
@@ -41,24 +41,24 @@ class kmerSetDB(object):
             self.PATH = path.rstrip('/') + '/'
 
             # Create/Open Plyvel object
-            self.DB = plyvel.DB(
-                self.PATH,
+            self.DB = leveldb.LevelDB(
+                filename=self.PATH,
                 create_if_missing=True,
                 error_if_exists=False)
 
             # Length setup
             try:
-                self.LEN = int(self.DB.get(b'LEN'))
+                self.LEN = int(self.DB.Get(b'LEN'))
             except:
                 self.LEN = 0
-                self.DB.put(b'LEN', b'0')
+                self.DB.Put(b'LEN', b'0')
 
             # K setup
             try:
-                self.K = int(self.DB.get(b'K'))
+                self.K = int(self.DB.Get(b'K'))
             except:
                 self.K = int(homology)
-                self.DB.put(b'K', str(homology).encode())
+                self.DB.Put(b'K', str(homology).encode())
 
             # Verbosity setup
             self.VERB = bool(verbose)
@@ -116,10 +116,11 @@ class kmerSetDB(object):
         Internal helper to fetch value for given
         key, from kmerSetDB instance.
         '''
-        val = self.DB.get(key)
-        if val is None:
+        try:
+            val = self.DB.Get(key)
+            return str(val)
+        except:
             return None
-        return str(val)
 
     @alivemethod
     def add(self, seq):
@@ -133,9 +134,9 @@ class kmerSetDB(object):
                     seq=seq, k=self.K):
                     kmer = kmer.encode()
                     if self._get(kmer) is None:
-                        self.DB.put(kmer, b'1')
+                        self.DB.Put(kmer, b'1')
                         self.LEN += 1
-            self.DB.put(b'LEN', str(self.LEN).encode())
+            self.DB.Put(b'LEN', str(self.LEN).encode())
         except Exception as E:
             raise E
 
@@ -147,7 +148,7 @@ class kmerSetDB(object):
         '''
         try:
             pt = False
-            WB = self.DB.write_batch(transaction=True)
+            WB = leveldb.WriteBatch()
             index = 0
             for seq in seq_list:
                 if not pt and self.VERB:
@@ -164,10 +165,10 @@ class kmerSetDB(object):
                         seq=seq, k=self.K):
                         kmer = kmer.encode()
                         if self._get(kmer) is None:
-                            WB.put(kmer, b'1')
+                            WB.Put(kmer, b'1')
                             self.LEN += 1
-            WB.put(b'LEN', str(self.LEN).encode())
-            WB.write()
+            WB.Put(b'LEN', str(self.LEN).encode())
+            self.DB.Write(WB, sync=True)
             if self.VERB: print()
         except Exception as E:
             raise E
@@ -212,7 +213,8 @@ class kmerSetDB(object):
         User fuction to iterate over k-mers stored in
         kmerSetDB.
         '''
-        for key, _ in self.DB:
+        for key, _ in self.DB.RangeIter(
+            key_from=None, key_to=None):
             if not key in [b'K', b'LEN']:
                 yield str(key.decode('ascii'))
 
@@ -237,9 +239,9 @@ class kmerSetDB(object):
                     seq=seq, k=self.K):
                     kmer = kmer.encode()
                     if self._get(kmer):
-                        self.DB.delete(kmer)
+                        self.DB.Delete(kmer)
                         self.LEN -= 1
-                self.DB.put(b'LEN', str(self.LEN).encode())
+                self.DB.Put(b'LEN', str(self.LEN).encode())
         except Exception as E:
             raise E
 
@@ -252,7 +254,7 @@ class kmerSetDB(object):
         '''
         try:
             pt = False
-            WB = self.DB.write_batch(transaction=True)
+            WB = leveldb.WriteBatch()
             index = 0
             for seq in seq_list:
                 if not pt and self.VERB:
@@ -269,14 +271,14 @@ class kmerSetDB(object):
                         seq=seq, k=self.K):
                         kmer = kmer.encode()
                         if clear:
-                            WB.delete(kmer)
+                            WB.Delete(kmer)
                             self.LEN -= 1
                         else:
                             if self._get(kmer):
-                                WB.delete(kmer)
+                                WB.Delete(kmer)
                                 self.LEN -= 1
-            WB.write()
-            self.DB.put(b'LEN', str(self.LEN).encode())
+            self.DB.Write(WB, sync=False)
+            self.DB.Put(b'LEN', str(self.LEN).encode())
             if self.VERB: print()
         except Exception as E:
             raise E
@@ -287,14 +289,14 @@ class kmerSetDB(object):
         kmerSetDB.
         '''
         self.drop()
-        self.DB = plyvel.DB(
-            self.PATH,
+        self.DB = leveldb.LevelDB(
+            filename=self.PATH,
             create_if_missing=True,
             error_if_exists=False)
         self.LEN = 0
-        self.DB.put(b'LEN', b'0')
+        self.DB.Put(b'LEN', b'0')
         if Lmax is None:
-            self.DB.put(b'K', str(self.K).encode())
+            self.DB.Put(b'K', str(self.K).encode())
         else:
             if not Lmax is None:
                 if not isinstance(Lmax, int):
@@ -308,7 +310,7 @@ class kmerSetDB(object):
                         Lmax))
                     print(' [SOLUTION] Try correcting Lmax\n')
                     raise ValueError
-            self.DB.put(b'K', str(self.K).encode())
+            self.DB.Put(b'K', str(self.K).encode())
         self.ALIVE = True
 
     def close(self):
@@ -345,7 +347,7 @@ def test():
         return ''.join(random.choice('ATGC') for _ in range(length))
 
     # create corpus
-    total_elements = 1000
+    total_elements = 10000
     dna_strings = sorted(get_DNA(100) for _ in range(total_elements))
     print('Testing Operations on {} items'.format(total_elements*2))
 

@@ -15,7 +15,7 @@ setup(
     name='nrpcalc',
 
     # Link: https://www.python.org/dev/peps/pep-0440/#version-scheme
-    version='1.6.3',
+    version='1.7.0',
 
     description='Non-Repetitive Parts Calculator - Automated design and discovery of non-repetitive genetic parts for engineering stable genetic systems',
 
@@ -84,21 +84,12 @@ setup(
         'nrpcalc': ['base/*.par']
     },
 
-    python_requires=', '.join([
-        '!=2.7',
-        '!=3.0.*',
-        '!=3.1.*',
-        '!=3.2.*',
-        '!=3.3.*',
-        '!=3.4.*',
-        '!=3.5.*',
-        '>=3.6.*',
-        '<4.0.*']),
+    python_requires='>=3.6, <4',
 
     install_requires=[
         'numpy>=1.19.0',
         'biopython>=1.77',
-        'leveldb>=0.201',
+        'plyvel>=1.5.1',
         'scipy>=1.5.1',
         'networkx>=2.4',
         'jupyter>=1.0.0',

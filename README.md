@@ -94,7 +94,7 @@ Non-Repetitive Parts Calculator
 Automated design and discovery of non-repetitive genetic
 parts for engineering stable systems.
 
-Version: 1.6.3
+Version: 1.7.0
 
 Authors: Ayaan Hossain <auh57@psu.edu>
          Howard Salis  <salis@psu.edu>
@@ -114,9 +114,9 @@ designed genetic parts will also be non-repetitive with respect
 to these sequences.
 
 You can learn more about the two modes and background via
-  print(nrpcalc.background.__doc__)
-  print(nrpcalc.finder.__doc__)
-  print(nrpcalc.maker.__doc__)
+  help(nrpcalc.background)
+  help(nrpcalc.finder)
+  help(nrpcalc.maker)
 
 >>>
 ```

@@ -13,7 +13,7 @@ import numpy as np
 complement_table = str.maketrans('ATGCU', 'TACGA')
 
 def stream_fasta_seq_list(fasta_filename):
-    with open(fasta_filename, "rU") as handle:
+    with open(fasta_filename) as handle:
         for record in SeqIO.parse(handle, "fasta"):
             yield str(record.seq)
 

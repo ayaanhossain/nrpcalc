@@ -3,7 +3,7 @@ from .base import finder    as nrpfinder
 from .base import kmerSetDB
 
 
-__version__ = '1.6.3'
+__version__ = '1.7.0'
 
 __authors__ = '''
 Ayaan Hossain <auh57@psu.edu>
@@ -31,14 +31,14 @@ The Non-Repetitive Parts Calculator offers two modes of operation:
                constraints
 
 Additionally, a 'background' object is available that stores
-background sequences. When the 'background' object is used, 
+background sequences. When the 'background' object is used,
 designed genetic parts will also be non-repetitive with respect
 to these sequences.
 
 You can learn more about the two modes and background via
-  print(nrpcalc.background.__doc__)
-  print(nrpcalc.finder.__doc__)
-  print(nrpcalc.maker.__doc__)
+  help(nrpcalc.background)
+  help(nrpcalc.finder)
+  help(nrpcalc.maker)
 '''.format(
     __version__,
     *__authors__.strip().split('\n'))
@@ -81,7 +81,7 @@ def background(
           is instantiated at the given path.
 
     background / kmerSetDB API Examples
-    
+
     >>> from pprint import pprint
     >>>
     >>> import nrpcalc
@@ -97,22 +97,22 @@ def background(
             Lmax=15)
     >>> bkg
     kmerSetDB stored at ./prj_bkg/ with 0 16-mers
-    >>>    
+    >>>
 
     background / kmerSetDB offers the following methods
 
     (1) add(seq) - adds an IUPAC string 'seq' to background
 
     >>> bkg.add('ATGCTTAGTGCCATACC')
-    
+
     (2) multiadd(seq_list) - adds multiple sequences from
                              the list to background
 
     >>> bkg.multiadd(my_background_list)
-    
+
     [Background Processing]
       Adding Seq 4: TTAGCTTGAT...
-    
+
     (3) __contains__(seq) - checks if all k-mers from seq
                             is present in background
 
@@ -186,7 +186,7 @@ def background(
 
     (10) close() - closes background instance; once closed
                    operations on the instance raises error
-    
+
     >>> bkg.close()
     True
     >>> bkg.close()
@@ -288,7 +288,7 @@ def finder(
     Finder Mode API Example
 
     >>> import nrpcalc
-    >>> 
+    >>>
     >>> # define background corpus
     >>> my_chromosomes = [
         'ATGAGATCGTAGCAACC',
@@ -296,7 +296,7 @@ def finder(
         'ACAGTAGAGACGAGTAA',
         'CCAGTACGAAAAGGCCC',
         'AAAAAAAAAAAAAAAAA']
-    >>> 
+    >>>
     >>> # initialize background
     >>> genomic_kmers = nrpcalc.background(
         path='./my_genome/',
@@ -306,14 +306,14 @@ def finder(
 
     [Background Processing]
       Adding Seq 4: AAAAAAAAAA...
-    >>> 
+    >>>
     >>> # fetch part toolbox
     >>> my_toolbox = [
         'AGAGCTATGACTGACGT',
         'GCAGATAGGGGGTAGTA',
         'TAAAAAAAAAAAAAAAA', # Repeats with last chromosome
         'GAGCTATGACTGACGTC'] # Repeats with first part
-    >>> 
+    >>>
     >>> # find non-repetitive subset
     >>> # with respect to background
     >>> nrpcalc.finder(
@@ -345,8 +345,8 @@ def finder(
 
     Written 4 unique sequences out to ./30c21235-e3f6-47f5-bce1-f99f47053e0b/seq_list.txt in 0.0002167 seconds
 
-     [Sequence processing remaining] = 1 
-     [Cliques inserted] = 2 
+     [Sequence processing remaining] = 1
+     [Cliques inserted] = 2
 
     Built homology graph in 0.0006673 seconds. [Edges = 1] [Nodes = 3]
      [Intital Nodes = 4] - [Repetitive Nodes = 1] = [Final Nodes = 3]
@@ -383,7 +383,7 @@ def finder(
     return nrpfinder.nrp_finder(
         seq_list=seq_list,
         homology=Lmax+1,
-        background=background,        
+        background=background,
         allow_internal_repeat=internal_repeats,
         vercov_func=vercov,
         output_file=output_file,
@@ -559,9 +559,9 @@ def maker(
               (default=True)
 
     Returns: A dictionary of DNA or RNA strings with integer keys.
-    
+
     Maker Mode API Example
-    
+
     >>> import nrpcalc
     >>>
     >>> Lmax = 15  # for global use
@@ -654,7 +654,7 @@ def maker(
     >>> bkg.multiadd(promoters_strong.values())
 
     [Background Processing]
-      Adding Seq 499: AACATCGATG... 
+      Adding Seq 499: AACATCGATG...
     >>>
     >>> # add promoters to final_toolbox
     >>> final_toolbox.extend(promoters_strong.values())
@@ -732,7 +732,7 @@ def maker(
     _maker = nrpmaker.NRPMaker(
         part_type=part_type,
         seed=seed)
-    
+
     # Compute parts
     parts = _maker.nrp_maker(
         seq_constr=seq_constr,
