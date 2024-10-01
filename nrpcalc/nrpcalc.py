@@ -3,7 +3,7 @@ from .base import finder    as nrpfinder
 from .base import kmerSetDB
 
 
-__version__ = '1.7.1'
+__version__ = '1.7.2'
 
 __authors__ = '''
 Ayaan Hossain <auh57@psu.edu>
@@ -612,10 +612,6 @@ def maker(
         background=None,
         local_model_fn=prevent_cutsites,
         global_model_fn=optimal_gc_content)
-    WARNING: stacking enthalpies not symmetric
-    WARNING: stacking enthalpies not symmetric
-    WARNING: stacking enthalpies not symmetric
-    WARNING: stacking enthalpies not symmetric
 
     [Non-Repetitive Parts Calculator - Maker Mode]
 
@@ -664,7 +660,7 @@ def maker(
     >>> # (this is called toolbox chaining)
     >>> promoters_variable = nrpcalc.maker(
         seq_constr='N'*20+'TTGACA'+'N'*16+'WWWWWWW'+'NNNNN',
-        struct_constr='.'*55,
+        struct_constr='.'*54,
         part_type='DNA',
         Lmax=Lmax,
         target_size=500,
@@ -672,16 +668,12 @@ def maker(
         background=bkg,
         local_model_fn=prevent_cutsites,
         global_model_fn=optimal_gc_content)
-    WARNING: stacking enthalpies not symmetric
-    WARNING: stacking enthalpies not symmetric
-    WARNING: stacking enthalpies not symmetric
-    WARNING: stacking enthalpies not symmetric
 
     [Non-Repetitive Parts Calculator - Maker Mode]
 
     [Checking Constraints]
       Sequence Constraint: NNNNNNNNNNNNNNNNNNNNTTGACANNNNNNNNNNNNNNNNWWWWWWWNNNNN
-     Structure Constraint: .......................................................
+     Structure Constraint: ......................................................
         Target Size      : 500 parts
                Lmax      : 15 bp
       Internal Repeats   : False

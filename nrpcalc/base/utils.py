@@ -1,8 +1,5 @@
 import os
 import sys
-from typing import Tuple
-
-import pkg_resources
 
 from Bio import SeqIO
 
@@ -80,13 +77,10 @@ class Fold(object):
 
         self.part_type = part_type
 
-        parameter_file = pkg_resources.resource_filename(
-            'nrpcalc', 'base/{}.par'.format(
-                self.part_type))
-        RNA.read_parameter_file(parameter_file)
-
         if part_type == 'DNA':
-            self.clear_warning()
+            RNA.params_load_RNA_Turner2004()
+        else:
+            RNA.params_load_RNA_Langdon2018()
 
         self.adjust = self.adjust_dG(temp)
 
