@@ -1,11 +1,9 @@
 import sys
 import shutil
 
-from functools import wraps
-
 from . import utils
 
-from ShareDB import ShareDB
+import plyvel
 
 
 
@@ -41,28 +39,27 @@ class kmerSetDB(object):
                 raise ValueError
 
             # Path setup
-            self.PATH = path.removesuffix('/') + '/'
-            if not self.PATH.endswith('kmerSetDB.ShareDB'):
-                self.PATH += 'kmerSetDB.ShareDB'
+            self.PATH = path.rstrip('/') + '/'
 
-            # Create/Open ShareDB object
-            self.DB = ShareDB(
-                path=self.PATH,
-                map_size=None)
+            # Create/Open Plyvel object
+            self.DB = plyvel.DB(
+                self.PATH,
+                create_if_missing=True,
+                error_if_exists=False)
 
             # Length setup
             try:
-                self.LEN = self.DB['LEN']
+                self.LEN = int(self.DB.get(b'LEN'))
             except:
                 self.LEN = 0
-                self.DB['LEN'] = 0
+                self.DB.put(b'LEN', b'0')
 
             # K setup
             try:
-                self.K = self.DB['K']
+                self.K = int(self.DB.get(b'K'))
             except:
                 self.K = int(homology)
-                self.DB['K'] = self.K
+                self.DB.put(b'K', str(homology).encode())
 
             # Verbosity setup
             self.VERB = bool(verbose)
@@ -81,7 +78,7 @@ class kmerSetDB(object):
         kmerSetDB.
         '''
         return 'kmerSetDB stored at {} with {} {}-mers'.format(
-            self.PATH.removesuffix('kmerSetDB.ShareDB'), self.LEN, self.K)
+            self.PATH, self.LEN, self.K)
 
     def __str__(self):
         '''
@@ -94,7 +91,6 @@ class kmerSetDB(object):
         Internal decorator to gate kmerSetDB operation
         once dropped.
         '''
-        @wraps(method)
         def wrapper(self, *args, **kwargs):
             if self.ALIVE:
                 return method(self, *args, **kwargs)
@@ -124,7 +120,7 @@ class kmerSetDB(object):
         val = self.DB.get(key)
         if val is None:
             return None
-        return val
+        return str(val)
 
     @alivemethod
     def add(self, seq):
@@ -136,10 +132,11 @@ class kmerSetDB(object):
                 seq = seq.replace('U', 'T')
                 for kmer in utils.stream_min_kmers(
                     seq=seq, k=self.K):
+                    kmer = kmer.encode()
                     if self._get(kmer) is None:
-                        self.DB[kmer] = True
+                        self.DB.put(kmer, b'1')
                         self.LEN += 1
-            self.DB['LEN'] = self.LEN
+            self.DB.put(b'LEN', str(self.LEN).encode())
         except Exception as E:
             raise E
 
@@ -147,10 +144,11 @@ class kmerSetDB(object):
     def multiadd(self, seq_list):
         '''
         User function to add seq k-mers for each seq in
-        seq_list to kmerSetDB.
+        seq_list to kmerSetDB via single transaction.
         '''
         try:
             pt = False
+            WB = self.DB.write_batch(transaction=True)
             index = 0
             for seq in seq_list:
                 if not pt and self.VERB:
@@ -165,11 +163,12 @@ class kmerSetDB(object):
                     seq = seq.replace('U', 'T')
                     for kmer in utils.stream_min_kmers(
                         seq=seq, k=self.K):
+                        kmer = kmer.encode()
                         if self._get(kmer) is None:
-                            self.DB[kmer] = True
+                            WB.put(kmer, b'1')
                             self.LEN += 1
-            self.DB['LEN'] = self.LEN
-            self.DB.sync()
+            WB.put(b'LEN', str(self.LEN).encode())
+            WB.write()
             if self.VERB: print()
         except Exception as E:
             raise E
@@ -185,6 +184,7 @@ class kmerSetDB(object):
                 seq = seq.replace('U', 'T')
             for kmer in utils.stream_min_kmers(
                 seq=seq, k=self.K):
+                kmer = kmer.encode()
                 if self._get(kmer):
                     return True
             return False
@@ -195,7 +195,8 @@ class kmerSetDB(object):
     def multicheck(self, seq_list):
         '''
         User function to check existence of any k-mer for
-        each seq in seq_list in kmerSetDB.
+        each seq in seq_list in kmerSetDB via single
+        transaction.
         '''
         try:
             for seq in seq_list:
@@ -212,9 +213,9 @@ class kmerSetDB(object):
         User fuction to iterate over k-mers stored in
         kmerSetDB.
         '''
-        for key, _ in self.DB.items():
-            if not key in ['K', 'LEN']:
-                yield key
+        for key, _ in self.DB:
+            if not key in [b'K', b'LEN']:
+                yield str(key.decode('ascii'))
 
     @alivemethod
     def __len__(self):
@@ -235,10 +236,11 @@ class kmerSetDB(object):
                 seq = seq.replace('U', 'T')
                 for kmer in utils.stream_min_kmers(
                     seq=seq, k=self.K):
+                    kmer = kmer.encode()
                     if self._get(kmer):
-                        self.DB.remove(kmer)
+                        self.DB.delete(kmer)
                         self.LEN -= 1
-                self.DB['LEN'] = self.LEN
+                self.DB.put(b'LEN', str(self.LEN).encode())
         except Exception as E:
             raise E
 
@@ -246,10 +248,12 @@ class kmerSetDB(object):
     def multiremove(self, seq_list, clear=False):
         '''
         User function to remove all k-mers from each
-        seq in seq_list from kmerSetDB.
+        seq in seq_list from kmerSetDB via single
+        transaction.
         '''
         try:
             pt = False
+            WB = self.DB.write_batch(transaction=True)
             index = 0
             for seq in seq_list:
                 if not pt and self.VERB:
@@ -264,15 +268,16 @@ class kmerSetDB(object):
                     seq = seq.replace('U', 'T')
                     for kmer in utils.stream_min_kmers(
                         seq=seq, k=self.K):
+                        kmer = kmer.encode()
                         if clear:
-                            self.DB.remove(kmer)
+                            WB.delete(kmer)
                             self.LEN -= 1
                         else:
                             if self._get(kmer):
-                                self.DB.remove(kmer)
+                                WB.delete(kmer)
                                 self.LEN -= 1
-            self.DB.sync()
-            self.DB['LEN'] = self.LEN
+            WB.write()
+            self.DB.put(b'LEN', str(self.LEN).encode())
             if self.VERB: print()
         except Exception as E:
             raise E
@@ -283,11 +288,14 @@ class kmerSetDB(object):
         kmerSetDB.
         '''
         self.drop()
-        self.DB = ShareDB(path=self.PATH, map_size=None)
+        self.DB = plyvel.DB(
+            self.PATH,
+            create_if_missing=True,
+            error_if_exists=False)
         self.LEN = 0
-        self.DB['LEN'] = 0
+        self.DB.put(b'LEN', b'0')
         if Lmax is None:
-            self.DB['K'] = self.K
+            self.DB.put(b'K', str(self.K).encode())
         else:
             if not Lmax is None:
                 if not isinstance(Lmax, int):
@@ -301,7 +309,7 @@ class kmerSetDB(object):
                         Lmax))
                     print(' [SOLUTION] Try correcting Lmax\n')
                     raise ValueError
-            self.DB['K'] = self.K
+            self.DB.put(b'K', str(self.K).encode())
         self.ALIVE = True
 
     def close(self):
@@ -322,7 +330,7 @@ class kmerSetDB(object):
         if self.ALIVE:
             del self.DB
             self.DB = None
-            shutil.rmtree(self.PATH.removesuffix('kmerSetDB.ShareDB'))
+            shutil.rmtree(self.PATH)
             self.ALIVE = False
             return True
         return False
