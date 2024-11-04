@@ -3,7 +3,7 @@ from .base import finder    as nrpfinder
 from .base import kmerSetDB
 
 
-__version__ = '1.7.3'
+__version__ = '1.7.4'
 
 __authors__ = '''
 Ayaan Hossain <auh57@psu.edu>
