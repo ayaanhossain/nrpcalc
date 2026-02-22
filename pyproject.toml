@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nrpcalc"
+version = "1.7.6"
+description = "Non-Repetitive Parts Calculator - Automated design and discovery of non-repetitive genetic parts for engineering stable genetic systems"
+readme = "README.md"
+license = "MIT"
+authors = [
+    { name = "Ayaan Hossain", email = "auh57@psu.edu" },
+    { name = "Howard Salis",  email = "salis@psu.edu" },
+]
+requires-python = ">=3.8, <4"
+keywords = [
+    "synthetic", "computational", "biology", "genetic", "parts",
+    "calculator", "non-repetitive", "design", "discovery", "algorithm",
+    "stable", "systems", "nrp", "repeats", "vertex", "cover", "path", "finding"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Chemistry",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "numpy>=1.19.0",
+    "biopython>=1.77",
+    "sharedb>=2.0.0",
+    "scipy>=1.5.1",
+    "networkx>=2.4",
+    "jupyter>=1.0.0",
+    "scikit-learn>=0.23.1",
+    "seaborn>=0.10.1",
+    "statsmodels>=0.11.0",
+    "ViennaRNA>=2.4.18a1",
+]
+
+[project.urls]
+"Bug Reports" = "https://github.com/ayaanhossain/nrpcalc/issues"
+"Source"      = "https://github.com/ayaanhossain/nrpcalc/tree/master/nrpcalc"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["nrpcalc*"]

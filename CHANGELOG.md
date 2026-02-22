@@ -1,4 +1,8 @@
 2026.02.22
+1. Switched to pyproject.toml
+2. Bumped version to 1.7.6
+
+2026.02.22
 1. Updated ShareDB dependency to v2.0.0+
 2. Updated Python requirement to 3.8+
 3. Updated README
