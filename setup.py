@@ -49,10 +49,11 @@ setup(
         # that you indicate whether you support Python 2, Python 3 or both.
         # These classifiers are *not* checked by 'pip install'. See instead
         # 'python_requires' below.
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
     ],
     keywords=' '.join([
         'synthetic',
@@ -84,12 +85,12 @@ setup(
     #     'nrpcalc': ['base/*.par']
     # },
 
-    python_requires='>=3.6, <4',
+    python_requires='>=3.8, <4',
 
     install_requires=[
         'numpy>=1.19.0',
         'biopython>=1.77',
-        'sharedb>=1.1.4',
+        'sharedb>=2.0.0',
         'scipy>=1.5.1',
         'networkx>=2.4',
         'jupyter>=1.0.0',

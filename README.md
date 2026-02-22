@@ -29,16 +29,16 @@ Non-repetitiveness is a global property of the entire genetic part toolbox, and 
 
 ## Installation
 
-`Non-Repetitive Parts Calculator` is a `Linux`/`MacOS`-tested software, and was originally built with `Python2.7`. The software is now `Python3` exclusive, and compatible only with `Python3.6` and above. `Python2.7` is no longer supported.
+`Non-Repetitive Parts Calculator` is a `Linux`/`MacOS`-tested software, and was originally built with `Python2.7`. The software is now `Python3` exclusive, and compatible only with `Python3.8` and above. `Python2.7` is no longer supported.
 
 
 **Setting up the Environment**
 
 The best way to install `NRP Calculator` is via `conda`. If you have either `anaconda` or `miniconda` installed on your system, you are good to proceed. Otherwise, you may first need to install [miniconda](https://docs.conda.io/en/latest/miniconda.html).
 
-Assuming you have `conda` available on your system, you may first create a new environment. Here we are naming it `nrpenv` but you can name it as you like. Also, we are setting `nrpenv` up with `Python3.6` but feel free to install `Python3.7`, or one of the newer ones.
+Assuming you have `conda` available on your system, you may first create a new environment. Here we are naming it `nrpenv` but you can name it as you like. Also, we are setting `nrpenv` up with `Python3.8` or one of the newer ones.
 ```bash
-$ conda create -n nrpenv python=3.6
+$ conda create -n nrpenv python=3.8
 ```
 Once your new environment is ready, deactivate your current environment
 ```bash
@@ -81,8 +81,8 @@ $ python setup.py install
 If everything went well, `NRP Calculator` is now available in your environment under the `nrpcalc` package. You may verify it like so:
 ```python
 $ python
-Python 3.6.10 | packaged by conda-forge | (default, Apr 24 2020, 16:44:11)
-[GCC 7.3.0] on linux
+Python 3.8.20 | packaged by conda-forge | (default, Oct  3 2024, 15:54:26)
+[GCC 13.3.0] on linux
 Type "help", "copyright", "credits" or "license" for more information.
 >>>
 >>> import nrpcalc
@@ -94,7 +94,7 @@ Non-Repetitive Parts Calculator
 Automated design and discovery of non-repetitive genetic
 parts for engineering stable systems.
 
-Version: 1.7.0
+Version: 1.7.5
 
 Authors: Ayaan Hossain <auh57@psu.edu>
          Howard Salis  <salis@psu.edu>

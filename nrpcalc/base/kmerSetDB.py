@@ -309,6 +309,7 @@ class kmerSetDB(object):
         User function to close kmerSetDB.
         '''
         if self.ALIVE:
+            self.DB.close()
             del self.DB
             self.DB = None
             self.ALIVE = False
@@ -320,6 +321,7 @@ class kmerSetDB(object):
         User function to drop kmerSetDB.
         '''
         if self.ALIVE:
+            self.DB.close()
             del self.DB
             self.DB = None
             shutil.rmtree(self.PATH.removesuffix('kmerSetDB.ShareDB'))
